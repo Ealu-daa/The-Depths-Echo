@@ -37,13 +37,16 @@ body.fs{position:fixed;inset:0;overscroll-behavior:none}
 }
 @media (pointer:coarse) and (orientation:portrait){
   body.fs .stage{inset:auto 0 auto 0;top:max(10px,env(safe-area-inset-top,0px));margin:0 auto;width:100vw}
-  html body.fs .pad{display:flex;padding:0 16px;align-items:center;max-width:none;width:auto;bottom:auto;top:calc(max(10px,env(safe-area-inset-top,0px)) + 100vw*7/12 + 44px)}
-  body.fs .pad .dpad{grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,56px);gap:6px}
-  body.fs .pad .dpad button{width:64px;height:56px}
-  body.fs .pad .acts button{width:66px;height:52px}
-  body.fs .pad .acts .jump{width:80px;height:110px}
-  body.fs .pad .acts .focus{width:80px}
-  body.fs::after{content:'横向きにすると、画面いっぱいで遊べます';position:fixed;left:0;right:0;top:calc(10px + 100vw*7/12 + 14px);text-align:center;color:#6a7088;font-size:12px;font-family:var(--font);pointer-events:none}
+  html body .pad{display:flex;position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-width:none;box-sizing:border-box;z-index:25;pointer-events:none;
+    justify-content:space-between;align-items:flex-end;padding:0 12px calc(24px + env(safe-area-inset-bottom,0px))}
+  html body .pad .dpad{grid-template-columns:repeat(3,min(66px,15.5vw));grid-template-rows:repeat(3,min(60px,14vw));gap:2px;pointer-events:auto;border-radius:50%;padding:4px}
+  html body .pad .dpad button{width:min(66px,15.5vw);height:min(60px,14vw);font-size:20px}
+  html body .pad .acts{gap:8px}
+  html body .pad .acts button{width:min(72px,17vw);height:min(58px,14vw);font-size:min(14px,3.3vw);letter-spacing:0;padding:0}
+  html body .pad .acts .jump{width:min(84px,20vw);height:calc(min(58px,14vw)*2 + 8px)}
+  html body .pad .acts .focus{width:min(84px,20vw)}
+  body{padding-bottom:300px}
+  body.fs::after{content:'';position:fixed;left:0;right:0;top:calc(max(10px,env(safe-area-inset-top,0px)) + 100vw*7/12 + 12px);text-align:center;color:#6a7088;font-size:12px;font-family:var(--font);pointer-events:none}
 }
 body.fs .pad{position:fixed;left:0;right:0;bottom:0;z-index:25;pointer-events:none}body.fs .pad button{pointer-events:auto}
 .fsbtn{position:absolute;top:6px;right:6px;font-family:var(--font);background:rgba(8,10,18,.5);color:var(--dim);border:1px solid var(--line);font-size:13px;padding:0 8px;line-height:22px;cursor:pointer;z-index:2}
@@ -152,6 +155,34 @@ button.ui:active{transform:translateY(2px);box-shadow:0 2px 0 #9c6a1e}
   .pad .acts .jump{width:64px;height:86px}
   .pad .acts .focus{width:64px}
 }
+
+/* 画面ボタンの配置 */
+.padedit{position:fixed;left:50%;top:max(8px,env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:60;background:rgba(8,11,20,.94);border:1px solid var(--amber);padding:10px 14px;display:flex;flex-direction:column;gap:6px;font-family:var(--font);color:var(--ink);font-size:13px;width:min(92vw,340px);box-sizing:border-box}
+.padedit[hidden]{display:none}.padedit b{color:var(--amber);font-weight:400}.padedit .pe-hint{color:var(--dim);font-size:12px}
+.padedit label{display:flex;justify-content:space-between;align-items:center;gap:10px}.padedit input{width:55%}
+.padedit .pe-btns{display:flex;gap:8px;justify-content:flex-end}
+.pad.editing .dpad,.pad.editing .acts{outline:2px dashed rgba(242,181,82,.8);outline-offset:4px;cursor:move}
+html.rot .padedit{left:auto;right:auto}
+/* 疑似横画面：端末の回転ロック中やiPhoneでも、ボタンひとつで横向きに */
+.rotback{display:none}
+@media (orientation:portrait){
+  html.rot,html.rot body{height:100%;overflow:hidden;overscroll-behavior:none}
+  html.rot body{position:fixed;top:0;left:0;width:100vh;width:100dvh;height:100vw;margin:0;padding:0 !important;transform-origin:top left;transform:rotate(90deg) translateY(-100%);touch-action:none}
+  html.rot .wrap{max-width:none;height:100%;padding:0;justify-content:center;gap:0}
+  html.rot .stage{width:min(100%,calc(100vw*12/7));border:0;box-shadow:none;top:auto;inset:auto}
+  html.rot .rotate,html.rot .help{display:none}
+  html.rot body .pad{position:absolute;left:0;right:0;bottom:0;top:auto;width:auto;max-width:none;box-sizing:border-box;z-index:25;pointer-events:none;align-items:flex-end;justify-content:space-between;padding:0 14px 10px 14px;display:flex}
+  html.rot body .pad button{pointer-events:auto;background:rgba(17,24,39,.42);border-color:rgba(141,147,166,.45);color:rgba(236,228,207,.9)}
+  html.rot body .pad button.jump{background:rgba(27,43,51,.45)}
+  html.rot body .pad button.on{background:rgba(42,53,80,.75)}
+  html.rot body .pad .dpad{grid-template-columns:repeat(3,54px);grid-template-rows:repeat(3,46px);padding:0}
+  html.rot body .pad .dpad button{width:54px;height:46px;font-size:18px}
+  html.rot body .pad .acts button{width:60px;height:42px;font-size:13px}
+  html.rot body .pad .acts .jump{width:66px;height:92px}
+  html.rot body .pad .acts .focus{width:66px}
+  html.rot body::after{content:none}
+  html.rot .rotback{display:block;position:absolute;left:calc(50% + 34px);top:6px;z-index:30;font-family:var(--font);background:rgba(8,10,18,.5);color:var(--dim);border:1px solid var(--line);font-size:12px;padding:2px 8px}
+}
 @media (prefers-reduced-motion:reduce){.toast,.roomname{transition:none}}
 /* 大きなエリア名・ボス登場 */
 .acard{position:absolute;left:0;right:0;top:33%;text-align:center;pointer-events:none;opacity:0;transition:opacity 1.2s ease;z-index:2}
@@ -256,6 +287,7 @@ button.ui:active{transform:translateY(2px);box-shadow:0 2px 0 #9c6a1e}
       <div class="row">バックアップ・引き継ぎ<button class="tb small" data-act="xfer">開く</button></div>
       <div class="row">文字の速さ<button class="tb small" id="setText"></button></div>
       <div class="row">キーの割り当て<button class="tb small" data-act="keycfg">変更する</button></div>
+      <div class="row" id="padRow">画面ボタンの配置<button class="tb small" id="padEditBtn">変更する</button></div>
       <button class="tb" data-act="back">戻る</button></div></div>
     <div class="ov panelov" id="keycfg" hidden><div class="panel"><b>キーの割り当て</b>
       <span style="color:var(--dim);font-size:12px;line-height:1.6;text-align:left">変えたいキーのボタンを押してから、新しいキーを押してください。Esc でやめる、Backspace / Delete で空にします。</span>
@@ -289,7 +321,7 @@ button.ui:active{transform:translateY(2px);box-shadow:0 2px 0 #9c6a1e}
       <span class="k" data-k="map" data-x=" / 地図">M / 地図</span><span>全体マップ（灯火のそばで開くと移動・火をつなぐ）</span><span class="k" data-k="inv" data-x=" / ≡→持ち物">I・Tab / ≡→持ち物</span><span>持ち物・まじない・図鑑</span><span class="k" data-k="esc" data-x=" / ≡">Esc / ≡</span><span>一時停止</span><span class="k">F11 / ⛶</span><span>全画面</span></div>
       <button class="tb" data-act="back">戻る</button></div></div>
     <button class="pbtn" id="pbtn" hidden aria-label="一時停止">≡</button>
-    <button class="fsbtn" id="fsbtn" aria-label="全画面">⛶</button>
+    <button class="fsbtn" id="fsbtn" aria-label="全画面">⛶</button><button class="rotback" id="rotBack">↺ 縦に戻す</button>
     <div class="ov panelov" id="inv" hidden><div class="panel wide">
       <div class="tabs"><button class="tab" data-tab="charm">まじない</button><button class="tab" data-tab="items">持ち物</button><button class="tab" data-tab="book">図鑑</button><button class="tab" data-tab="rec">記録</button></div>
       <div class="split"><div id="invBody" style="display:flex;flex-direction:column;gap:6px"></div>
@@ -326,7 +358,12 @@ button.ui:active{transform:translateY(2px);box-shadow:0 2px 0 #9c6a1e}
     <span><kbd>↑</kbd>調べる・話す　<kbd>M</kbd>地図</span>
   </div>
 
-  <div class="rotate">スマホを横にすると、画面いっぱいで遊べます</div>
+  <div class="rotate"><button class="tb small" id="rotBtn">↻ 横画面で遊ぶ</button></div>
+  <div class="padedit" id="padEdit" hidden><b>画面ボタンの配置</b><span class="pe-hint">ボタンをドラッグして動かす</span>
+    <label>十字キーの大きさ<input type="range" id="peD" min="60" max="160" step="5"></label>
+    <label>ボタンの大きさ<input type="range" id="peA" min="60" max="160" step="5"></label>
+    <label>濃さ<input type="range" id="peO" min="25" max="100" step="5"></label>
+    <div class="pe-btns"><button class="tb small" id="peReset">初期に戻す</button><button class="tb small" id="peDone">完了</button></div></div>
   <div class="pad" id="pad">
     <div class="dpad">
       <button class="up" data-k="up" aria-label="上">▲</button>
@@ -485,7 +522,7 @@ const ROOMS={
  ne1:{name:'眠りの入口',area:'nemuri',cx:10,cy:27,w:2,h:1,sky:false,safe:[8, 11],map:["################################################", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "....................######......................", "................................................", "................................................", "................................................", "################################################", "################################################"],ents:[["neboke", 30, 11], ["makurawata", 16, 6], ["fire", 8, 11], ["prop", 17, 11, "pot2", 81], ["prop", 42, 11, "pot2", 36], ["prop", 19, 11, "mush", 86], ["prop", 25, 7, "pot2", 56], ["prop", 27, 11, "basket", 3], ["prop", 22, 11, "candles", 36], ["prop", 20, 7, "pot2", 27], ["prop", 15, 11, "pot2", 60], ["prop", 33, 11, "candles", 30], ["prop", 22, 7, "candles", 34], ["prop", 36, 11, "mush", 86], ["prop", 11, 11, "candles", 46], ["prop", 39, 11, "pot2", 85], ["prop", 2, 11, "basket", 91], ["prop", 25, 11, "pot2", 66], ["prop", 45, 11, "candles", 16], ["prop", 4, 1, "lanternh", 81], ["prop", 28, 1, "laundry2", 47], ["prop", 7, 1, "lanternh", 6], ["prop", 43, 1, "laundry2", 35], ["prop", 21, 1, "laundry2", 38], ["prop", 33, 1, "laundry2", 79], ["prop", 38, 1, "lanternh", 5], ["prop", 15, 1, "lanternh", 87], ["prop", 22, 9, "lanternh", 29], ["prop", 10, 1, "lanternh", 48]],L:4,music:"nemuri"},
  ne2:{name:'苔の寝床',area:'nemuri',cx:8,cy:27,w:2,h:1,sky:false,safe:null,map:["################....############################", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "..........................######................", "................................................", "................................................", "................................................", "################################################", "################################################"],ents:[["nemugoke", 8, 11, 24], ["ybell", 34, 11], ["neboke", 20, 11], ["komorigumo", 38, 6], ["heart", 17, 4], ["prop", 26, 11, "mush", 1], ["prop", 27, 7, "pot2", 61], ["prop", 3, 11, "basket", 51], ["prop", 39, 11, "pot2", 45], ["prop", 30, 7, "mush", 12], ["prop", 31, 11, "basket", 89], ["prop", 14, 11, "basket", 31], ["prop", 24, 11, "pot2", 98], ["prop", 17, 11, "candles", 92], ["prop", 28, 11, "pot2", 66], ["prop", 44, 11, "candles", 75], ["prop", 5, 11, "pot2", 93], ["prop", 41, 11, "pot2", 64], ["prop", 11, 11, "mush", 53], ["prop", 37, 11, "basket", 15], ["prop", 39, 1, "lanternh", 51], ["prop", 31, 9, "laundry2", 87], ["prop", 26, 1, "laundry2", 50], ["prop", 12, 1, "lanternh", 23], ["prop", 8, 1, "lanternh", 30], ["prop", 30, 1, "lanternh", 66], ["prop", 36, 1, "lanternh", 95], ["prop", 2, 1, "lanternh", 59], ["prop", 20, 1, "lanternh", 77]],L:4,music:"nemuri"},
  ne3:{name:'ゆりかごの縦穴',area:'nemuri',cx:7,cy:27,w:1,h:2,sky:false,safe:null,map:["########################", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#.......................", "#.......................", "#.......................", "#.......................", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", ".......................#", "..#####................#", ".......................#", ".......................#", "########################", "########################"],ents:[["cradle", 16, 6], ["cradle", 6, 12], ["cradle", 15, 18], ["makurawata", 12, 14], ["heart", 4, 22], ["prop", 13, 25, "mush", 74], ["prop", 4, 25, "candles", 65], ["prop", 7, 25, "pot2", 44], ["prop", 20, 25, "candles", 64], ["prop", 10, 25, "basket", 9], ["prop", 16, 25, "mush", 36], ["prop", 18, 25, "basket", 43], ["prop", 2, 25, "candles", 70], ["prop", 12, 1, "lanternh", 11], ["prop", 5, 1, "lanternh", 30], ["prop", 2, 1, "lanternh", 50], ["prop", 21, 1, "lanternh", 80]],L:4,music:"nemuri"},
- ne4:{name:'揺れるゆりかご',area:'nemuri',cx:5,cy:28,w:2,h:1,sky:false,safe:null,map:["################################################", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "................................................", "................................................", "................................................", "........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX........", "##....##########################################", "##....##########################################"],ents:[["cradle", 10, 7], ["cradle", 18, 7], ["cradle", 26, 7], ["cradle", 34, 7], ["komorigumo", 22, 2], ["suzuitem", 44, 11, "kd1"], ["prop", 40, 11, "candles", 59], ["prop", 6, 11, "candles", 40], ["prop", 33, 1, "lanternh", 29], ["prop", 27, 1, "lanternh", 20], ["prop", 44, 1, "lanternh", 53], ["prop", 30, 1, "laundry2", 13], ["prop", 3, 1, "lanternh", 34], ["prop", 13, 1, "lanternh", 23], ["prop", 40, 1, "lanternh", 75], ["prop", 18, 1, "lanternh", 94]],L:4,music:"nemuri"},
+ ne4:{name:'揺れるゆりかご',area:'nemuri',cx:5,cy:28,w:2,h:1,sky:false,safe:null,map:["################################################", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "................................................", "................................................", "................................................", "........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX........", "##MMMM##########################################", "##MMMM##########################################"],ents:[["cradle", 10, 7], ["cradle", 18, 7], ["cradle", 26, 7], ["cradle", 34, 7], ["komorigumo", 22, 2], ["suzuitem", 44, 11, "kd1"], ["prop", 40, 11, "candles", 59], ["prop", 6, 11, "candles", 40], ["prop", 33, 1, "lanternh", 29], ["prop", 27, 1, "lanternh", 20], ["prop", 44, 1, "lanternh", 53], ["prop", 30, 1, "laundry2", 13], ["prop", 3, 1, "lanternh", 34], ["prop", 13, 1, "lanternh", 23], ["prop", 40, 1, "lanternh", 75], ["prop", 18, 1, "lanternh", 94]],L:4,music:"nemuri"},
  ne5:{name:'眠りの苔原',area:'nemuri',cx:3,cy:28,w:2,h:1,sky:false,safe:null,map:["################################################", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#.#####...............................#####....#", "................................................", "................................................", "................................................", "................................................", "################################################", "################################################"],ents:[["nemugoke", 6, 11, 36], ["ybell", 24, 11], ["neboke", 14, 11], ["neboke", 34, 11], ["makurawata", 28, 5], ["suzuitem", 4, 6, "kd2"], ["knot", 40, 6], ["prop", 41, 11, "candles", 51], ["prop", 37, 11, "candles", 39], ["prop", 18, 11, "candles", 4], ["prop", 20, 11, "pot2", 46], ["prop", 31, 11, "basket", 77], ["prop", 3, 11, "mush", 25], ["prop", 29, 11, "mush", 56], ["prop", 39, 11, "basket", 94], ["prop", 44, 11, "pot2", 1], ["prop", 9, 11, "candles", 7], ["prop", 11, 11, "mush", 47], ["prop", 27, 11, "candles", 6], ["prop", 38, 1, "laundry2", 76], ["prop", 41, 1, "lanternh", 22], ["prop", 15, 1, "lanternh", 30], ["prop", 18, 1, "lanternh", 40], ["prop", 21, 1, "laundry2", 26], ["prop", 30, 1, "lanternh", 73], ["prop", 44, 1, "laundry2", 43], ["prop", 24, 1, "lanternh", 99], ["prop", 12, 1, "laundry2", 96], ["prop", 6, 1, "lanternh", 21]],L:4,music:"nemuri"},
  ne6:{name:'洞の灯火',area:'nemuri',cx:2,cy:28,w:1,h:1,sky:false,safe:[12, 11],map:["########################", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "........................", "........................", "........................", "........................", "########################", "########################"],ents:[["fire", 12, 11], ["suzuitem", 4, 11, "kd3"], ["prop", 18, 11, "candles", 83], ["prop", 20, 11, "pot2", 61], ["prop", 8, 11, "candles", 80], ["prop", 16, 11, "candles", 91], ["prop", 8, 1, "laundry2", 92], ["prop", 5, 1, "lanternh", 53], ["prop", 21, 1, "lanternh", 38], ["prop", 16, 1, "lanternh", 90]],L:4,music:"nemuri"},
  ne7:{name:'鈴の道',area:'nemuri',cx:1,cy:28,w:1,h:1,sky:false,safe:null,map:["######....##############", "#......................#", "#......................#", "#.....#####............#", "#......................#", "#......................#", "#......................#", "#......................#", "..............#####.....", "........................", "........................", "........................", "########################", "########################"],ents:[["sbell", 8, 1, "kanedo"], ["look", 12, 11, "suzumichi"], ["prop", 17, 11, "candles", 0], ["prop", 3, 11, "mush", 48], ["prop", 21, 11, "basket", 41], ["prop", 18, 7, "mush", 84], ["prop", 7, 11, "candles", 99], ["prop", 9, 11, "mush", 53], ["prop", 5, 11, "mush", 43], ["prop", 15, 7, "candles", 91], ["prop", 19, 11, "basket", 32], ["prop", 15, 11, "mush", 13], ["prop", 6, 4, "laundry2", 32], ["prop", 20, 1, "lanternh", 17], ["prop", 17, 9, "laundry2", 67], ["prop", 5, 1, "laundry2", 53], ["prop", 15, 1, "laundry2", 42]],L:4,music:"nemuri"},
@@ -526,7 +563,7 @@ const ROOMS={
  kd18:{name:'書庫への抜け道',area:'kanedo',cx:-3,cy:10,w:1,h:1,sky:false,safe:null,map:["########################", "#......................#", "#......................#", "#......................#", "#.......................", "#.......................", "#.......................", "#.......................", "..............##########", "..............##########", "..............##########", "..............##########", "########################", "########################"],ents:[["pdoor", 20, 7, "kanedoLib"], ["memo", 8, 11, "mark10"], ["prop", 17, 7, "bellsmall", 77], ["prop", 15, 7, "candles", 22], ["prop", 11, 11, "crate", 63], ["prop", 4, 11, "candles", 53], ["prop", 2, 11, "crate", 71], ["prop", 13, 11, "bellsmall", 34], ["prop", 20, 1, "chainh", 49], ["prop", 6, 1, "bellh", 3], ["prop", 2, 1, "chainh", 69], ["prop", 15, 1, "chainh", 11], ["prop", 5, 4, "niche", 4], ["prop", 13, 4, "niche", 3]],L:2,mute:true,music:"none"},
  ip1:{name:'祈りの抜け穴',area:'prayer',cx:15,cy:25,w:1,h:1,sky:false,safe:null,map:["##########....##########", "#......................#", "#......................#", "#......................#", "#.............#####....#", "#......................#", "#......................#", "#.......####...........#", "V......................#", "V.#####................#", "V......................#", "V......................#", "##########....##########", "##########....##########"],ents:[["lever", 19, 11, "g:inShort"], ["kuchinui", 4, 11], ["prop", 8, 6, "candles", 4], ["prop", 17, 3, "candles", 59], ["prop", 14, 11, "candles", 5], ["prop", 5, 8, "candles", 99], ["prop", 2, 8, "candles", 59], ["prop", 16, 11, "pillar", 11], ["prop", 8, 11, "pillar", 51], ["prop", 10, 6, "candles", 56], ["prop", 15, 3, "candles", 48], ["prop", 16, 5, "cloth", 8], ["prop", 19, 1, "cloth", 84], ["prop", 8, 1, "cloth", 91], ["prop", 14, 1, "cloth", 19], ["prop", 11, 8, "cloth", 84], ["prop", 17, 8, "niche", 34], ["prop", 6, 4, "niche", 55]],L:4,mute:true,music:"none"},
  sts:{name:'祈りの隠し棚',area:'prayer',cx:14,cy:25,w:1,h:1,sky:false,safe:null,map:["########################", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#.........#####.........", "#.......................", "#.......................", "#.......................", "########################", "########################"],ents:[["heart", 6, 11], ["look", 16, 11, "stshelf"], ["prop", 2, 11, "pillar", 25], ["prop", 9, 11, "candles", 71], ["prop", 11, 11, "candles", 91], ["prop", 13, 7, "pillar", 78], ["prop", 20, 11, "candles", 36], ["prop", 13, 11, "smallstatue", 78], ["prop", 10, 7, "pillar", 3], ["prop", 16, 1, "cloth", 94], ["prop", 10, 9, "cloth", 63], ["prop", 13, 9, "cloth", 84], ["prop", 21, 1, "cloth", 14], ["prop", 2, 1, "cloth", 7], ["prop", 3, 8, "niche", 87], ["prop", 8, 3, "niche", 72]],L:4,mute:true,music:"none",secret:true},
- pm1:{name:'香の抜け道',area:'prayer',cx:14,cy:27,w:2,h:1,sky:false,safe:null,map:["########################################....####", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#.....................................###......#", "#..............................................#", "#...............#######..........####..........#", "#...#####......................................#", "#..............................................#", "#..............................................#", "##########....##################################", "##########....##################################"],ents:[["juzu", 26, 11], ["kourou", 14, 11], ["hankyou", 30, 4], ["prop", 17, 11, "candles", 92], ["prop", 17, 7, "smallstatue", 71], ["prop", 37, 11, "smallstatue", 56], ["prop", 19, 11, "candles", 38], ["prop", 22, 7, "candles", 5], ["prop", 5, 11, "pillar", 91], ["prop", 4, 8, "candles", 69], ["prop", 41, 11, "pillar", 15], ["prop", 8, 8, "candles", 13], ["prop", 44, 11, "candles", 72], ["prop", 30, 11, "candles", 86], ["prop", 9, 11, "smallstatue", 20], ["prop", 35, 11, "pillar", 41], ["prop", 38, 5, "pillar", 14], ["prop", 6, 8, "candles", 22], ["prop", 33, 11, "candles", 42], ["prop", 2, 11, "candles", 39], ["prop", 34, 7, "candles", 92], ["prop", 39, 11, "candles", 99], ["prop", 19, 9, "cloth", 29], ["prop", 4, 1, "cloth", 43], ["prop", 26, 1, "cloth", 41], ["prop", 45, 1, "cloth", 19], ["prop", 39, 1, "cloth", 60], ["prop", 34, 9, "cloth", 35], ["prop", 34, 1, "cloth", 70], ["prop", 20, 1, "cloth", 36], ["prop", 30, 1, "cloth", 19], ["prop", 12, 1, "cloth", 99], ["prop", 24, 3, "niche", 67], ["prop", 44, 7, "niche", 98], ["prop", 21, 5, "niche", 83], ["prop", 9, 3, "niche", 6]],L:4,mute:true,music:"none"},
+ pm1:{name:'香の抜け道',area:'prayer',cx:14,cy:27,w:2,h:1,sky:false,safe:null,map:["########################################....####", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#..............................................#", "#.....................................###......#", "#..............................................#", "#...............#######..........####..........#", "#...#####......................................#", "#..............................................#", "#..............................................#", "##########MMMM##################################", "##########MMMM##################################"],ents:[["juzu", 26, 11], ["kourou", 14, 11], ["hankyou", 30, 4], ["prop", 17, 11, "candles", 92], ["prop", 17, 7, "smallstatue", 71], ["prop", 37, 11, "smallstatue", 56], ["prop", 19, 11, "candles", 38], ["prop", 22, 7, "candles", 5], ["prop", 5, 11, "pillar", 91], ["prop", 4, 8, "candles", 69], ["prop", 41, 11, "pillar", 15], ["prop", 8, 8, "candles", 13], ["prop", 44, 11, "candles", 72], ["prop", 30, 11, "candles", 86], ["prop", 9, 11, "smallstatue", 20], ["prop", 35, 11, "pillar", 41], ["prop", 38, 5, "pillar", 14], ["prop", 6, 8, "candles", 22], ["prop", 33, 11, "candles", 42], ["prop", 2, 11, "candles", 39], ["prop", 34, 7, "candles", 92], ["prop", 39, 11, "candles", 99], ["prop", 19, 9, "cloth", 29], ["prop", 4, 1, "cloth", 43], ["prop", 26, 1, "cloth", 41], ["prop", 45, 1, "cloth", 19], ["prop", 39, 1, "cloth", 60], ["prop", 34, 9, "cloth", 35], ["prop", 34, 1, "cloth", 70], ["prop", 20, 1, "cloth", 36], ["prop", 30, 1, "cloth", 19], ["prop", 12, 1, "cloth", 99], ["prop", 24, 3, "niche", 67], ["prop", 44, 7, "niche", 98], ["prop", 21, 5, "niche", 83], ["prop", 9, 3, "niche", 6]],L:4,mute:true,music:"none"},
  nr1:{name:'眠りの根の道',area:'nemuri',cx:5,cy:29,w:4,h:1,sky:false,safe:[88, 11],map:["##....##########################################################################################", "#..............................................................................................#", "#..............................................................................................#", "#..............................................................................................#", "#.....###..............................RRRR....................................................#", "#..............................................................................................#", "#........###.....................RRRR..........................................................#", "#..............................................................................................#", "#...........####............................................#######.............................", "#.........................#####.......................................#####.....................", "#...............................................................................................", "#...............................................................................................", "################################################################################################", "################################################################################################"],ents:[["nemugoke", 16, 11, 20], ["neboke", 30, 11], ["neboke", 58, 11], ["makurawata", 48, 5], ["damariko", 80, 10], ["heart", 41, 3], ["fire", 88, 11], ["prop", 62, 7, "mush", 45], ["prop", 33, 11, "mush", 97], ["prop", 41, 11, "pot2", 91], ["prop", 22, 11, "candles", 29], ["prop", 49, 11, "pot2", 5], ["prop", 85, 11, "basket", 43], ["prop", 47, 11, "candles", 72], ["prop", 70, 11, "candles", 16], ["prop", 44, 11, "basket", 37], ["prop", 67, 11, "candles", 18], ["prop", 7, 11, "candles", 92], ["prop", 26, 11, "mush", 27], ["prop", 14, 7, "pot2", 78], ["prop", 73, 8, "pot2", 50], ["prop", 52, 11, "candles", 82], ["prop", 36, 11, "basket", 0], ["prop", 9, 11, "candles", 41], ["prop", 63, 11, "pot2", 2], ["prop", 65, 11, "basket", 44], ["prop", 8, 3, "candles", 19], ["prop", 77, 11, "mush", 32], ["prop", 65, 7, "pot2", 71], ["prop", 4, 11, "basket", 66], ["prop", 26, 8, "candles", 67], ["prop", 85, 1, "laundry2", 43], ["prop", 19, 1, "laundry2", 67], ["prop", 23, 1, "lanternh", 18], ["prop", 49, 1, "laundry2", 31], ["prop", 88, 1, "laundry2", 76], ["prop", 13, 9, "lanternh", 78], ["prop", 63, 1, "laundry2", 76], ["prop", 56, 1, "lanternh", 99], ["prop", 65, 9, "lanternh", 5], ["prop", 13, 1, "lanternh", 7]],L:4,music:"nemuri"},
  gu1:{name:'灯りの昇り井戸',area:'gake',cx:14,cy:30,w:1,h:5,sky:false,safe:null,map:["##########....##########", "#......................#", "#......................#", "#......................#", "#......................#", "#.#######..............#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#..............#####...#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#..............#####...#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#..............#####...#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", ".......................#", ".......................#", ".......................#", ".......................#", "########################", "########################"],ents:[["draft", 10, 67, "s", 68], ["lever", 6, 4, "g:dkUp"], ["heart", 3, 4], ["prop", 4, 67, "crate", 58], ["prop", 17, 19, "crate", 20], ["prop", 15, 47, "candles", 95], ["prop", 18, 67, "crate", 42], ["prop", 15, 67, "rocks", 17], ["prop", 15, 19, "rocks", 76], ["prop", 16, 33, "candles", 22], ["prop", 6, 67, "candles", 4], ["prop", 2, 67, "crate", 96], ["prop", 21, 67, "candles", 26], ["prop", 17, 47, "crate", 24], ["prop", 19, 33, "rocks", 95], ["prop", 13, 67, "candles", 43], ["prop", 19, 19, "rocks", 47], ["prop", 17, 49, "chainh", 0], ["prop", 15, 1, "chainh", 24], ["prop", 21, 1, "chainh", 92], ["prop", 17, 35, "chainh", 80], ["prop", 5, 1, "chainh", 86], ["prop", 19, 21, "chainh", 95], ["prop", 18, 1, "chainh", 10]],L:4},
  kzs:{name:'消え音の隠し棚',area:'kie',cx:7,cy:25,w:1,h:1,sky:false,safe:null,map:["########################", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#......................#", "#.......#####...........", "#.......................", "#.......................", "#.......................", "########################", "########################"],ents:[["heart", 5, 11], ["look", 12, 11, "kzshelf"], ["prop", 19, 11, "pebbles", 8], ["prop", 8, 11, "rocks", 27], ["prop", 21, 11, "rocks", 38], ["prop", 16, 11, "shard", 0], ["prop", 2, 11, "pebbles", 89], ["prop", 8, 7, "pebbles", 22], ["prop", 11, 7, "rocks", 47], ["prop", 7, 1, "roots", 47], ["prop", 2, 1, "roots", 16], ["prop", 14, 1, "roots", 81], ["prop", 8, 9, "roots", 77], ["prop", 18, 1, "roots", 29]],L:4,music:"kie3",secret:true},
@@ -859,13 +896,13 @@ async function cloudInit2(){
   }catch(e){cloud=null}}
 function migrate(o){if(Array.isArray(o.buy)&&o.buy.includes('heart4')&&Array.isArray(o.got)&&!o.got.includes('shop:heart4'))o.got.push('shop:heart4');/* 版ごとのセーブ移行はここに足す（例：if(verCmp(o.gv||'0',"0.80")<0){...}） */return o}
 function loadSlot(n){try{const v=JSON.parse(stGet(SLOT_KEY(n)));if(v&&v.visited&&v.fire&&ROOMS[v.fire.room]){const o=migrate(Object.assign(freshSave(),v));
-  for(const k of['home'])if(!o.fires.includes(k))o.fires.unshift(k);for(const k of['home','hub','t2'])if(!o.linked.includes(k))o.linked.push(k);for(const k of['found','story','talkN'])if(!o[k]||typeof o[k]!=='object')o[k]={};for(const k of['buy','pages','hardDefeated'])if(!Array.isArray(o[k]))o[k]=[];if(!o.visited.includes('home'))o.visited.push('home');return o}}catch(e){}return null}
+  for(const k of['home'])if(!o.fires.includes(k))o.fires.unshift(k);for(const k of['home','hub','t2'])if(!o.linked.includes(k))o.linked.push(k);for(const k of['found','story','talkN'])if(!o[k]||typeof o[k]!=='object')o[k]={};for(const k of['buy','pages','hardDefeated'])if(!Array.isArray(o[k]))o[k]=[];if(Array.isArray(o.charms))for(const b in BOSS_CHARM){const c=BOSS_CHARM[b];if(o.charms.includes(c)&&!o.hardDefeated.includes(b)){o.charms=o.charms.filter(x=>x!==c);if(Array.isArray(o.eq))o.eq=o.eq.filter(x=>x!==c)}}if(!o.visited.includes('home'))o.visited.push('home');return o}}catch(e){}return null}
 function loadSave(){return loadSlot(slot)}
 try{if(![1,2,3].some(n=>stGet(SLOT_KEY(n)))){const old=stGet('shinsou-zankyou-v4');if(old)stSet(SLOT_KEY(1),old)}}catch(e){}
 /* 設定 */
 const SET_KEY='shinsou-settings';
-const GAME_VER='0.71',REPO_URL='https://github.com/Ealu-daa/The-Depths-Echo',VER_URL='https://raw.githubusercontent.com/Ealu-daa/The-Depths-Echo/main/version.txt';
-const CHANGES={'0.71':['4層を網の目に：祈り↔無響の抜け道、眠り↔無響の根の道、消え音→眠りの落とし穴（響き落とし）を追加','近道：祭壇の扉→祈りの回廊（レバー）、ツノの部屋→反響の縦穴（昇り井戸）','隠し部屋と命のかけらを5つ追加（照らし・響き落とし・鈴照らしで行ける場所）','実績「灯の記録」を追加（持ち物の「記録」タブ）','急降下を調整：敵に当てたあと少しのあいだ連続で出せない／ボスへのダメージ・無敵時間を減らし、空中ジャンプの回復をなくした','灯守の休み処から上の部屋へ登れなかったので、足場を追加','家の中の足場が透明になっていたのを修正','崩れた階段に、水の底へ押し下げる風のレバーを置いた','鐘道の門の上側にも鳴らせる鐘を吊るした','一族の住居跡の骨細工屋が出てこなかった不具合を修正','筆談の老人の「命のかけら」を買っても増えなかった不具合を修正'],'0.70':['新しい版が出たら、タイトル画面でお知らせするようにした','セーブに版の番号を記録するようにした（古い版のHTMLで新しいセーブは開かない）','ブラウザ内にも、セーブの予備を3世代残すようにした','セーブの保存先を選べるようにした（ブラウザだけ／ブラウザ＋txt）','txtへのバックアップと読み込み','書き換えたセーブを読み込むと……','4層：祈りの列・鈴のかけら・鐘道の門などの不具合を修正','4層の灯火を増やした','ミニマップが自分を中心にスクロールするようにした']};
+const GAME_VER='0.83',REPO_URL='https://github.com/Ealu-daa/The-Depths-Echo',VER_URL='https://raw.githubusercontent.com/Ealu-daa/The-Depths-Echo/main/version.txt';
+const CHANGES={'0.83':['攻撃が当たったときの手応えを強く：斬撃の線、光のはじけ、火花、ヒットストップ、画面の揺れ','被弾したときを派手に：一瞬止まる、赤い×の傷と衝撃、画面が赤くにじむ、ハートが砕けて飛び散る'],'0.82':['書庫の灯守：灯を移す（回復する）あいだは床まで降りてくる。立ったまま横斬りで止められる'],'0.81':['書庫の灯守：水が満ちているあいだに倒すと、浮いた本が穴の上に残って下りられなかったのを修正','書庫の灯守：灯を移す（回復する）あいだは低いところまで降りてくる。光っているあいだに3回斬れば止められる'],'0.80':['ツノ戦：技のあとに、はっきりした隙（息を整える）を入れた。重い技ほど長い','ツノ戦：隙のあいだは暗くても姿が見え、ぶつかってもダメージを受けない','ツノ戦：隙に何度も叩くと、跳びのいて間合いを取る（第1・2段階は4回、第3段階は3回）','ツノ戦：防御の時間を短くし、防御のあとにも短い隙'],'0.79':['トゲ這いの百足：トゲは片側だけに。体はその側の地面からまっすぐ立ちあがり、急に真ん中へ来なくなった。頭は低く、反対側から叩ける','トゲ這いの百足：潜ったあと体が地上を横切らないように／頭が出てくる場所を先に知らせるように','渦の大鰻：打ち上げられているあいだ、横に動かないように','鳴き石の番人：突進の跳ね返りはランダムではなく、第2段階で必ず（跳ね返る前の間も長く）。往復のあとは必ず目を回す','水晶の神託者：攻撃と攻撃のあいだに休みを入れた','蒼白の双騎士：画面に映っていない騎士は攻撃を始めないように','塔の頂：残響の灯が穴の上に出て触れなかったのを修正','風鳴き卿の強化版の最中に、綱で降りられないように'],'0.78':['古いセーブで、強化版に勝つ前から持っていたボスのまじないを外した（強化版に勝つと手に入る）'],'0.77':['すでにまじないを持っているボスに、強化版の残響の灯が出ていたのを修正（勝ったことにする）'],'0.76':['強化版のボス戦で、別の場所へ抜けられる穴（蒼白の聖域への道など）が開いていたのを閉じた'],'0.75':['強化版のボス戦は、最初に戦ったときの地形で戦うように（倒したあとに出る足場などは、勝つとまた出てくる）'],'0.74':['2〜4層の曲を作り直し：エリアごとに拍子・楽器・リズムを変えた（ワルツ、五拍子、七拍子、12拍子、聖歌、鐘の転調鳴らしなど）','曲に展開（Aメロ・Bメロ）、二つ目の旋律、こだまを追加','灯りの昇り井戸で曲が鳴らなかったのを修正'],'0.73':['ツノ戦の最初の段階で曲が消えていたのを修正（静かな曲が流れるように）','鳴らずの鐘道の上のほうで曲が鳴らなかったのを修正'],'0.72':['ツノ戦：技の前に構え（体が光る・杖の構え・地面の目印）が出るように','ツノの技の順番を固定に（段階ごとに決まった流れ）','ツノの新しい技「灯り落とし」：光る柱の目印のあとに灯りが落ちてくる','反撃の「……戻れ。」を削除'],'0.71':['4層を網の目に：祈り↔無響の抜け道、眠り↔無響の根の道、消え音→眠りの落とし穴（響き落とし）を追加','近道：祭壇の扉→祈りの回廊（レバー）、ツノの部屋→反響の縦穴（昇り井戸）','ツノ戦のツノを、旅人と同じ姿に／名前を知ったあとは、旅人の名前をすべて「ツノ」に統一','4層の住人との会話を、画面を暗くせず普通の会話枠で表示するようにした','スマホ：設定から画面ボタンの位置・大きさ・濃さを変えられる（縦と横で別々に保存）','スマホ：「横画面で遊ぶ」ボタンで横向きに（回転ロック中やiPhoneでも、画面ごと90°回して遊べる）','スマホ縦画面：操作ボタンを画面の下（親指の届く位置）に移し、十字キーを指をすべらせて斜めも入る形に','第4層の無音だった場所に小さな曲を追加（里・祈り・無響・崖・鐘道）','祭司と子守唄の後半で曲が消えたままにならず、少しの静寂のあと後半の曲になる','4層のボスの図鑑の絵を修正','石泳ぎを響き落としで黙り石から叩き出せるようにした','トゲに当たったとき、部屋の反対側に戻されることがあったのを修正','新しい抜け道（香の抜け道・眠りの根の道）の入口は黙り石：響き落としを手に入れるまで無響の大空洞には入れない','隠し部屋と命のかけらを5つ追加（照らし・響き落とし・鈴照らしで行ける場所）','実績「灯の記録」を追加（持ち物の「記録」タブ）','急降下を調整：敵に当てたあと少しのあいだ連続で出せない／ボスへのダメージ・無敵時間を減らし、空中ジャンプの回復をなくした','灯守の休み処から上の部屋へ登れなかったので、足場を追加','家の中の足場が透明になっていたのを修正','崩れた階段に、水の底へ押し下げる風のレバーを置いた','鐘道の門の上側にも鳴らせる鐘を吊るした','一族の住居跡の骨細工屋が出てこなかった不具合を修正','筆談の老人の「命のかけら」を買っても増えなかった不具合を修正'],'0.70':['新しい版が出たら、タイトル画面でお知らせするようにした','セーブに版の番号を記録するようにした（古い版のHTMLで新しいセーブは開かない）','ブラウザ内にも、セーブの予備を3世代残すようにした','セーブの保存先を選べるようにした（ブラウザだけ／ブラウザ＋txt）','txtへのバックアップと読み込み','書き換えたセーブを読み込むと……','4層：祈りの列・鈴のかけら・鐘道の門などの不具合を修正','4層の灯火を増やした','ミニマップが自分を中心にスクロールするようにした']};
 function verCmp(a,b){const x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0}
 let SET={se:8,amb:6,bgm:5,shake:true,text:1,txt:false};
 try{Object.assign(SET,JSON.parse(stGet(SET_KEY))||{})}catch(e){}
@@ -1088,6 +1125,15 @@ function lead(kind,m,t,len){const f=mf(m);
   else if(kind==='pluck'){vo('triangle',f,t,.02,.09,.008,1.1,1500)}
   else if(kind==='flute'){vo('sine',f,t,len*.85,.065,.06,.35,0,4);vo('triangle',f*2,t,len*.8,.008,.08,.3,2400)}
   else if(kind==='glass'){vo('sine',f,t,.02,.06,.01,2.4);vo('sine',f*3.01,t,.01,.02,.005,1.1);vo('sine',f*5.4,t,.01,.008,.004,.5)}
+  else if(kind==='harp'){vo('triangle',f,t,.02,.085,.004,1.5,2600);vo('sine',f*2,t,.01,.015,.003,.6)}
+  else if(kind==='reed'){vo('sawtooth',f,t,len*.9,.026,.05,.25,1300,-6);vo('sawtooth',f,t,len*.9,.019,.05,.25,1300,6)}
+  else if(kind==='kalimba'){vo('sine',f,t,.01,.08,.003,.9);vo('sine',f*5.4,t,.005,.014,.002,.07);vo('sine',f*2,t,.01,.01,.003,.3)}
+  else if(kind==='whistle'){vo('sine',f,t,len*.85,.06,.03,.15,0,3);vo('sine',f*2,t,len*.8,.006,.03,.1)}
+  else if(kind==='shaku'){vo('sine',f,t,len*.9,.06,.14,.5,0,-5);vo('triangle',f,t,len*.9,.012,.2,.4,900,5);noiseHit(t,.018*VMUL,.4,'bandpass',f*2)}
+  else if(kind==='celesta'){vo('sine',f,t,.01,.07,.003,1.3);vo('sine',f*4,t,.005,.014,.002,.25);vo('sine',f*2,t,.01,.02,.003,.6)}
+  else if(kind==='lute'){vo('sawtooth',f,t,.02,.04,.003,.7,1700);vo('triangle',f,t,.02,.06,.003,.9,2200)}
+  else if(kind==='organ'){vo('sine',f,t,len*.95,.035,.08,.5);vo('sine',f*2,t,len*.95,.014,.08,.5);vo('sine',f*3,t,len*.95,.006,.08,.4)}
+  else if(kind==='hum'){vo('sine',f,t,len*.9,.055,.18,.6,0,-4);vo('sine',f,t,len*.9,.03,.22,.6,0,5);vo('triangle',f*2,t,len*.9,.004,.2,.4,1200)}
   else{vo('sawtooth',f,t,len*.8,.035,.02,.3,800);vo('sine',f/2,t,len*.8,.03,.02,.2,0)}}
 function noiseHit(t,vol,dur,type,fq){if(!noiseBuf)return;const s=ac.createBufferSource(),bf=ac.createBiquadFilter(),e=ac.createGain();s.buffer=noiseBuf;bf.type=type;bf.frequency.value=fq;
   e.gain.setValueAtTime(vol,t);e.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(bf).connect(e).connect(trk.g);s.start(t);s.stop(t+dur+.02)}
@@ -1108,29 +1154,37 @@ function drums(D,i,bar,t){const v=D.dv||1,kind=D.drums;
 function musicTick(){
   if(!trk)return;const D=trk.def,spb=60/D.bpm/2;
   try{while(trk.next<ac.currentTime+.2){
-    const st=trk.step,bar=Math.floor(st/8),i=st%8,t=trk.next,ch=CH[D.ch[bar%D.ch.length]].map(n=>n+(trk.shift||0)),ML=D.mel[bar%D.mel.length];
-    if(i===0){const bl=spb*8;
+    const BT=D.bt||8,st=trk.step,bar=Math.floor(st/BT),i=st%BT,t0=trk.next,t=t0+(D.sw&&i%2?spb*D.sw:0),ch=chd(D.ch[bar%D.ch.length]).map(n=>n+(trk.shift||0)),ML=D.mel[bar%D.mel.length];
+    if(i===0){const bl=spb*BT;
       const tones=D.pad==='fifth'?[1,2]:[1,2,3];
       for(const k of tones){const f=mf(ch[k]-12);
         if(D.pad==='soft'||D.pad==='fifth'){vo('triangle',f,t,bl*.9,.02,1.8,2,700,-7);vo('triangle',f,t,bl*.9,.02,1.8,2,700,7)}
         else if(D.pad==='organ'){vo('sine',f,t,bl*.92,.026,.9,1.6,0);vo('sine',f*2,t,bl*.92,.008,.9,1.6,0)}
         else if(D.pad==='choir'){vo('sawtooth',f,t,bl*.92,.009,2.2,2.4,750,-9);vo('sawtooth',f,t,bl*.92,.009,2.2,2.4,750,9);vo('sine',f*2,t,bl*.9,.008,2.2,2.4,0)}
-        else vo('sawtooth',f,t,bl*.9,.016,1.2,1.4,380)}
+        else if(D.pad==='string'){vo('sawtooth',f,t,bl*.95,.011,bl*.35,1.8,1100,-8);vo('sawtooth',f,t,bl*.95,.011,bl*.35,1.8,1100,8)}
+        else if(D.pad!=='none')vo('sawtooth',f,t,bl*.9,.016,1.2,1.4,380)}
       if(D.drone)vo('sine',mf(ch[0]),t,bl*.98,.07,1.5,2.2,0);
       if(D.bass==='root')vo('sine',mf(ch[0]+12),t,bl*.8,.07,.3,1.2);
+      if(D.bass==='rock2')vo('sine',mf(ch[0]+12),t,bl*.45,.075,.08,.8);
       if(D.bass==='toll'){vo('sine',mf(ch[0]+12),t,.05,.09,.005,4.5);vo('sine',mf(ch[0]+12)*2.76,t,.03,.025,.005,2.2);vo('sine',mf(ch[0]+12)*5.4,t,.02,.01,.004,1.2)}}
+    if(D.bass==='pizz'&&(i===0||i===(BT>>1)))vo('triangle',mf(ch[0]+(i?19:12)),t,.05,i?.07:.1,.004,.35,600);
+    if(D.bass==='rock2'&&i===(BT>>1))vo('sine',mf(ch[0]+19),t,spb*BT*.4,.05,.08,.7);
     if(D.bass==='heart'&&(i===0||i===1))vo('sine',mf(ch[0]),t,.06,i?.09:.13,.005,.25);
     if(D.bass==='slow'&&i%4===0)vo('sine',mf(ch[0]+12),t,spb*3,.08,.05,.6,500);
     if(D.bass==='pulse'&&i%2===0)vo('triangle',mf(ch[0]+12),t,spb*.9,.1,.005,.12,500);
     if(D.bass==='drive')vo('triangle',mf(ch[0]+(i%2?24:12)),t,spb*.7,.08,.004,.08,650);
     if(D.arp){const a=D.arp.p[i];if(a){const n=ch[(a-1)%3+1]+(a>3?12:0);VMUL=D.arp.v;lead(D.arp.k,n,t,spb);VMUL=1}}
-    if(D.bass==='walk'){const wk=[0,0,7,0,12,0,7,5][i];vo('triangle',mf(ch[0]+12+wk),t,spb*.8,.075,.005,.15,700)}
+    if(D.bass==='walk'&&BT===8){const wk=[0,0,7,0,12,0,7,5][i];vo('triangle',mf(ch[0]+12+wk),t,spb*.8,.075,.005,.15,700)}
     if(D.extra==='bubbles'&&Math.random()<.16){const f0=300+Math.random()*500,tt=t+Math.random()*spb;try{const o=ac.createOscillator(),e=ac.createGain();o.type='sine';o.frequency.setValueAtTime(f0,tt);o.frequency.exponentialRampToValueAtTime(f0*2.4,tt+.09);e.gain.setValueAtTime(.0001,tt);e.gain.linearRampToValueAtTime(.022,tt+.01);e.gain.exponentialRampToValueAtTime(.0001,tt+.12);o.connect(e).connect(trk.g);o.start(tt);o.stop(tt+.14)}catch(_){}}
     if(D.extra==='clank'&&(i===3||i===7)&&Math.random()<.5)noiseHit(t,.05,.09,'highpass',3600+Math.random()*1500);
     if(D.extra==='drips'&&Math.random()<.22){const f=1400+Math.random()*1600,tt=t+Math.random()*spb;vo('sine',f,tt,.004,.018,.002,.12);vo('sine',f*1.5,tt+.03,.003,.007,.002,.08)}
     if(D.extra==='knock'&&Math.random()<.18)noiseHit(t+Math.random()*spb*.5,.07,.05,'bandpass',420+Math.random()*380);
-    const m=ML[i];if(m&&!(D.thin&&i%2===1)&&!(D.thin&&Math.random()<.12)){VMUL=D.lv||1;lead(D.lead,m+(D.tr||0)+(trk.shift||0),t,spb*(ML[i+1]===0?2:1));VMUL=1}
-    if(D.drums)drums(D,i,bar,t);
+    const m=ML[i];if(m>0&&!(D.thin&&i%2===1)&&!(D.thin&&Math.random()<.12)){let n=1;while(ML[i+n]===-1)n++;const len=n>1?spb*n:spb*(ML[i+1]===0?2:1),nn=m+(D.tr||0)+(trk.shift||0);VMUL=D.lv||1;lead(D.lead,nn,t,len);
+      if(D.echo){VMUL=(D.lv||1)*D.echo.v;lead(D.lead,nn,t+spb*D.echo.d,len);VMUL=(D.lv||1)*D.echo.v*D.echo.v;lead(D.lead,nn,t+spb*D.echo.d*2,len)}VMUL=1}
+    if(D.ctr&&D.ctr.mel){const CM=D.ctr.mel[bar%D.ctr.mel.length],c=CM[i];if(c>0){let n=1;while(CM[i+n]===-1)n++;VMUL=D.ctr.v||1;lead(D.ctr.k,c+(trk.shift||0),t,spb*n);VMUL=1}}
+    if(D.dp){const v=D.dv||1,P=D.dp,q=k=>{const c=P[k]&&P[k][i];return c==='x'?v:c==='o'?v*.55:0};let a;
+      if(a=q('k'))kick(t,a);if(a=q('s'))snare(t,a);if(a=q('h'))hat(t,a);if(a=q('t'))tom(t,170,a);if(a=q('n'))noiseHit(t,.07*a,.06,'bandpass',620);if(a=q('c'))noiseHit(t,.05*a,.09,'highpass',3800);if(a=q('r'))noiseHit(t,.05*a,.025,'bandpass',2600)}
+    else if(D.drums&&BT===8)drums(D,i,bar,t);
     trk.next+=spb;trk.step++}}catch(e){VMUL=1;trk=null}
 }
 function fanfare(){if(!ac)return;try{musicBus();const g=ac.createGain();g.gain.value=1;g.connect(musG);if(musRev)g.connect(musRev);const keep=trk;trk={g};const t=ac.currentTime+.05;
@@ -1139,15 +1193,103 @@ function fanfare(){if(!ac)return;try{musicBus();const g=ac.createGain();g.gain.v
 TRACKS.kie={bpm:84,lead:'box',lv:1.5,pad:'soft',bass:'walk',drums:'soft',dv:.6,arp:{k:'glass',p:[1,0,2,0,3,0,2,0],v:.3},tr:-12,ch:['C','Am','F','G','C','Em','F','G'],
   mel:[[84,0,83,0,79,0,76,0],[81,0,0,0,79,0,0,0],[77,0,76,0,72,0,74,0],[74,0,0,0,0,0,0,0],[84,0,83,0,79,0,76,0],[79,0,0,0,76,0,71,0],[77,0,79,0,81,0,77,0],[79,0,0,0,0,0,0,0],
     [88,0,86,0,84,0,83,0],[84,0,0,0,81,0,0,0],[81,0,79,0,77,0,76,0],[79,0,0,0,83,0,0,0],[84,0,0,0,79,0,76,0],[76,0,0,0,71,0,0,0],[74,0,76,0,77,0,74,0],[71,0,0,0,0,0,0,0]]};
+// v0.71：第4層の無音だった場所にも、小さな曲を
+TRACKS.a4_sato={bpm:74,lead:'pluck',lv:1.2,pad:'soft',bass:'slow',tr:-12,ch:['G','Em','C','D','G','Bm','C','D'],
+  mel:[[79,0,0,0,76,0,74,0],[76,0,0,0,0,0,71,0],[72,0,0,0,76,0,79,0],[78,0,0,0,0,0,0,0],[79,0,0,0,83,0,81,0],[78,0,0,0,74,0,0,0],[76,0,79,0,77,0,76,0],[74,0,0,0,0,0,0,0]]};
+TRACKS.a4_prayer={bpm:54,lead:'bell',lv:1.05,pad:'organ',bass:'toll',tr:-12,ch:['Am','Em','F','C','Dm','Am','E','E'],
+  mel:[[81,0,0,0,0,0,0,0],[79,0,0,0,76,0,0,0],[77,0,0,0,0,0,72,0],[76,0,0,0,0,0,0,0],[74,0,0,0,77,0,0,0],[76,0,0,0,72,0,0,0],[71,0,0,0,0,0,68,0],[0,0,0,0,0,0,0,0]]};
+TRACKS.a4_muon={bpm:48,lead:'glass',lv:.8,pad:'fifth',bass:'root',tr:-12,ch:['Dm','Dm','Bb','Bb','Gm','Gm','A','A'],
+  mel:[[0,0,0,0,0,0,0,0],[86,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,82,0,0,0],[0,0,0,0,0,0,0,0],[79,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,85,0,0,0]]};
+TRACKS.a4_gake={bpm:80,lead:'marimba',lv:1.1,pad:'soft',bass:'walk',arp:{k:'glass',p:[1,0,3,0,5,0,3,0],v:.25},tr:-12,ch:['D','A','Bm','G','D','A','G','A'],
+  mel:[[78,0,0,0,81,0,0,0],[76,0,0,0,73,0,0,0],[74,0,0,0,78,0,81,0],[79,0,0,0,0,0,0,0],[81,0,0,0,83,0,85,0],[86,0,0,0,81,0,0,0],[79,0,78,0,76,0,74,0],[76,0,0,0,0,0,0,0]]};
+TRACKS.a4_kanedo={bpm:64,lead:'bell',lv:1.15,pad:'choir',bass:'toll',tr:-12,ch:['Em','C','G','D','Em','C','Am','B'],
+  mel:[[76,0,0,0,0,0,79,0],[76,0,0,0,72,0,0,0],[74,0,0,0,71,0,74,0],[78,0,0,0,0,0,0,0],[79,0,0,0,0,0,83,0],[79,0,0,0,76,0,0,0],[72,0,0,0,76,0,79,0],[75,0,0,0,0,0,0,0]]};
+TRACKS.boss_shisai2=Object.assign({},TRACKS.boss_shisai,{bpm:132,lead:'saw',drums:'rock',dv:.9,ch:['Am','F','Dm','E','Am','F','G','E']});
+TRACKS.boss_komori2=Object.assign({},TRACKS.boss_komori,{bpm:112,drums:'tribal',dv:.85,lead:'bell',ch:['Dm','Bb','Gm','A','Dm','Bb','Gm','A']});
+// ===== 曲の作りを増やす：拍子・展開・対旋律・こだま・自由なリズム =====
+const NOTE_={c:0,d:2,e:4,f:5,g:7,a:9,b:11};
+function pn(tk){if(tk==='.')return 0;if(tk==='-')return -1;const m=/^([a-g])(#|b)?(\d)$/.exec(tk);if(!m)return 0;return NOTE_[m[1]]+(m[2]==='#'?1:m[2]==='b'?-1:0)+12*(+m[3]+1)}
+function chd(nm){if(CH[nm])return CH[nm];const m=/^([A-G])(#|b)?(m)?$/.exec(nm);if(!m)return CH.C;let r=(NOTE_[m[1].toLowerCase()]+(m[2]==='#'?1:m[2]==='b'?-1:0)+12)%12;
+  const pcs=[r,(r+(m[3]?3:4))%12,(r+7)%12].map(c=>58+((c-58)%12+12)%12).sort((a,b)=>a-b);return CH[nm]=[r<=9?36+r:24+r,...pcs]}
+function TK(d){const bt=d.bt||8,rows=t=>t.split('|').map(r=>{const a=r.trim().split(/\s+/).filter(x=>x).map(pn);while(a.length<bt)a.push(0);return a.slice(0,bt)}),chs=t=>t.trim().split(/\s+/);
+  if(d.secs){const f=d.form||Object.keys(d.secs).join(''),P={};for(const k in d.secs){const S=d.secs[k];P[k]={m:rows(S.mel),c:chs(S.ch),x:S.ctr?rows(S.ctr):null}}
+    const ch=[],mel=[],ctr=[];for(const k of f){const S=P[k];for(let b=0;b<S.m.length;b++){mel.push(S.m[b]);ch.push(S.c[b%S.c.length]);ctr.push(S.x?S.x[b]||Array(bt).fill(0):Array(bt).fill(0))}}
+    d.mel=mel;d.ch=ch;if(d.ctr)d.ctr.mel=ctr}
+  for(const c of d.ch)chd(c);d.tr=d.tr||0;return d}
+// ----- 2層 -----
+// 水門の街：三拍子のワルツ。竪琴とはじく低音
+TRACKS.town=TK({bt:6,bpm:96,lead:'harp',lv:1.25,pad:'soft',bass:'pizz',dp:{k:'x.....',h:'..o.o.'},dv:.55,form:'AAB',secs:{
+  A:{ch:'G G C D G Em Am D',mel:'b4 - - d5 - c5 | b4 - a4 - g4 - | e5 - - d5 - c5 | a4 - - - - . | b4 - - d5 - g5 | g5 - f#5 - e5 - | e5 - c5 - a4 - | d5 - - - - .'},
+  B:{ch:'Em Em C C Am Am D D',mel:'e5 - - f#5 - g5 | b5 - - a5 - g5 | e5 - - - c5 - | g5 - - e5 - . | c5 - - d5 - e5 | a5 - g5 - e5 - | d5 - - - c5 - | a4 - - - - .'}}});
+// 錆びた水路：五拍子。軋む金物と木琴、機械のような刻み
+TRACKS.gate=TK({bt:10,bpm:112,lead:'marimba',lv:1.3,pad:'fifth',bass:'pulse',dp:{k:'x....x....',n:'..x....x..',c:'...x...x.x',h:'o.o.o.o.o.'},dv:.7,form:'AABA',secs:{
+  A:{ch:'Em Em C D',mel:'e5 - - . b4 . d5 - . . | e5 - - . g5 . f#5 - e5 . | c5 - - . e5 . g5 - . . | f#5 - - - - . d5 - . .'},
+  B:{ch:'G D Am B',mel:'g5 - - . f#5 . e5 - . . | d5 - - . b4 . a4 - b4 . | c5 - - . e5 . a5 - g5 . | f#5 - - - - . . . . .'}}});
+// 水没した書庫：時計の音と、鍵盤とリードの二声
+TRACKS.library=TK({bt:8,bpm:66,lead:'celesta',lv:1.2,pad:'none',bass:'slow',dp:{r:'x.o.x.o.'},dv:.6,ctr:{k:'reed',v:.8},form:'AB',secs:{
+  A:{ch:'Dm Dm Gm A Dm Bb Gm A',mel:'a5 - f5 - d5 - e5 f5 | g5 - f5 - e5 - d5 - | bb5 - - - g5 - d5 - | c#5 - e5 - a5 - - - | a5 - f5 - d5 - f5 a5 | d6 - - - bb5 - f5 - | g5 - bb5 - d5 - e5 - | e5 - - - - - . .',
+     ctr:'. . . . d4 - - - | c4 - - - a3 - - - | d4 - - - bb3 - - - | a3 - - - e4 - - - | . . . . f4 - - - | f4 - - - d4 - - - | bb3 - - - g3 - - - | a3 - - - c#4 - - -'},
+  B:{ch:'F F C C Bb Gm A A',mel:'c6 - a5 - f5 - a5 - | g5 - - - e5 - c5 - | d5 - f5 - a5 - c6 - | bb5 - - - g5 - - - | f5 - d5 - bb4 - d5 - | g5 - - - bb5 - - - | a5 - g5 - f5 - e5 - | e5 - - - - - . .',
+     ctr:'f4 - - - c4 - - - | e4 - - - g4 - - - | f4 - - - a4 - - - | g4 - - - e4 - - - | d4 - - - f4 - - - | d4 - - - bb3 - - - | c#4 - - - e4 - - - | a3 - - - - - - -'}}});
+// 淵：ゆっくり揺れる6拍子。ガラスの音がこだまする
+TRACKS.abyss=TK({bt:6,bpm:58,lead:'glass',lv:1.4,pad:'string',bass:'rock2',drone:true,echo:{d:3,v:.4},extra:'bubbles',form:'AB',secs:{
+  A:{ch:'C#m C#m A A E E B G#',mel:'g#5 - - - - - | e5 - - c#5 - - | e5 - - - - - | a5 - - g#5 - - | g#5 - - b5 - - | e5 - - - - - | f#5 - - d#5 - - | g#5 - - - - -'},
+  B:{ch:'F#m F#m C#m C#m A B C#m C#m',mel:'a5 - - - c#6 - | f#5 - - - - - | e5 - - g#5 - - | c#5 - - - - - | e5 - - c#5 - - | d#5 - - f#5 - - | g#5 - - - - - | . . . . . .'}}});
+// 封じられた縦穴・聖堂：旋律はなく、合唱と鐘だけ
+TRACKS.sealed=TK({bt:8,bpm:38,lead:'glass',lv:.9,pad:'choir',bass:'toll',drone:true,form:'A',secs:{
+  A:{ch:'Am Am F F Dm Dm E E',mel:'e6 - - - - - - - | . . . . . . . . | . . . . . . . . | . . . . . . . . | c6 - - - - - - - | . . . . . . . . | . . . . . . . . | b5 - - - - - - -'}}});
+// ----- 3層 -----
+// 骨の参道：尺八と箏。陰旋法と、木を打つ音
+TRACKS.bone=TK({bt:8,bpm:58,lead:'shaku',lv:1.3,pad:'fifth',bass:'root',arp:{k:'koto',p:[1,0,0,2,0,0,3,0],v:.45},dp:{n:'x......o'},dv:.7,form:'A',secs:{
+  A:{ch:'A5 A5 Bb Bb A5 A5 Dm E5',mel:'e5 - - - - - f5 - | e5 - - - - - . . | d5 - - - f5 - a5 - | bb5 - - - a5 - - - | a5 - - - - - f5 e5 | d5 - - - - - . . | f5 - - - e5 - d5 - | e5 - - - - - - .'}}});
+// 集落：6拍子の踊り。口笛とバグパイプのような持続音、手太鼓
+TRACKS.hamlet=TK({bt:6,bpm:104,lead:'whistle',lv:1.2,pad:'fifth',bass:'none',drone:true,dp:{k:'x..o..',t:'...x.o',h:'.o..o.'},dv:.6,form:'AAB',secs:{
+  A:{ch:'D D C D D G C D',mel:'a5 - f#5 a5 - d6 | c6 - a5 g5 - e5 | g5 - e5 c5 - e5 | f#5 - d5 d5 - - | a5 - f#5 a5 - b5 | b5 - g5 d5 - g5 | c6 - b5 a5 - g5 | e5 - - d5 - -'},
+  B:{ch:'G G D D C C D D',mel:'b5 - - a5 - g5 | d6 - - b5 - - | a5 - - f#5 - d5 | a5 - - - - - | g5 - e5 c5 - e5 | g5 - - e5 - - | f#5 - e5 d5 - c5 | d5 - - - - -'}}});
+// 鐘楼：歯車のように休まず刻む分散和音と、風のような長い笛
+TRACKS.belfry=TK({bt:8,bpm:132,lead:'flute',lv:1.2,pad:'none',bass:'pulse',arp:{k:'pluck',p:[1,2,3,2,4,3,2,3],v:.4},extra:'clank',form:'A',secs:{
+  A:{ch:'F#m F#m D D E C#m D E',mel:'c#6 - - - - - - - | b5 - - - a5 - - - | a5 - - - - - - - | f#5 - - - - - - - | g#5 - - - - - - - | e5 - - - - - - - | f#5 - - - a5 - - - | b5 - - - g#5 - - -'}}});
+// 晶の洞：カリンバの音が、遅れてこだまする
+TRACKS.cave=TK({bt:8,bpm:76,lead:'kalimba',lv:1.4,pad:'soft',bass:'slow',echo:{d:3,v:.45},arp:{k:'glass',p:[5,0,0,0,6,0,0,0],v:.25},extra:'drips',form:'A',secs:{
+  A:{ch:'E F# E F# C#m B F# B',mel:'b5 . g#5 . e5 . a#5 - | c#6 - . . a#5 . f#5 . | g#5 . b5 . e6 - . . | f#6 - - - . . . . | e6 . c#6 . g#5 . e5 . | d#6 - . . b5 . f#5 . | a#5 . c#6 . f#6 - . . | d#6 - - - . . . .'}}});
+// 青白い祭壇：ゆっくりした行進。リードと弦、小太鼓
+TRACKS.pale=TK({bt:8,bpm:72,lead:'reed',lv:1.25,pad:'string',bass:'root',dp:{k:'x...x...',s:'..o...o.',r:'.......o'},dv:.6,form:'AB',secs:{
+  A:{ch:'Gm Gm Eb D Gm Cm D D',mel:'g5 - - - bb5 - a5 g5 | d5 - - - - - . . | eb5 - - - g5 - bb5 - | a5 - - - f#5 - - - | g5 - - - d6 - c6 bb5 | c6 - - - eb5 - g5 - | f#5 - - - a5 - c6 - | d5 - - - - - . .'},
+  B:{ch:'Eb Eb Bb Bb Cm Cm D D',mel:'g5 - - - eb5 - g5 - | bb5 - - - - - . . | f5 - - - d5 - f5 - | bb5 - - - - - a5 - | g5 - - - eb5 - c5 - | eb5 - - - g5 - - - | f#5 - - - - - a5 - | d5 - - - - - . .'}}});
+// ----- 4層 -----
+// 崖の一族の里：七拍子（2+2+3）。はじく弦と手太鼓
+TRACKS.a4_sato=TK({bt:7,bpm:110,lead:'lute',lv:1.3,pad:'fifth',bass:'pizz',dp:{k:'x.o.x..',t:'.....x.',h:'o.o.o.o'},dv:.65,form:'AAB',secs:{
+  A:{ch:'Am G Am D Am G Em Am',mel:'e5 . a5 . c6 - b5 | d6 - b5 . g5 - - | a5 . c6 . e6 - d6 | f#5 - a5 . d6 - - | e6 . d6 . c6 - a5 | b5 - g5 . d5 - - | e5 . g5 . b5 - g5 | a5 - - - - . .'},
+  B:{ch:'C C G G Am Am D D',mel:'c6 - - a5 . g5 . | e5 - c6 . e6 - - | d6 - - b5 . g5 . | b5 - d6 . g6 - - | e6 - - c6 . a5 . | e6 - - - c6 - - | d6 - - a5 . f#5 . | a5 - - - - . .'}}});
+// 祈りの間：オルガンの聖歌。旋律はなく、和音だけがゆっくり進む
+TRACKS.a4_prayer=TK({bt:8,bpm:50,lead:'organ',lv:1.1,pad:'organ',bass:'root',form:'A',secs:{
+  A:{ch:'F C Dm Am Bb F Gm C F Am Bb F Gm C F F',mel:'a5 - - - - - - - | g5 - - - - - - - | f5 - - - - - - - | e5 - - - - - - - | d5 - - - - - - - | c5 - - - - - - - | bb4 - - - - - - - | c5 - - - - - - - | c5 - - - - - - - | e5 - - - - - - - | f5 - - - - - - - | a5 - - - - - - - | g5 - - - - - - - | e5 - - - - - - - | f5 - - - - - - - | . . . . . . . .'}}});
+// 灯り流れの崖：12拍子で流れつづける竪琴と、長い笛
+TRACKS.a4_gake=TK({bt:12,bpm:120,lead:'flute',lv:1.2,pad:'soft',bass:'slow',arp:{k:'harp',p:[1,2,3,4,3,2,1,2,3,4,5,4],v:.35},form:'AB',secs:{
+  A:{ch:'D A Bm G D A G A',mel:'f#5 - - - - - a5 - - - - - | e5 - - - - - c#5 - - - - - | d5 - - - - - f#5 - - - - - | g5 - - - - - - - - b5 - - | a5 - - - - - d6 - - - - - | c#6 - - - - - e5 - - - - - | d5 - - - - - b4 - - g5 - - | e5 - - - - - - - - - - -'},
+  B:{ch:'Bm Bm G G Em Em A A',mel:'d6 - - - - - b5 - - - - - | f#5 - - - - - - - - - - - | g5 - - - - - b5 - - - - - | d6 - - - - - - - - - - - | e6 - - - - - b5 - - - - - | g5 - - - - - e5 - - - - - | a5 - - - - - c#6 - - - - - | a5 - - - - - - - - - - -'}}});
+// 鳴らずの鐘道：鐘の「転調鳴らし」。4つの鐘が順番を入れ替えながら鳴りつづける
+TRACKS.a4_kanedo=TK({bt:8,bpm:104,lead:'bell',lv:1.05,pad:'fifth',bass:'toll',ctr:{k:'organ',v:.8},form:'AB',secs:{
+  A:{ch:'Eb Eb Cm Gm Ab Bb Cm Eb',mel:'eb6 c6 bb5 g5 eb6 c6 bb5 g5 | eb6 c6 bb5 g5 eb6 c6 bb5 g5 | c6 eb6 g5 bb5 c6 g5 eb6 bb5 | g5 c6 bb5 eb6 g5 bb5 c6 eb6 | bb5 g5 eb6 c6 bb5 eb6 g5 c6 | eb6 bb5 c6 g5 eb6 c6 bb5 g5 | eb6 c6 bb5 g5 eb6 c6 bb5 g5 | eb6 c6 bb5 g5 eb6 c6 bb5 g5',ctr:'eb4 - - - - - - - | eb4 - - - - - - - | c4 - - - - - - - | bb3 - - - - - - - | ab3 - - - - - - - | bb3 - - - - - - - | c4 - - - - - - - | eb4 - - - - - - -'},
+  B:{ch:'Ab Ab Eb Eb Fm Fm Bb Bb',mel:'eb6 bb5 c6 g5 bb5 eb6 g5 c6 | bb5 g5 eb6 c6 g5 bb5 c6 eb6 | g5 c6 bb5 eb6 c6 g5 eb6 bb5 | c6 eb6 g5 bb5 eb6 c6 bb5 g5 | c6 eb6 g5 bb5 c6 g5 eb6 bb5 | g5 c6 bb5 eb6 g5 bb5 c6 eb6 | bb5 g5 eb6 c6 bb5 eb6 g5 c6 | eb6 bb5 c6 g5 eb6 c6 bb5 g5',ctr:'c5 - - - - - - - | ab4 - - - - - - - | bb4 - - - - - - - | g4 - - - - - - - | ab4 - - - - - - - | c5 - - - - - - - | d5 - - - - - - - | bb4 - - - - - - -'}}});
+// 眠りの苔：三拍子の子守唄を、ハミングのような声で
+TRACKS.nemuri=TK({bt:6,bpm:70,lead:'hum',lv:1.3,pad:'soft',bass:'rock2',form:'AB',secs:{
+  A:{ch:'Bb F Gm Eb Bb F Eb F',mel:'f5 - - d5 - - | c5 - - a4 - - | bb4 - - d5 - g5 | g5 - - - - - | f5 - - d5 - bb4 | c5 - - f5 - - | eb5 - - g5 - - | f5 - - - - -'},
+  B:{ch:'Gm Gm Eb Eb Cm Cm F F',mel:'d5 - - g5 - - | bb5 - - a5 - g5 | g5 - - eb5 - - | bb4 - - - - - | c5 - - eb5 - g5 | g5 - - f5 - eb5 | c5 - - a4 - - | c5 - - - - -'}}});
+// 消え音の坂：リードと心音。坂を下るほど楽器が消えていく
+Object.assign(TRACKS.kie,{lead:'reed',lv:1.3,bass:'heart',arp:{k:'kalimba',p:[1,0,2,0,3,0,2,0],v:.3}});
+TRACKS.boss_tsuno1=Object.assign({},TRACKS.boss_tsuno,{bpm:66,lead:'glass',lv:.7,drums:'low',dv:.6,bass:'toll',mel:TRACKS.boss_tsuno.mel.map((r,i)=>i%2?[0,0,0,0,0,0,0,0]:r.map((n,j)=>j%4?0:n))});
+const A4MUS={sato:'a4_sato',prayer:'a4_prayer',muon:'a4_muon',gake:'a4_gake',kanedo:'a4_kanedo',kie:'kie4'};
 (function(){const b=TRACKS.kie;if(!b)return;TRACKS.kie1=Object.assign({},b);TRACKS.kie2=Object.assign({},b,{drums:null});TRACKS.kie3=Object.assign({},b,{drums:null,mel:[[0,0,0,0,0,0,0,0]]});TRACKS.kie4=Object.assign({},b,{drums:null,arp:null,bass:'none',mel:[[0,0,0,0,0,0,0,0]],lv:0})})();
 function musicFor(){
   if(mode==='title')return'home';
   if(mode==='movie')return mt>MOV.C+40?'home':null;
   if(mode==='win')return'home';
   if(!room)return null;
-  if(boss){if(boss.silent)return null;if(boss.track)return boss.track;return cine&&cine.t<40?null:(TRACKS['boss_'+boss.id]?'boss_'+boss.id:'boss')}
+  if(boss){if(boss.silent&&boss.p2&&(boss.id==='shisai'||boss.id==='komori')){if(!boss.silT)boss.silT=frames;if(frames-boss.silT>110){boss.silent=false;boss.track='boss_'+boss.id+'2'}}if(boss.silent)return null;if(boss.track)return boss.track;return cine&&cine.t<40?null:(TRACKS['boss_'+boss.id]?'boss_'+boss.id:'boss')}
   if(scene&&scene.music!==undefined)return scene.music;
-  if(room.music)return room.music==='none'?null:room.music;
+  if(room.music)return room.music==='none'?((layerOf(room)===4||room.area==='kanedo')&&A4MUS[room.area]||null):room.music;
+  if(!room.arena&&!TRACKS[room.area]&&A4MUS[room.area])return A4MUS[room.area];
   if(room.arena)return null;
   const a=room.area;return a==='nave'?'sealed':a==='hut'?'home':(a==='ledge'||a==='shaft'||a==='lift')?'ledge':a;
 }
@@ -1199,13 +1341,49 @@ stageEl.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'||e.target.
   const k=KEYMAP['Mouse'+e.button];if(!k)return;e.preventDefault();if(!held[k])pressed[k]=true;held[k]=true});
 addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')return;const k=KEYMAP['Mouse'+e.button];if(k)held[k]=false});
 stageEl.addEventListener('contextmenu',e=>e.preventDefault());
-document.querySelectorAll('#pad button').forEach(b=>{
+{const dp=document.querySelector('#pad .dpad');if(dp){const DK=['up','down','left','right'],btn={};for(const k of DK){btn[k]=dp.querySelector('[data-k='+k+']');if(btn[k])btn[k].style.pointerEvents='none'}
+  let pid=null;const setDir=(e)=>{const r=dp.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,rt=isRot(),dx=rt?e.clientY-cy:e.clientX-cx,dy=rt?cx-e.clientX:e.clientY-cy,dz=Math.min(r.width,r.height)*.12;
+    const on={left:dx<-dz&&-dx>Math.abs(dy)*.45,right:dx>dz&&dx>Math.abs(dy)*.45,up:dy<-dz&&-dy>Math.abs(dx)*.45,down:dy>dz&&dy>Math.abs(dx)*.45};
+    for(const k of DK){if(on[k]&&!held[k])pressed[k]=true;held[k]=on[k];if(btn[k])btn[k].classList.toggle('on',on[k])}};
+  const clear=()=>{pid=null;for(const k of DK){held[k]=false;if(btn[k])btn[k].classList.remove('on')}};
+  dp.style.touchAction='none';
+  dp.addEventListener('pointerdown',e=>{e.preventDefault();pid=e.pointerId;try{dp.setPointerCapture(e.pointerId)}catch(_){};setDir(e)});
+  dp.addEventListener('pointermove',e=>{if(e.pointerId===pid)setDir(e)});
+  dp.addEventListener('pointerup',e=>{if(e.pointerId===pid)clear()});dp.addEventListener('pointercancel',clear);dp.addEventListener('lostpointercapture',clear);
+  dp.addEventListener('contextmenu',e=>e.preventDefault())}}
+document.querySelectorAll('#pad .acts button').forEach(b=>{
   const k=b.dataset.k;
   const up=()=>{held[k]=false;b.classList.remove('on')};
   b.addEventListener('pointerdown',e=>{e.preventDefault();try{b.setPointerCapture(e.pointerId)}catch(_){};held[k]=true;pressed[k]=true;b.classList.add('on')});
   b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('lostpointercapture',up);
   b.addEventListener('contextmenu',e=>e.preventDefault());
 });
+
+
+/* ================= 画面ボタンの配置（向きごとに保存） ================= */
+let padEditing=false;
+function padKey(){return isRot()||matchMedia('(orientation:landscape)').matches?'land':'port'}
+function padCfg(){const all=SET.padLay||{};return Object.assign({dx:0,dy:0,ds:100,ax:0,ay:0,as:100,op:100},all[padKey()]||{})}
+function padSave(c){SET.padLay=SET.padLay||{};SET.padLay[padKey()]=c;saveSet()}
+function applyPad(){const c=padCfg(),dp=document.querySelector('#pad .dpad'),ac=document.querySelector('#pad .acts');if(!dp||!ac)return;
+  dp.style.transformOrigin='left bottom';ac.style.transformOrigin='right bottom';
+  dp.style.transform='translate('+c.dx+'px,'+c.dy+'px) scale('+c.ds/100+')';ac.style.transform='translate('+c.ax+'px,'+c.ay+'px) scale('+c.as/100+')';
+  $('pad').style.opacity=c.op/100}
+function openPadEdit(){padEditing=true;for(const id of ['settings','pause'])if($(id))$(id).hidden=true;$('padEdit').hidden=false;$('pad').classList.add('editing');const c=padCfg();$('peD').value=c.ds;$('peA').value=c.as;$('peO').value=c.op;applyPad();for(const k in held)held[k]=false}
+function closePadEdit(){padEditing=false;$('padEdit').hidden=true;$('pad').classList.remove('editing');if(mode==='title'){$('settings').hidden=false}else if(gameOn){$('settings').hidden=false}}
+setTimeout(function(){const groups=[['.dpad','d'],['.acts','a']];
+  for(const [sel,kk] of groups){const el=document.querySelector('#pad '+sel);if(!el)continue;let st=null;
+    el.addEventListener('pointerdown',e=>{if(!padEditing)return;e.preventDefault();e.stopImmediatePropagation();const c=padCfg();st={x:e.clientX,y:e.clientY,ox:c[kk+'x'],oy:c[kk+'y'],id:e.pointerId};try{el.setPointerCapture(e.pointerId)}catch(_){}},true);
+    el.addEventListener('pointermove',e=>{if(!padEditing||!st||e.pointerId!==st.id)return;e.stopImmediatePropagation();let dx=e.clientX-st.x,dy=e.clientY-st.y;if(isRot()){const t=dx;dx=dy;dy=-t}
+      const c=padCfg();c[kk+'x']=Math.round(st.ox+dx);c[kk+'y']=Math.round(st.oy+dy);padSave(c);applyPad()},true);
+    const end=e=>{if(!padEditing)return;st=null;e.stopImmediatePropagation()};el.addEventListener('pointerup',end,true);el.addEventListener('pointercancel',end,true)}
+  for(const [id,k] of [['peD','ds'],['peA','as'],['peO','op']])$(id).addEventListener('input',e=>{const c=padCfg();c[k]=+e.target.value;padSave(c);applyPad()});
+  for(const id of ['peD','peA','peO'])$(id).addEventListener('keydown',e=>e.stopPropagation());
+  $('peReset').onclick=e=>{e.stopPropagation();padSave({dx:0,dy:0,ds:100,ax:0,ay:0,as:100,op:100});openPadEdit()};
+  $('peDone').onclick=e=>{e.stopPropagation();closePadEdit();sfx('pick')};
+  $('padEditBtn').onclick=e=>{e.stopPropagation();openPadEdit()};
+  if(!TOUCH&&$('padRow'))$('padRow').style.display='none';
+  addEventListener('resize',()=>setTimeout(applyPad,80));addEventListener('orientationchange',()=>setTimeout(applyPad,300));applyPad()},0);
 
 /* ================= 状態 ================= */
 let rw=RW,rh=RH,RWp=W,RHp=H,camX=0,camY=0,lift=null,rins=[],hideHUD=false;
@@ -1221,12 +1399,17 @@ function gateShut(k,x,y){for(const g in GATES){const d=GATES[g][k];if(!d||gateOp
 function applyGate(){for(const g in GATES){const d=GATES[g][roomKey];if(!d||gateOpen(g))continue;for(const [x,y] of gateCells(d))tiles[y][x]=d.t||'D'}}
 function openGate(g){save.story[g]=true;persist();const d=GATES[g]&&GATES[g][roomKey];if(d){for(const [x,y] of gateCells(d)){tiles[y][x]='.';for(let i=0;i<6;i++)parts.push({x:x*T+8,y:y*T+8,vx:(Math.random()-.5)*3,vy:-Math.random()*2.5,life:34,c:i%2?'#cfe0ff':'#8e98ae',g:.15,s:2})}renderRoom()}sfx('brk');shake=7}
 function inSafe(x,y){for(const z of zones)if(x>z.x0&&x<z.x1&&y>z.y0&&y<z.y1)return true;return false}
-let hitstop=0,sparks=[],rings=[];
+let hitstop=0,sparks=[],rings=[],slashes=[],impacts=[],hurtV=0,heartFx=null;
+function slashFx(x,y,a,len,col,w){slashes.push({x,y,a,len,t:0,col:col||'#ffffff',w:w||3})}
 function hitFx(x,y,dir,face,col,big){
   const ang=dir==='up'?-Math.PI/2:dir==='down'?Math.PI/2:(face>0?0:Math.PI);
   for(let i=0;i<(big?10:7);i++){const a=ang+(Math.random()-.5)*1.6,sp=3+Math.random()*(big?5:4);sparks.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:10+Math.random()*8,col})}
   rings.push({x,y,t:0,max:big?16:12,col});burst(x,y,big?10:6,[col,'#f2b552'],2.4,.06,18);
-  hitstop=Math.max(hitstop,big?4:3);shake=Math.max(shake,big?3.5:2.2)}
+  // 斬撃の線・光のはじけ・追加の火花
+  const sa=ang+Math.PI/2+(Math.random()-.5)*.9;slashFx(x,y,sa,big?40:28,col,big?4:3);if(big)slashFx(x,y,sa+1.2+(Math.random()-.5)*.4,26,'#fff1c4',2);
+  impacts.push({x,y,t:0,r:big?11:7});rings.push({x,y,t:0,max:big?26:18,col:'#ffffff'});
+  for(let i=0;i<(big?8:5);i++){const a=Math.random()*Math.PI*2,sp=1.5+Math.random()*3;sparks.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:8+Math.random()*10,col:'#fff1c4'})}
+  hitstop=Math.max(hitstop,big?6:4);shake=Math.max(shake,big?4.5:3)}
 function rune(x,y,col){runes.push({x,y,t:0,col:col||'#ffd37a'})}
 function ftext(x,y,t,col){ftexts.push({x,y,t:0,s:t,col:col||'#ece4cf'})}
 const defeated={has:id=>save.defeated.includes(id),get size(){return save.defeated.length}};
@@ -1295,11 +1478,11 @@ function loadRoom(key){
     else if(type==='bat')enemies.push({type,x:tx*T+3,y:ty*T+4,w:10,h:8,vx:0,vy:0,hp:1,t:Math.random()*6,by:ty*T+4,flash:0,hitId:-1});
     else{const id=key+':'+type+(arg?':'+arg:'');if((type==='heart'||type==='vessel'||type==='memo'||type==='recipe'||type==='knot'||type==='page'||type==='song')&&save.got.includes(id))continue;items.push({type,id,arg,n:num,x:tx*T,y:ty*T,w:16,h:16,bob:tx})}
   }
-  if(room.arena&&save.defeated.includes(room.arena.boss)&&!(save.hardDefeated||[]).includes(room.arena.boss)&&BOSS_CHARM[room.arena.boss])items.push({type:'echoorb',id:key+':echoorb',arg:room.arena.boss,x:Math.round(rw/2)*T-8,y:10*T+4,w:16,h:16,bob:0});
+  if(room.arena&&save.defeated.includes(room.arena.boss)&&!(save.hardDefeated||[]).includes(room.arena.boss)&&BOSS_CHARM[room.arena.boss])items.push({type:'echoorb',id:key+':echoorb',arg:room.arena.boss,x:(()=>{const fr=Math.floor(FY/T),ok=c=>(tiles[fr]||[])[c]==='#'&&(tiles[fr]||[])[c-1]==='#';let c0=Math.round(rw/2);for(let d=0;d<rw;d++){if(ok(c0-d))return (c0-d)*T-8;if(ok(c0+d))return (c0+d)*T-8}return c0*T-8})(),y:10*T+4,w:16,h:16,bob:0});
   // 灯火のまわりは敵が入れない（見つけられない）
   zones=items.filter(i=>i.type==='fire').map(i=>({x0:i.x+8-88,x1:i.x+8+88,y0:i.y-72,y1:i.y+32,fx:i.x+8}));
   enemies=enemies.filter(e=>{const ex=e.x+e.w/2,ey=e.y+e.h/2;return!zones.some(z=>ex>z.x0-16&&ex<z.x1+16&&ey>z.y0&&ey<z.y1)});
-  pstars=[];runes=[];ftexts=[];sparks=[];rings=[];hitstop=0;updateWater(true);wasWet=false;
+  pstars=[];runes=[];ftexts=[];sparks=[];rings=[];slashes=[];impacts=[];hitstop=0;updateWater(true);wasWet=false;
   drips=[];for(const d of DOORS){if(d.side!=='h')continue;const o=d.a===key?d.b:d.b===key?d.a:null;if(!o)continue;const q=ROOMS[o];if(!q.water||q.cy+q.h!==room.cy||Math.abs(d.y-room.cy*14)>.01)continue;
     const deepAbove=q.water.y!=null?q.water.y<(q.h*14-2)*T-12:q.water.hi!=null?(save.libLow?false:true):true;const x0=(d.x-d.len/2-room.cx*24)*T,x1=(d.x+d.len/2-room.cx*24)*T;
     for(let x=x0+3;x<x1-2;x+=deepAbove?3:6){const tx=Math.floor(x/T);let ty=0;while(ty<rh&&!solidAt(tx,ty))ty++;drips.push({x,bot:Math.min(ty*T,wLv!=null?wLv:1e9),strong:deepAbove,ph:Math.random()*40})}}
@@ -1731,7 +1914,10 @@ function hurt(fromX,up,kind,dmg){
   if(!boss&&inSafe(p.x+p.w/2,p.y+p.h/2))return;
   if(eq('mukade')&&(kind==='spikes'||kind==='puddle'))return;
   if(eq('awa')&&p.focusT>0&&!p.awaPop){p.awaPop=true;p.inv=40;sfx('bubble');burst(p.x+5,p.y+7,16,['#a8f0ff','#ffffff'],2.4,-.02,24);rune(p.x+5,p.y+7,'#a8f0ff');return}
-  p.hp-=Math.max(1,(dmg||1)+(boss&&boss.hard?1:0)-(eq('futago')?1:0))*(eq('kaketa')?2:1);dmgTaken++;p.kz=0;p.inv=eq('rinpun')?115:75;if(eq('rinpun'))scaleBurst();if(!eq('komorisuzu'))p.focusT=0;shake=6;sfx('hurt');burst(p.x+5,p.y+7,8,['#e46a6a']);
+  const hp0=p.hp;p.hp-=Math.max(1,(dmg||1)+(boss&&boss.hard?1:0)-(eq('futago')?1:0))*(eq('kaketa')?2:1);dmgTaken++;p.kz=0;p.inv=eq('rinpun')?115:75;if(eq('rinpun'))scaleBurst();if(!eq('komorisuzu'))p.focusT=0;shake=11;sfx('hurt');sfx('thud');burst(p.x+5,p.y+7,22,['#e46a6a','#ff9a8a','#ffffff'],3.4,.08,26);
+  {const cx=p.x+p.w/2,cy=p.y+p.h/2;slashFx(cx,cy,.8,30,'#ff5a5a',4);slashFx(cx,cy,-.8,30,'#ff5a5a',4);impacts.push({x:cx,y:cy,t:0,r:14,red:true});for(const m of[18,32])rings.push({x:cx,y:cy,t:0,max:m,col:m===18?'#ffffff':'#e46a6a'});
+   for(let i=0;i<12;i++){const a=Math.random()*Math.PI*2,sp=2+Math.random()*4;sparks.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:10+Math.random()*10,col:i%3?'#e46a6a':'#ffffff'})}}
+  hitstop=Math.max(hitstop,9);hurtV=1;heartFx={to:Math.max(0,hp0),from:Math.max(0,p.hp),t:0};
   p.dashT=0;p.plunge=false;p.kb=12;p.kbDir=(p.x+p.w/2<fromX)?-1:1;p.vy=up?-5.6:-3.2;
   if(p.hp<=0)die();
 }
@@ -1800,7 +1986,7 @@ const NPCNAME={kazoku:'炉を囲む家族',hitsudan:'筆談の老人',yurikago:'
 const KEEPNAME={bone:'骨細工屋',lamp:'さまよう灯具屋',smith:'さまよう鍛冶屋',painter:'さまよう絵描き',sundry:'さまよう雑貨屋'};
 const L2BOSS=['knight2','archivist','eel'];
 function tn(k){const n=save.talkN[k]||0;save.talkN[k]=n+1;return n}
-function npcTalk(it){const a=it.arg||'child',nm=(/^traveler[3-7]$/.test(a)&&save.story.tsuno)?'ツノ':(NPCNAME[a]||'残響');
+function npcTalk(it){const a=it.arg||'child',nm=(/^traveler\d*$/.test(a)&&save.story.tsuno)?'ツノ':(NPCNAME[a]||'残響');talkPlain=['kazoku','yurikago','suzuko','hitsudan'].includes(a)?nm:null;
   const cyc=(k,L)=>L[tn(k)%L.length];
   if(a==='traveler3'){if(!save.story.tsuno1){save.story.tsuno1=true;persist();talk(nm,STORY3.tsuno1);return}persist();talk(nm,cyc('tsuno1',STORY3.tsuno1b));return}
   if(a==='traveler4'){if(!save.story.roster){talk(nm,STORY3.tsuno2pre);return}
@@ -1967,9 +2153,15 @@ function blackTick(){if(blk.hold>0){blk.a=1;blk.hold--;return}
   if(blk.wait){blk.a=1;blk.wt++;if(mode==='talk')blk.saw=true;else if((blk.saw&&mode==='play')||blk.wt>300)blk.wait=false;return}
   blk.a=Math.max(0,blk.a-blk.sp)}
 function drawBlack(){if(blk.a<=0)return;ctx.setTransform(S,0,0,S,0,0);ctx.fillStyle='rgba(0,0,0,'+blk.a+')';ctx.fillRect(0,0,W,H)}
+function safeNear(e){if(!e)return null;const ex=Math.floor((e.x+p.w/2)/T),ey=Math.max(0,Math.floor(e.y/T));
+  const ok=c=>c==='#'||c==='B'||c==='M'||c==='P'||c==='D'||c==='C'||c==='G';
+  for(let d=0;d<=12;d++)for(const sg of d?[1,-1]:[1]){const tx=ex+d*sg;if(tx<1||tx>=rw-1)continue;
+    for(let ty=ey+1;ty<rh;ty++){const c=tiles[ty][tx];if(c==='.'||c===undefined)continue;
+      if(ok(c)&&tiles[ty-1][tx]==='.'&&!(tiles[ty-1][tx-1]==='^'||tiles[ty-1][tx-1]==='X'||tiles[ty-1][tx+1]==='^'||tiles[ty-1][tx+1]==='X'))return{x:tx*T+3,y:ty*T-p.h};break}}
+  return null}
 function spikeHit(){
   sfx('spike');if(p.inv<=0&&!eq('mukade')){p.hp-=eq('kaketa')?2:1;dmgTaken++;p.inv=60;shake=6;sfx('hurt');burst(p.x+5,p.y+7,8,['#e46a6a'])}
-  const sf=p.safe||(room.safe?{x:room.safe[0]*T+3,y:(room.safe[1]+1)*T-p.h}:{x:3*T,y:FY-p.h});p.x=sf.x;p.y=sf.y;p.vx=p.vy=0;p.dashT=0;p.plunge=false;p.kb=0;p.focusT=0;
+  const sf=p.safe||safeNear(p.entry)||(room.safe?{x:room.safe[0]*T+3,y:(room.safe[1]+1)*T-p.h}:{x:3*T,y:FY-p.h});p.x=sf.x;p.y=sf.y;p.vx=p.vy=0;p.dashT=0;p.plunge=false;p.kb=0;p.focusT=0;
   if(p.hp<=0)die();
 }
 
@@ -2142,10 +2334,17 @@ function upd7(e,ex,ey,dx,dy,d,calm){if(e.stun>0){e.stun--;return}
       else if(e.st==='rest'){if(e.t>70){e.st=(!calm&&d<120)?'wake':'sleep';e.t=0}}break;
     case'hankyou':if(!calm&&noisy&&Math.hypot(lastNoise.x-ex,lastNoise.y-ey)<240){e.tx=lastNoise.x;e.ty=lastNoise.y;e.go=60;sfx('ksoft')}
       if(e.go>0){e.go--;const ddx=e.tx-ex,ddy=e.ty-ey,dd=Math.hypot(ddx,ddy)||1;e.x=clamp(e.x+ddx/dd*3.4,T,RWp-T-e.w);e.y=clamp(e.y+ddy/dd*3.4,T,RHp-2*T-e.h)}else floatTo(e,e.bx,e.by+Math.sin(e.t*.06)*6,.002,.95);break;
-    case'ishioyogi':if(e.st==='swim'){e.ghost=true;e.y=e.fy;if(!calm&&Math.abs(dx)<200){const v=clamp(dx*.02,-1.3,1.3),nx=e.x+v;if(solidAt(Math.floor((nx+e.w/2)/T),Math.floor(e.fy/T)))e.x=nx}
+    case'ishioyogi':if(e.st==='swim'&&save.hibiki&&lastShock.t>frames-3&&Math.hypot(lastShock.x-ex,lastShock.y-e.fy)<96){e.st='out';e.t=0;e.ghost=false;e.vy=-4.5;e.y=e.fy-12;sfx('kstone');shake=Math.max(shake,4);burst(ex,e.fy,10,['#8a92b0','#c8d0e8'],2,.08,20);hintOnce('ishiout','石泳ぎを叩き出した','しばらく黙り石に戻れない。今のうちに')}
+    if(e.st==='swim'){const mR=Math.floor(e.fy/T),isM=xx=>tiles[mR]&&tiles[mR][Math.floor((xx+e.w/2)/T)]==='M';
+      if(!isM(e.x)){e.st='out';e.t=0;e.ghost=false;e.vy=0;e.y=e.fy-e.h}else{e.ghost=true;e.y=e.fy;if(!calm&&Math.abs(dx)<200){const v=clamp(dx*.02,-1.3,1.3),nx=e.x+v;if(isM(nx))e.x=nx}}}
+    if(e.st==='swim'){
         if(!calm&&Math.abs(dx)<22&&e.t>70){e.st='jump';e.t=0;e.ghost=false;e.vy=-6.2;e.y=e.fy-10;sfx('splash')}}
       else if(e.st==='jump'){e.vy+=.3;e.y+=e.vy;if(e.vy>0&&e.y>=e.fy-2){e.st='swim';e.t=0}}
-      else if(e.st==='out'){e.ghost=false;e.vy=(e.vy||0)+.3;e.y=Math.min(e.fy-e.h,e.y+e.vy);if(e.t>120){e.st='swim';e.t=0}}break;
+      else if(e.st==='out'){e.ghost=false;e.vy=Math.min((e.vy||0)+.3,6);const ny=e.y+e.vy,cx=Math.floor((e.x+e.w/2)/T),fr=Math.floor((ny+e.h)/T);
+        if(e.vy>0&&solidAt(cx,fr)){e.y=fr*T-e.h;e.vy=0;e.land=true}else{e.y=ny;e.land=false}
+        if(e.land&&e.t%40===0){e.vy=-2;e.vx=(Math.random()<.5?-1:1)*.6}if(!e.land&&e.vx){const nx=e.x+e.vx;if(!solidAt(Math.floor((nx+(e.vx>0?e.w:0))/T),Math.floor((e.y+e.h/2)/T)))e.x=nx}
+        if(e.y>RHp+20){e.dead=true}
+        if(e.t>150&&e.land&&tiles[fr]&&tiles[fr][cx]==='M'){e.st='swim';e.t=0;e.fy=fr*T+2;e.vx=0}}break;
     case'nagarebi':e.y+=e.vy;if(e.y>RHp){e.y=-8;e.x=T+Math.random()*(RWp-3*T)}break;
     case'okilan':{e.vy+=.3;e.y+=e.vy;const fy=Math.floor((e.y+e.h)/T);if(solidAt(Math.floor((e.x+e.w/2)/T),fy)&&e.vy>0){e.y=fy*T-e.h;e.vy=0;e.onGround=true}else e.onGround=false;
       if(e.onGround){e.vx=0;if(--e.t<=0&&!calm&&d<180){e.vy=-5;e.vx=Math.sign(dx)*1.6;e.t=60+Math.random()*30}}else{const nx=e.x+e.vx;if(!solidAt(Math.floor((e.vx>0?nx+e.w:nx)/T),Math.floor((e.y+e.h/2)/T)))e.x=nx}break}
@@ -2495,12 +2694,12 @@ const WARDEN={
       case'roar':if(b.t>50)go(b,'idle');break;
       case'idle':b.face=pc<bc?-1:1;if(b.t>(P?18:36))go(b,pick(b,['charge','charge','leap','stones','slam'])+'W');break;
       case'chargeW':if(b.t%5===0)dust(b.face<0?b.x+b.w:b.x,FY);
-        if(b.t>(P?36:50)){b.vx=b.face*(P?5.6:4.6);b.bounce=Math.random()<(P?.6:.35);b.bounced=false;go(b,'charge');sfx('dash')}break;
+        if(b.t>(P?36:50)){b.vx=b.face*(P?5.6:4.6);b.bounce=!!P;b.bounced=false;go(b,'charge');sfx('dash')}break;
       case'charge':b.x+=b.vx;if(b.t%3===0)dust(b.x+b.w/2,FY);
         if(b.x<=LX||b.x+b.w>=RX){b.x=clamp(b.x,LX,RX-b.w);shake=6;sfx('thud');burst(b.vx>0?RX:LX,FY-16,8,['#8a8f9f','#cfd5df']);
-          if(b.bounce&&!b.bounced){b.bounced=true;b.face*=-1;b.vx=-b.vx;go(b,'turn')}else go(b,P?'leapW':'stun')}break;
-      case'turn':if(b.t>14)go(b,'charge');break;
-      case'stun':if(b.t>46)go(b,'idle');break;
+          if(b.bounce&&!b.bounced){b.bounced=true;b.face*=-1;b.vx=-b.vx;go(b,'turn')}else go(b,'stun')}break;
+      case'turn':if(b.t%3===0)dust(b.x+b.w/2,FY);if(b.t>22)go(b,'charge');break;
+      case'stun':if(b.t>(b.p2?34:46))go(b,'idle');break;
       case'leapW':b.face=pc<bc?-1:1;if(b.t>(P?16:26)){const air=2*7.2/.3;b.vy=-7.2;b.vx=clamp((pc-bc)/air,-4,4);go(b,'leap');sfx('jump')}break;
       case'leap':b.x=clamp(b.x+b.vx,LX,RX-b.w);b.vy+=.3;b.y+=b.vy;
         if(b.vy>0&&b.y>=FY-b.h){b.y=FY-b.h;b.vy=0;wave(b.x+b.w/2,P?3.4:2.8);shake=7;sfx('thud');go(b,'recover')}break;
@@ -2605,8 +2804,8 @@ const CENTI={
     switch(b.state){
       case'intro':Hd.x=192;if(b.t<40)Hd.y+= (FY-46-Hd.y)*.1;if(b.t===42){sfx('roar');shake=6}if(b.t>75)go(b,'dive');break;
       case'roar':Hd.x+=(192-Hd.x)*.1;Hd.y+=(FY-50-Hd.y)*.12;if(b.t>55)go(b,'dive');break;
-      case'dive':Hd.y+=4;if(Hd.y>FY+34)go(b,'under');break;
-      case'under':Hd.y=FY+40;if(b.t>(P?14:26)){const m=pick(b,['burrow','burrow','spikes','spit','coil','tail']);if(m==='burrow')Hd.x=clamp(pc+(Math.random()<.5?-90:90),40,344);
+      case'dive':Hd.y+=4;if(Hd.y>FY+34&&b.segs.every(s=>s.y>FY+6))go(b,'under');break;
+      case'under':Hd.y=FY+40;for(const s of b.segs)s.y=Math.max(s.y,FY+30);if(b.t>(P?14:26)){const m=pick(b,['burrow','burrow','spikes','spit','coil','tail']);if(m==='burrow')Hd.x=clamp(pc+(Math.random()<.5?-90:90),40,344);
           if(m==='coil'){b.cflip=pc<192;const sx=b.cflip?W-30:30;hazards.push({kind:'warn',x:sx-14,y:30,w:28,h:FY-30,life:P?34:48});go(b,'coilW')}else go(b,m)}break;
       case'coilW':{const sx=b.cflip?W-30:30;Hd.x=sx;Hd.y=FY+30;if(b.t%3===0)dust(sx+(Math.random()-.5)*14,FY,'#a08a6a');if(b.t%8===0)shake=Math.max(shake,1.5);
         if(b.t>(P?34:48)){go(b,'coil');sfx('roar')}}break;
@@ -2618,15 +2817,16 @@ const CENTI={
       case'erupt':Hd.x=clamp(Hd.x+b.vx,24,360);b.vy+=.3;Hd.y+=b.vy;
         if(b.vy>0&&Hd.y>FY+30){if(P&&!b.again){b.again=true;go(b,'burrow');b.t=40}else{b.again=false;go(b,'under')}}break;
       case'spikes':{const dur=P?200:170;
-        if(b.t===1){b.pose=true;b.flip=pc>192;hazards.push({kind:'spikes',x:LX,y:FY-8,w:RX-LX,h:8,warn:50,life:50+dur})}
+        if(b.t===1){b.pose=true;b.flip=pc>192;const L=b.flip;hazards.push({kind:'spikes',x:L?LX:200,y:FY-8,w:L?184-LX:RX-200,h:8,warn:50,life:50+dur});
+          for(let i=0;i<NSEG;i++){const u=(i+1)/(NSEG+1),s=b.segs[i];s.x=L?176-u*148:208+u*148;s.y=FY+40}Hd.x=L?168:216;Hd.y=FY+40;hintOnce('centiSp','トゲが生える ─ 百足のいない側へ','頭は低いところにある。反対側から叩ける')}
         if(b.t>60&&b.t%(P?48:70)===0)spitAt(b,1);
         if(b.t>50+dur){b.pose=false;go(b,'dive')}}break;
       case'spit':
-        if(b.t===1){Hd.x=clamp(pc+(pc<192?75:-75),40,344);Hd.y=FY+24}
-        if(b.t<=25)Hd.y+=(FY-56-Hd.y)*.18;
-        if(b.t===30)spitFan(b,P?5:3,P?3.4:2.6);
-        if(P&&b.t===56)spitFan(b,4,3.8);
-        if(b.t>(P?82:62))go(b,'dive');break;
+        if(b.t===1){Hd.x=clamp(pc+(pc<192?75:-75),40,344);Hd.y=FY+24;hazards.push({kind:'warn',x:Hd.x-16,y:FY-48,w:32,h:48,life:22})}
+        if(b.t<22){if(b.t%2===0)dust(Hd.x+(Math.random()-.5)*20,FY,'#a08a6a')}else if(b.t<=46)Hd.y+=(FY-56-Hd.y)*.18;
+        if(b.t===50)spitFan(b,P?5:3,P?3.4:2.6);
+        if(P&&b.t===76)spitFan(b,4,3.8);
+        if(b.t>(P?102:82))go(b,'dive');break;
       case'coil':{const dur=P?120:150,fx=x=>b.cflip?W-x:x;
         // 壁をのぼり、天井を渡って、反対の壁を下りる（床の真ん中は安全）
         if(b.t<=dur){const u=b.t/dur,pts=[[30,FY+24],[30,34],[354,34],[354,FY+24]];
@@ -2642,10 +2842,11 @@ const CENTI={
     }
     // 体の追従
     if(b.pose){
-      const ease=b.t<50?.08:.25;
-      for(let i=0;i<NSEG;i++){const u=1-(i+1)/(NSEG+1);let tx=46+u*262,ty=FY+12-Math.sin(u*Math.PI*.78)*82;if(b.flip)tx=W-tx;
-        const s=b.segs[i];s.x+=(tx-s.x)*ease;s.y+=(ty-s.y)*ease}
-      let hx=322,hy=FY-62;if(b.flip)hx=W-hx;Hd.x+=(hx-Hd.x)*ease;Hd.y+=(hy-Hd.y)*ease;
+      // 体は自分の側の地面から、まっすぐ上へ立ちあがる（横には動かない）
+      const ease=b.t<50?.06:.2,L=b.flip;
+      for(let i=0;i<NSEG;i++){const u=(i+1)/(NSEG+1),tx=L?176-u*148:208+u*148,ty=FY+16-Math.sin(Math.min(1,u*1.15)*Math.PI)*78;
+        const s=b.segs[i];s.x=tx;s.y+=(ty-s.y)*ease;if(b.t<50&&b.t%4===0&&s.y>FY-4)dust(tx,FY,'#a08a6a')}
+      const hx=L?168:216,hy=FY-34;Hd.x=hx;Hd.y+=(hy-Hd.y)*ease;
     }else{
       let prev=Hd;for(const s of b.segs){const dx=s.x-prev.x,dy=s.y-prev.y,d=Math.hypot(dx,dy)||1;if(d>10){s.x=prev.x+dx/d*10;s.y=prev.y+dy/d*10}prev=s}
     }
@@ -2768,7 +2969,7 @@ const ARCHIVIST={
       case'dive':b.x=clamp(b.x+b.dvx,LX,RX-b.w);b.y+=b.dvy;const fl=wLv!=null?Math.min(FY,wLv+6):FY;if(b.y+b.h>=fl){b.y=fl-b.h;shake=5;sfx('thud');burst(bc,fl-2,10,['#d9cfb4','#5a5060'],2,.05,24);go(b,'stuck')}break;
       case'stuck':if(b.t>(P?36:56))go(b,'rise');break;
       case'rise':b.y-=2.4;if(b.y<64){b.vx=b.vy=0;go(b,'hover')}break;
-      case'heal':hoverMove(b,bc,64);if(b.t===1){b.healHits=0;sfx('shoot')}
+      case'heal':hoverMove(b,bc,FY-b.h);if(b.t===1){b.healHits=0;sfx('shoot')}
         if(frames%2===0)parts.push({x:bc+(Math.random()-.5)*24,y:bcy+12,vx:0,vy:-1,life:16,c:'#ffcf8a',g:0,s:1});
         if(b.t>(P?92:110)){b.hp=Math.min(b.max,b.hp+10);b.heals++;sfx('heal');burst(bc,bcy,18,['#ffcf8a','#fff1c4'],2.2,-.02,26);toast('灯守が灯を移した','HPが回復した。光りはじめたら斬って止めよう');go(b,'hover')}break;
       case'healStun':b.vy+=.12;b.y=Math.min(b.y+b.vy,FY-b.h);if(b.t>70){b.vy=0;go(b,'rise')}break;
@@ -2847,7 +3048,7 @@ const EEL={
         if(b.t>(P?170:200))go(b,'dive');break;
       case'drain':if(b.t===1){waterOver=FY-1;sfx('door');hintOnce('t1x8','淵の水が引いていく','いまが好機だ')}
         Hd.y=Math.min(FY-8,lv+10);if(lv>=FY-6&&b.t>20)go(b,'stranded');break;
-      case'stranded':Hd.y=FY-8-Math.abs(Math.sin(b.t*.12))*(b.t%60<20?6:1);if(b.t%60===0){Hd.x=clamp(Hd.x+(Math.random()<.5?-20:20),40,344);shake=2;sfx('thud')}
+      case'stranded':Hd.y=FY-8-Math.abs(Math.sin(b.t*.12))*(b.t%60<20?6:1);if(b.t%60===0){shake=2;sfx('thud')}
         if(b.t>(P?150:180)){waterOver=null;sfx('door');go(b,'refill')}break;
       case'refill':Hd.y=Math.min(FY-8,lv+20);if(lv<=base+2)go(b,'sub');break;
     }
@@ -2963,7 +3164,7 @@ const ORACLE={
     switch(b.state){
       case'intro':b.al=Math.min(1,b.t/60);if(b.t%5===0)parts.push({x:b.x+Math.random()*b.w,y:b.y+Math.random()*b.h,vx:0,vy:-.5,life:20,c:'#cfeaff',g:0,s:1});if(b.t===40){sfx('roar');shake=6}if(b.t>70)go(b,'idle');break;
       case'roar':if(b.t>50)go(b,'idle');break;
-      case'idle':b.face=pc<bc?-1:1;if(b.t>(P?14:22)){const o=['beamV','beamH','beamV','pillar','blink','shards','echo'];if(P)o.push('echo','cross','cross','shards');go(b,pick(b,o)+'W')}break;
+      case'idle':b.face=pc<bc?-1:1;if(b.t>(P?30:42)){const o=['beamV','beamH','beamV','pillar','blink','shards','echo'];if(P)o.push('echo','cross','cross','shards');go(b,pick(b,o)+'W')}break;
       case'beamVW':if(b.t===1){const n=P?4:3;b.cols=[clamp(pc-7,LX,RX-14)];for(let i=1;i<n;i++)b.cols.push(LX+10+Math.random()*(RX-LX-34));for(const x of b.cols)hazards.push({kind:'omark',x,y:FY-T*3,w:14,h:T*3,life:P?28:34})}
         if(b.t===(P?28:34)){for(const x of b.cols)hazards.push({kind:'beam',x,y:T,w:14,h:FY-T,life:14,dmg:P?2:1});sfx('hitstone');shake=4;go(b,'recover')}break;
       case'beamHW':if(b.t===1){b.row=clamp(p.y-2,T*2,FY-18);hazards.push({kind:'omark',x:LX,y:b.row,w:RX-LX,h:16,life:P?28:34})}
@@ -2975,7 +3176,7 @@ const ORACLE={
       case'shardsW':if(b.t===1){b.sx=[pc];for(let i=0;i<(P?5:4);i++)b.sx.push(LX+10+Math.random()*(RX-LX-20));for(const x of b.sx)hazards.push({kind:'warn',x:x-6,y:T,w:12,h:20,life:26})}
         if(b.t===26){for(const x of b.sx)projs.push({kind:'shard',x:x-3,y:T+4,w:6,h:8,vx:0,vy:3.6,g:.12});sfx('kstone')}if(b.t>40)go(b,'recover');break;
       case'echoW':if(b.t===10||b.t===40||(P&&b.t===70)){const n=P?12:8;for(let i=0;i<n;i++){const a=i/n*Math.PI*2+(b.t===40?.3:0);projs.push({kind:'echo',x:bc-3,y:b.y+14,w:6,h:6,vx:Math.cos(a)*2.1,vy:Math.sin(a)*2.1,g:0})}sfx('shoot')}if(b.t>(P?90:60))go(b,'recover');break;
-      case'recover':if(b.t>(P?12:20))go(b,'idle');break}
+      case'recover':if(b.t>(P?22:32))go(b,'idle');break}
     if(b.state==='blinkW'){}else b.x+=(SP[b.spot][0]-b.x)*.1;
     for(const q of plats)if(q.crys&&--q.life<=0){q.dead=true;burst(q.x+7,q.y+10,8,['#cfeaff'],1.6,.1,16)}},
   draw(b){const fl=b.flash>0&&b.flash%2,x=Math.round(b.x),y=Math.round(b.y),c=(col,X,Y,w,h)=>{ctx.fillStyle=col;ctx.fillRect(X,Y,w,h)};ctx.globalAlpha=b.al;
@@ -3009,7 +3210,7 @@ const TWINS={
           let tx;if(k.c==='ao')tx=pc-(dx>0?1:-1)*64;else{const side=both?(ao.x+ao.w/2<pc?1:-1):(kc<pc?-1:1);tx=pc+side*86}
           const want=clamp(tx-k.w/2,T,RWp-T-k.w),mv=clamp(want-k.x,-1,1)*(k.c==='ao'?.7:1.5)*sp;if(Math.abs(want-k.x)>6)k.x+=mv;
           if(k.c==='shiro'&&p.focusT>0&&k.t>8){k.st='crouch';k.t=0;if(!save.hints.includes('hunt'))hintOnce('hunt','灯を狩る','灯移しを始めると、白の守り手が跳びこんでくる');break}
-          if(k.t>(b.p2?26:k.c==='ao'?64:48)&&(b.busy<=0||b.p2)&&ad<220){const o=['slam','sweep','lunge','leap','lunge'].filter(can);const m=o[Math.random()*o.length|0];
+          const onS=k.x+k.w>camX+12&&k.x<camX+W-12;if(k.t>(b.p2?26:k.c==='ao'?64:48)&&(b.busy<=0||b.p2)&&ad<220&&onS){const o=['slam','sweep','lunge','leap','lunge'].filter(can);const m=o[Math.random()*o.length|0];
             k.st=m==='lunge'?'crouch':m+'W';k.t=0;if(!b.p2)b.busy=k.c==='ao'?70:50}break}
         case'slamW':if(k.t>=(b.p2?24:36)){const fx=kc+k.face*18;hazards.push({kind:'hbox',x:fx-14,y:FY-24,w:28,h:24,life:1,dmg:k.c==='ao'?3:2});
             const v=k.c==='ao'?3.2:3.6;hazards.push({kind:'wave',x:fx-8,y:FY-10,w:12,h:10,vx:-v,pogo:true,wide:true,dmg:2});hazards.push({kind:'wave',x:fx-4,y:FY-10,w:12,h:10,vx:v,pogo:true,wide:true,dmg:2});
@@ -3114,15 +3315,16 @@ const TSF=[13*T,27*T,40*T];
 const TSUNO_LINES={1:'戻れ。ここから先は、おまえの行く場所じゃない。',1.5:'……聞こえないのか。戻れと言っている。',2:'この灯りは、みんな降りていった者のものだ。',2.5:'灯して何になる。照らした先に、何がある。',3:'……消えるんだぞ。おまえも、あいつらみたいに。',3.5:'俺は逃げた。だから、ここにいる。'};
 let bossSub=null;function bsay(t){bossSub={t:0,text:t}}
 const TSUNO={
-  make:()=>({id:'tsuno',name:'ツノ',hp:200,max:200,x:16*T,y:TSF[0]-26,w:14,h:26,vx:0,vy:0,face:-1,state:'idle',t:0,last:'',p2:false,flash:0,hitId:-1,stage:1,said:{},silent:true,vis:0,lamp:false}),
-  parts:b=>b.state==='end'?[]:[{x:b.x+2,y:b.y+2,w:b.w-4,h:b.h-2,hit:true,hurt:b.state!=='kneel'&&b.state!=='fall'&&b.vis>.3}],
+  make:()=>({id:'tsuno',name:'ツノ',hp:200,max:200,x:16*T,y:TSF[0]-26,w:14,h:26,vx:0,vy:0,face:-1,state:'idle',t:0,last:'',p2:false,flash:0,hitId:-1,stage:1,said:{},silent:false,track:'boss_tsuno1',vis:0,lamp:false}),
+  parts:b=>b.state==='end'?[]:[{x:b.x+2,y:b.y+2,w:b.w-4,h:b.h-2,hit:true,hurt:b.state!=='kneel'&&b.state!=='fall'&&b.state!=='recover'&&b.state!=='hop'&&b.vis>.3}],
   center:b=>[b.x+b.w/2,b.y+b.h/2],
   deflect:(b,pt)=>b.state==='kneel'||b.state==='guard',
+  onHit(b){if(b.state==='recover'){b.rh=(b.rh||0)+1;if(b.rh>=(b.stage===3?3:4))go(b,'hop')}},
   onDeflect(b){if(b.state==='guard'){go(b,'counter')}},
   floor:b=>TSF[b.stage-1],
   update(b){b.t++;const pc=p.x+p.w/2,bc=b.x+b.w/2,sp=b.stage===3?1.35:b.stage===2?1.15:1,F=TSUNO.floor(b);
     // 見えるか：ランタンの光、灯したランタン、第3段階は自分の灯り
-    let v=Math.hypot(pc-bc,p.y-b.y)<curLR*.62?1:0;for(const it of items)if(it.type==='oklamp'&&it.lit&&Math.hypot(it.x+8-bc,it.y+8-(b.y+12))<70)v=1;if(b.lamp)v=1;b.vis+=(v-b.vis)*.15;
+    let v=Math.hypot(pc-bc,p.y-b.y)<curLR*.62?1:0;for(const it of items)if(it.type==='oklamp'&&it.lit&&Math.hypot(it.x+8-bc,it.y+8-(b.y+12))<70)v=1;if(b.lamp)v=1;if(b.state==='recover'||b.state==='hop')v=Math.max(v,.85);b.vis+=(v-b.vis)*.15;
     // 段階
     const th=[135,70,15];if(b.stage<3&&b.hp<=th[b.stage-1]&&b.state!=='fall'){go(b,'fall');b.stage++;const ry=Math.round(TSF[b.stage-2]/T);for(let x=1;x<rw-1;x++)tiles[ry][x]='.';renderRoom();shake=12;sfx('brk');burst(RWp/2,TSF[b.stage-2],40,['#8a7a5a','#ffd890'],3,.2,40);
       bsay(TSUNO_LINES[b.stage]);if(b.stage===2){b.silent=false;b.track='boss_tsuno'}if(b.stage===3){b.track='home';b.lamp=true;b.name='ツノ ─ 元灯守';hintOnce('tsuno3','ツノが、捨てられたランタンを拾った','姿がよく見えるぶん、速く激しい')}}
@@ -3130,36 +3332,95 @@ const TSUNO={
     if(b.stage===3&&b.hp<=th[2]&&b.state!=='kneel'&&b.state!=='end'){go(b,'kneel');bsay('……');hintOnce('tsuno4','ツノが膝をついた','そばで、灯移しをしよう')}
     // 灯を奪う
     if(p.focusT>0&&b.state==='idle'&&Math.hypot(pc-bc,p.y-b.y)<130&&b.t>10){go(b,'grab');if(!save.hints.includes('tsunograb'))hintOnce('tsunograb','灯を奪う','近くで灯移しをすると、ツノが残り火を奪いにくる')}
+    const Wu=b.stage===3?18:b.stage===2?22:26;b.wind=false;
     switch(b.state){
       case'fall':break;
       case'idle':b.face=pc<bc?-1:1;{const tx=pc-b.face*70;b.x+=clamp(tx-b.x,-1.6*sp,1.6*sp)}
-        if(b.t>(b.stage===3?16:b.stage===2?24:32)){const o=b.stage===1?['guard','dash','stone','vanish','dash']:b.stage===2?['dash','jump','stone','vanish','jump','slash']:['dash','jump','stone','swing','jump','dash'];go(b,pick(b,o))}break;
-      case'guard':if(b.t>60)go(b,'idle');break;
-      case'counter':if(b.t===4){hazards.push({kind:'hbox',x:b.face>0?b.x+b.w:b.x-26,y:b.y,w:26,h:22,life:4,dmg:1});p.kb=16;p.kbDir=b.face;sfx('swing');bsay('……戻れ。')}if(b.t>20)go(b,'idle');break;
-      case'dash':if(b.t<12){b.face=pc<bc?-1:1}else if(b.t<26){b.x=clamp(b.x+b.face*6*sp,T,RWp-T-b.w);hazards.push({kind:'hbox',x:b.x-2,y:b.y+4,w:b.w+4,h:b.h-4,life:1,dmg:2});if(b.t%3===0)parts.push({x:b.x,y:b.y,vx:0,vy:0,life:10,ghost:true,c:'#1a1418'})}else go(b,'recover');break;
-      case'jump':if(b.t===1){b.vy=-7.2;b.vx=clamp((pc-bc)/30,-4,4);sfx('jump')}if(b.t>1){b.x=clamp(b.x+b.vx,T,RWp-T-b.w);if(b.vy>-1&&Math.abs(pc-bc)<20||b.t>45){go(b,'plunge');b.vy=9;b.vx=0}}break;
+        if(b.t>(b.stage===3?18:b.stage===2?26:34)){const Q=b.stage===1?['guard','dash','stone','vanish','dash','rain']:b.stage===2?['dash','jump','stone','vanish','rain','jump','slash']:['dash','jump','swing','stone','rain','jump','dash','swing'];
+          b.seqI=(b.seqI||0)%Q.length;let nx=Q[b.seqI++];if(Math.abs(pc-bc)>170&&(nx==='slash'||nx==='swing'||nx==='guard'))nx='stone';go(b,nx)}break;
+      case'guard':if(b.t>48){b.recT=18;go(b,'recover')}break;
+      case'counter':if(b.t<8)b.wind=true;if(b.t===8){hazards.push({kind:'hbox',x:b.face>0?b.x+b.w:b.x-26,y:b.y,w:26,h:22,life:4,dmg:1});p.kb=16;p.kbDir=b.face;sfx('swing')}if(b.t>24)go(b,'idle');break;
+      case'dash':if(b.t===1){b.face=pc<bc?-1:1;b.dashL=Math.round(14*6*sp)}
+        if(b.t<Wu){b.wind=true}else if(b.t<Wu+14){b.x=clamp(b.x+b.face*6*sp,T,RWp-T-b.w);hazards.push({kind:'hbox',x:b.x-2,y:b.y+4,w:b.w+4,h:b.h-4,life:1,dmg:2});if(b.t%2===0)parts.push({x:b.x,y:b.y,vx:0,vy:0,life:10,ghost:true,c:'#1a1418'})}else{b.recT=[46,40,32][b.stage-1];for(let k=0;k<6;k++)dust(b.x+b.w/2,TSF[b.stage-1]);go(b,'recover')}break;
+      case'jump':if(b.t===1){b.tx=clamp(pc,T*2,RWp-T*2);b.face=b.tx<bc?-1:1}
+        if(b.t<Math.round(Wu*.6)){b.wind=true;break}
+        if(b.t===Math.round(Wu*.6)){b.vy=-7.4;b.vx=clamp((b.tx-bc)/32,-4.2,4.2);sfx('jump')}
+        b.x=clamp(b.x+b.vx,T,RWp-T-b.w);if((b.vy>-.5&&Math.abs(b.x+b.w/2-b.tx)<10)||b.t>Wu+48){go(b,'hang')}break;
+      case'hang':b.vy=-.35;b.vx=0;b.wind=true;if(b.t>10){go(b,'plunge');b.vy=10}break;
       case'plunge':hazards.push({kind:'hbox',x:b.x,y:b.y+b.h-4,w:b.w,h:12,life:1,dmg:2});break;
-      case'stone':if(b.t===14||b.stage>=2&&b.t===26){const dx=pc-bc,dy=p.y-b.y,d=Math.hypot(dx,dy)||1;projs.push({kind:'blackstone',tile:true,x:bc-4,y:b.y+6,w:8,h:8,vx:dx/d*3.6,vy:dy/d*3.6-1,g:.08,dmg:1,dark:true});sfx('shoot')}if(b.t>40)go(b,'recover');break;
-      case'vanish':if(b.t===20){b.x=clamp(pc-(p.face)*-40-b.w/2,T,RWp-T-b.w);b.y=F-b.h;b.face=pc<b.x+b.w/2?-1:1;b.vis=0}if(b.t>30)go(b,'slash');break;
-      case'slash':if(b.t===8){hazards.push({kind:'hbox',x:b.face>0?b.x+b.w:b.x-24,y:b.y+2,w:24,h:18,life:3,dmg:2});sfx('swing')}if(b.t>24)go(b,'recover');break;
-      case'swing':if(b.t>10&&b.t<34){const a=(b.t-10)/24*Math.PI;hazards.push({kind:'hbox',x:bc+Math.cos(a)*30*b.face-8,y:b.y+6-Math.sin(a)*24,w:16,h:16,life:1,dmg:2})}if(b.t>44)go(b,'recover');break;
-      case'grab':{b.face=pc<bc?-1:1;b.x=clamp(b.x+b.face*5,T,RWp-T-b.w);if(hit(p,{x:b.x-4,y:b.y,w:b.w+8,h:b.h})){const take=Math.min(p.ember,30);p.ember-=take;p.focusT=0;sfx('ignite');burst(pc,p.y+6,14,['#f2b552'],2,0,20);bsay('その火を、よこせ。');go(b,'recover')}if(b.t>30)go(b,'recover');break}
-      case'recover':if(b.t>(b.stage===3?12:20))go(b,'idle');break;
+      case'stone':if(b.t<Wu)b.wind=true;
+        if(b.t===Wu||b.stage>=2&&b.t===Wu+14){const dx=pc-bc,dy=p.y-b.y,d=Math.hypot(dx,dy)||1;projs.push({kind:'blackstone',tile:true,x:bc-4,y:b.y+6,w:8,h:8,vx:dx/d*3.6,vy:dy/d*3.6-1,g:.08,dmg:1,dark:true});sfx('shoot')}if(b.t>Wu+30){b.recT=[26,22,18][b.stage-1];go(b,'recover')}break;
+      case'vanish':if(b.t<16){b.vis=Math.max(0,b.vis-.08);if(b.t%3===0)parts.push({x:bc+(Math.random()-.5)*12,y:b.y+Math.random()*b.h,vx:0,vy:-.5,life:22,c:'#2a2430',g:0,s:2})}
+        if(b.t===16){b.mx=clamp(pc+(p.face>0?-34:34)-b.w/2,T,RWp-T-b.w)}
+        if(b.t>16&&b.t<16+Wu){b.wind=true;if(b.t%4===0)parts.push({x:b.mx+b.w/2+(Math.random()-.5)*12,y:F-4-Math.random()*20,vx:0,vy:-.4,life:18,c:'#3a3040',g:0,s:2})}
+        if(b.t===16+Wu){b.x=b.mx;b.y=F-b.h;b.face=pc<b.x+b.w/2?-1:1;b.vis=1;go(b,'slash')}break;
+      case'slash':if(b.t<12)b.wind=true;if(b.t===12){hazards.push({kind:'hbox',x:b.face>0?b.x+b.w:b.x-26,y:b.y+2,w:26,h:18,life:3,dmg:2});sfx('swing')}if(b.t>28){b.recT=[36,32,26][b.stage-1];go(b,'recover')}break;
+      case'swing':if(b.t===1)b.face=pc<bc?-1:1;if(b.t<Wu)b.wind=true;else if(b.t<Wu+24){const a=(b.t-Wu)/24*Math.PI;hazards.push({kind:'hbox',x:bc+Math.cos(a)*30*b.face-8,y:b.y+6-Math.sin(a)*24,w:16,h:16,life:1,dmg:2})}if(b.t>Wu+34){b.recT=[40,34,28][b.stage-1];go(b,'recover')}break;
+      case'rain':{// 新しい技：灯り落とし（流れていく灯を呼び寄せて、柱のように落とす）
+        if(b.t===1){const n=b.stage===1?3:b.stage===2?4:5,gap=(RWp-4*T)/(n),off=(pc-2*T)%gap;b.cols=[];for(let i=0;i<n;i++)b.cols.push(Math.round(2*T+off+i*gap));sfx('kane')}
+        const warn=Wu+24;if(b.t<warn)b.wind=true;
+        if(b.t===warn){shake=6;sfx('brk');for(const cx of b.cols){hazards.push({kind:'hbox',x:cx-9,y:F-9*T,w:18,h:9*T,life:12,dmg:b.stage===3?2:1});for(let k=0;k<6;k++)parts.push({x:cx+(Math.random()-.5)*14,y:F-2,vx:(Math.random()-.5)*2,vy:-Math.random()*2,life:20,c:Math.random()<.5?'#ffd890':'#fff1c4',g:.1,s:2})}}
+        if(b.t>warn+30){b.recT=[26,22,18][b.stage-1];go(b,'recover')}break}
+      case'grab':{if(b.t<10){b.wind=true;break}b.face=pc<bc?-1:1;b.x=clamp(b.x+b.face*5,T,RWp-T-b.w);if(hit(p,{x:b.x-4,y:b.y,w:b.w+8,h:b.h})){const take=Math.min(p.ember,30);p.ember-=take;p.focusT=0;sfx('ignite');burst(pc,p.y+6,14,['#f2b552'],2,0,20);bsay('その火を、よこせ。');go(b,'recover')}if(b.t>40)go(b,'recover');break}
+      case'recover':if(b.t===1)b.rh=0;if(b.t%12===0)parts.push({x:bc+b.face*4,y:b.y+4,vx:b.face*.3,vy:-.4,life:24,c:'#c8c0b0',g:0,s:1});if(b.t>(b.recT||22)){b.recT=0;go(b,'idle')}break;
+      case'hop':if(b.t===1){b.face=pc<bc?-1:1;b.vy=-4.6;sfx('jump')}if(b.t<18)b.x=clamp(b.x-b.face*3.2*sp,T,RWp-T-b.w);if(b.t>24)go(b,'idle');break;
       case'kneel':b.lamp=true;if(p.focusT>0&&Math.hypot(pc-bc,p.y-b.y)<60){b.share=(b.share||0)+1;if(frames%3===0)parts.push({x:pc,y:p.y+4,vx:(bc-pc)/14,vy:(b.y+4-p.y)/14,life:14,c:'#ffd37a',g:0,s:1});if(b.share>40)finishTsuno()}break}
     // 重力と床
-    if(b.state!=='end'){b.vy=Math.min((b.vy||0)+(b.state==='plunge'?1.2:.4),10);b.y+=b.vy;const fy=TSUNO.floor(b);if(b.y+b.h>=fy){if(b.state==='plunge'){shake=7;sfx('thud');hazards.push({kind:'wave',x:bc-8,y:fy-10,w:12,h:10,vx:-3,wide:true,dmg:1});hazards.push({kind:'wave',x:bc-4,y:fy-10,w:12,h:10,vx:3,wide:true,dmg:1});go(b,'recover')}if(b.state==='fall')go(b,'idle');b.y=fy-b.h;b.vy=0}}},
-  draw(b){const a=b.state==='end'?1:Math.max(.05,b.vis);ctx.globalAlpha=a;const fl=b.flash>0&&b.flash%2,x=Math.round(b.x),y=Math.round(b.y),f=b.face,c=(col,X,Y,w,h)=>{ctx.fillStyle=fl?'#fff':col;ctx.fillRect(X,Y,w,h)};
-    const kn=b.state==='kneel'||b.state==='end'?6:0;c('#2a2430',x+2,y+8+kn,10,18-kn);c('#1e1a24',x+1,y+18,12,8);for(let i=0;i<4;i++)c('#2a2430',x+1+i*3,y+24,2,3);
-    c('#141018',x+3,y+2+kn,8,7);c('#f4f1e6',x+(f>0?7:4),y+4+kn,1,2);c('#f4f1e6',x+(f>0?9:6),y+4+kn,1,2);
-    c('#8a7a5a',x+1,y-3+kn,2,5);c('#8a7a5a',x+11,y-3+kn,2,5);c('#8a7a5a',x-1,y-5+kn,2,3);c('#8a7a5a',x+13,y-5+kn,2,3);
-    if(b.state!=='kneel'&&b.state!=='end')c('#6a5a40',f>0?x+12:x-12,y+10,14,1);
-    if(b.lamp){const lx=f>0?x+14:x-4,ly=y+12+kn;c('#3a2e22',lx,ly,5,7);c('#ffd37a',lx+1,ly+2,3,4);ctx.globalCompositeOperation='lighter';glow(lx+2,ly+4,36,'rgba(255,200,120,.4)');ctx.globalCompositeOperation='source-over'}
-    if(b.share>0){ctx.globalCompositeOperation='lighter';glow(x+2,y-4,10+b.share/4,'rgba(255,220,150,.5)');glow(x+12,y-4,10+b.share/4,'rgba(255,220,150,.5)');ctx.globalCompositeOperation='source-over'}
-    ctx.globalAlpha=1}};
+    if(b.state!=='end'){if(b.state==='hang'){b.y+=b.vy}else{b.vy=Math.min((b.vy||0)+(b.state==='plunge'?1.2:.4),10);b.y+=b.vy}const fy=TSUNO.floor(b);if(b.y+b.h>=fy){if(b.state==='plunge'){shake=7;sfx('thud');hazards.push({kind:'wave',x:bc-8,y:fy-10,w:12,h:10,vx:-3,wide:true,dmg:1});hazards.push({kind:'wave',x:bc-4,y:fy-10,w:12,h:10,vx:3,wide:true,dmg:1});b.recT=[50,42,34][b.stage-1];go(b,'recover')}if(b.state==='fall')go(b,'idle');b.y=fy-b.h;b.vy=0}}},
+  draw(b){const a=b.state==='end'?1:Math.max(.05,b.vis);ctx.globalAlpha=a;const fl=b.flash>0&&b.flash%2,x=Math.round(b.x),y=Math.round(b.y),f=b.face,F=col=>fl?'#fff':col;
+    // 旅人（NPC）と同じ姿：長い外套・丸い闇の顔・つばの平らな帽子と枝角
+    const kn=b.state==='kneel'||b.state==='end'?5:b.state==='recover'?2:0,c0=x+b.w/2,G=y+b.h,sw=Math.sin(frames*.05)*(b.state==='idle'?.8:1.6),top=G-19+kn;
+    ctx.fillStyle=F('#1a1c24');ctx.beginPath();ctx.moveTo(c0-5,top);ctx.lineTo(c0+5,top);ctx.lineTo(c0+10+sw,G);ctx.lineTo(c0-10+sw,G);ctx.fill();
+    ctx.fillStyle=F('#232633');ctx.beginPath();ctx.moveTo(c0-8,top+2);ctx.lineTo(c0-3,top);ctx.lineTo(c0-1,top+6);ctx.fill();ctx.beginPath();ctx.moveTo(c0+8,top+2);ctx.lineTo(c0+3,top);ctx.lineTo(c0+1,top+6);ctx.fill();
+    ctx.fillStyle=F('#2e3242');for(let k=-8;k<=8;k+=2){const L=(k*7+40)%5;ctx.fillRect(Math.round(c0+k*.95+sw*(1+k/16)),top+5+Math.abs(k)*.4,1,14-kn-Math.abs(k)*.4+(L%2))}
+    ctx.fillStyle=F('#0e0f15');ctx.fillRect(c0,top+7,1,12-kn);
+    const hy=top-3;ctx.fillStyle=F('#08080e');ctx.beginPath();ctx.arc(c0,hy,5,0,7);ctx.fill();
+    const bl=frames%260<6;ctx.fillStyle=fl?'#fff':'#d8e0f0';ctx.fillRect(c0+(f>0?-1:-3),hy-1,1,bl?1:2);ctx.fillRect(c0+(f>0?3:1),hy-1,1,bl?1:2);
+    ctx.fillStyle=F('#bdb59e');ctx.fillRect(c0-6,hy-9,12,4);ctx.fillStyle=F('#d6cfb8');ctx.fillRect(c0-6,hy-9,12,1);ctx.fillStyle=F('#8a8270');ctx.fillRect(c0-6,hy-6,12,1);
+    ctx.fillStyle=F('#c8c0a8');ctx.fillRect(c0-8,hy-5,16,1);
+    ctx.fillStyle=F('#7a6a54');ctx.fillRect(c0-7,hy-12,1,4);ctx.fillRect(c0-9,hy-14,2,1);ctx.fillRect(c0-8,hy-13,1,1);ctx.fillRect(c0-6,hy-15,1,3);ctx.fillRect(c0-10,hy-15,1,1);
+    ctx.fillRect(c0+6,hy-12,1,4);ctx.fillRect(c0+7,hy-14,2,1);ctx.fillRect(c0+7,hy-13,1,1);ctx.fillRect(c0+5,hy-15,1,3);ctx.fillRect(c0+9,hy-15,1,1);
+    // 杖（構え）
+    if(b.state!=='kneel'&&b.state!=='end'){ctx.fillStyle=F('#6a5a40');const st=b.state;
+      if((st==='slash'||st==='counter')&&b.wind)ctx.fillRect(f>0?c0+6:c0-7,top-12,1,20);// 振りかぶり：杖を真上に
+      else if(st==='swing'&&b.wind)ctx.fillRect(f>0?c0-16:c0+3,top+4,14,1);// 後ろへ引く
+      else if(st==='dash'&&b.wind)ctx.fillRect(f>0?c0+4:c0-18,top+13,14,1);// 低く構える
+      else if(st==='rain'&&b.wind)ctx.fillRect(c0-1,top-18,1,26);// 杖を掲げる
+      else ctx.fillRect(f>0?c0+7:c0-21,top+9,14,1)}
+    if(b.lamp){const lx=f>0?c0+9:c0-14,ly=top+10;ctx.fillStyle=F('#3a2e22');ctx.fillRect(lx,ly,5,7);ctx.fillStyle='#ffd37a';ctx.fillRect(lx+1,ly+2,3,4);ctx.globalCompositeOperation='lighter';glow(lx+2,ly+4,36,'rgba(255,200,120,.4)');ctx.globalCompositeOperation='source-over'}
+    if(b.share>0){ctx.globalCompositeOperation='lighter';glow(c0-7,hy-13,10+b.share/4,'rgba(255,220,150,.5)');glow(c0+7,hy-13,10+b.share/4,'rgba(255,220,150,.5)');ctx.globalCompositeOperation='source-over'}
+    ctx.globalAlpha=1}
+  ,tel(b){const c0=Math.round(b.x)+b.w/2,G=Math.round(b.y)+b.h,top=G-19,hy=top-3;// 予備動作の目印（暗くても見えるように、いつも明るく描く）
+    const st=b.state,f=b.face,Fl=TSUNO.floor(b),L=(x,y,r,c)=>glow(x,y,r,c),bl=frames%6<3;
+    ctx.globalCompositeOperation='lighter';
+    if(b.wind){// 目が灯る＋構えのあいだ体がうっすら光る
+      const pu=.5+.5*Math.sin(frames*.4);glow(c0,G-12,20,'rgba(255,150,90,'+(.16+.14*pu)+')');
+      ctx.fillStyle='#ffcf7a';ctx.fillRect(c0+(f>0?-1:-3),hy-1,1,2);ctx.fillRect(c0+(f>0?3:1),hy-1,1,2);L(c0,hy,8,'rgba(255,190,110,.35)')}
+    if(b.wind&&b.t<8){ctx.fillStyle='#fff3c8';ctx.fillRect(c0-1,hy-22,2,5);ctx.fillRect(c0-1,hy-15,2,2)}// 「！」
+    if(st==='dash'&&b.wind){const k=b.t/(b.stage===3?18:b.stage===2?22:26),x0=f>0?b.x+b.w:b.x,len=b.dashL||84;
+      ctx.fillStyle='rgba(255,140,90,'+(.45+.5*k)+')';ctx.fillRect(f>0?x0:x0-len,Fl-3,len,3);glow(f>0?x0+len:x0-len,Fl-3,10,'rgba(255,140,90,.4)');ctx.fillStyle='rgba(255,220,180,'+(.4*k)+')';ctx.fillRect(f>0?x0+len-3:x0-len,Fl-6,3,6);
+      for(let i=0;i<3;i++){const ax=Math.round(x0+f*(len*(.25+i*.25)));ctx.fillRect(ax-f*2,Fl-7,2,2);ctx.fillRect(ax,Fl-5,2,2);ctx.fillRect(ax-f*2,Fl-3,2,0)}}
+    if((st==='jump'||st==='hang')&&b.tx!=null){const r=st==='hang'?14:10,pul=st==='hang'&&bl?.55:.3;
+      ctx.fillStyle='rgba(255,150,90,'+pul+')';ctx.fillRect(Math.round(b.tx-r),Fl-2,r*2,2);ctx.fillRect(Math.round(b.tx-r*.6),Fl-4,Math.round(r*1.2),2);L(b.tx,Fl-2,r+6,'rgba(255,140,80,'+(pul*.5)+')')}
+    if(st==='hang'){ctx.fillStyle='rgba(255,200,140,.25)';ctx.fillRect(Math.round(c0-1),G,2,Math.max(0,Fl-G))}
+    if(st==='stone'&&b.wind){const k=b.t/(b.stage===3?18:b.stage===2?22:26),hx=c0+f*7,hy2=top+8;L(hx,hy2,6+k*10,'rgba(170,140,255,'+(.35+.45*k)+')');ctx.fillStyle='#0a0810';ctx.fillRect(hx-2,hy2-2,4,4);ctx.fillStyle='#c8b8ff';ctx.fillRect(hx-1,hy2-3,2,1)}
+    if(st==='vanish'&&b.mx!=null&&b.t>16){const mx=b.mx+b.w/2,k=(b.t-16)/(b.stage===3?18:b.stage===2?22:26);ctx.fillStyle='rgba(190,170,230,'+(.15+.35*k)+')';ctx.fillRect(Math.round(mx-8),Fl-2,16,2);
+      ctx.globalAlpha=.15+.3*k;ctx.fillRect(Math.round(mx-1),Fl-8,1,2);ctx.fillRect(Math.round(mx+2),Fl-8,1,2);ctx.globalAlpha=1;L(mx,Fl-12,14,'rgba(150,130,210,'+(.2*k)+')')}
+    if(st==='slash'&&b.wind){const tx=c0+f*6;L(tx,top-12,6+b.t/2,'rgba(255,220,170,.35)');ctx.fillStyle='rgba(255,200,150,.3)';ctx.fillRect(f>0?b.x+b.w:b.x-26,G-20,26,1)}
+    if(st==='counter'&&b.wind){L(c0+f*6,top-12,8,'rgba(255,255,220,.5)')}
+    if(st==='swing'&&b.wind){const k=b.t/(b.stage===3?18:b.stage===2?22:26);ctx.strokeStyle='rgba(255,180,120,'+(.15+.45*k)+')';ctx.lineWidth=1;ctx.beginPath();
+      ctx.arc(c0,b.y+14,30,Math.PI,Math.PI*2);ctx.stroke()}
+    if(st==='rain'&&b.cols){const warn=(b.stage===3?18:b.stage===2?22:26)+24;
+      if(b.t<warn){const k=b.t/warn,last=warn-b.t<12;for(const cx of b.cols){ctx.fillStyle=last&&bl?'rgba(255,240,190,.55)':'rgba(255,210,140,'+(.08+.25*k)+')';ctx.fillRect(cx-1,Fl-9*16,2,9*16);
+        ctx.fillStyle='rgba(255,210,140,'+(.3+.5*k)+')';ctx.fillRect(cx-9,Fl-2,18,2);L(cx,Fl-9*16+8+k*30,5+k*4,'rgba(255,220,150,.5)')}
+        L(c0-7,hy-13,8+k*6,'rgba(255,220,150,.45)');L(c0+7,hy-13,8+k*6,'rgba(255,220,150,.45)')}
+      else if(b.t<warn+12){for(const cx of b.cols){ctx.fillStyle='rgba(255,236,180,'+(.9-(b.t-warn)/14)+')';ctx.fillRect(cx-9,Fl-9*16,18,9*16)}}}
+    if(st==='grab'&&b.wind){L(c0+f*8,top+8,9,'rgba(255,170,90,.4)')}
+    ctx.globalCompositeOperation='source-over'}};
 function tsunoIntro(){if(scene||boss)return;if(save.story.tsunoSeen){runScene([{wait:30},{say:'ツノ',l:['……また来たのか。']},{fn:()=>startTsuno()}]);return}save.story.tsunoSeen=true;persist();
   runScene([{wait:20},{fn:()=>{flowStop=true;sfx('ksoft')}},{wait:60},{fn:()=>{sceneTsuno={x:15*T,y:TSF[0]-26,face:1}}},{wait:50},{fn:()=>{sceneTsuno.face=-1}},{wait:20},
     {say:'灯を持たない旅人',l:['……ここまで来たか。']},{wait:16},{say:'灯を持たない旅人',l:['見ろ。この崖を流れているのは、みんな、降りていった灯守の灯りだ。','……その灯りを、ここに置いていけ。']},
-    {fn:()=>{bossCard({id:'tsuno',name:'灯を持たない旅人'});sfx('roar');shake=6;setTimeout(()=>{$('bcName').textContent='ツノ';sfx('kstone')},1500)}},{wait:110},
+    {fn:()=>{const named=!!save.story.tsuno;bossCard({id:'tsuno',name:named?'ツノ':'灯を持たない旅人'});sfx('roar');shake=6;if(!named)setTimeout(()=>{$('bcName').textContent='ツノ';sfx('kstone')},1500)}},{wait:110},
     {fn:()=>{flowStop=false;sceneTsuno=null;startTsuno()}}])}
 let sceneTsuno=null,flowStop=false;
 function startTsuno(){const a=room.arena;locked=true;for(const [x,y] of a.door)tiles[y][x]='D';renderRoom();boss=TSUNO.make();boss.x=15*T;boss.face=-1;bsay(TSUNO_LINES[1]);$('bosscard').classList.remove('on')}
@@ -3171,13 +3432,13 @@ function finishTsuno(){const b=boss;if(!b||b.state==='end')return;b.state='end';
 const BOSSES={shisai:SHISAI,komori:KOMORI,tsuno:TSUNO,twins:TWINS,warden:WARDEN,moth:MOTH,centi:CENTI,knight2:KNIGHT2,archivist:ARCHIVIST,eel:EEL,graver:GRAVER,kazanaki:KAZANAKI,oracle:ORACLE};
 const B=()=>BOSSES[boss.id];
 
+let rmHid=[];
 function startRematch(id){
   sfx('door');blk.a=1;blk.hold=34;blk.wait=false;blk.sp=.03;items=items.filter(i=>i.type!=='echoorb');
   p.x=2*T+3;p.y=FY-p.h;p.vx=p.vy=0;p.face=1;p.hp=MAXHP;p.safe={x:p.x,y:p.y};snapCam();
-  const a=room.arena;locked=true;for(const [x,y] of a.door)tiles[y][x]='D';
-  if(roomKey==='a8')for(let y=0;y<rh;y++)for(let x=0;x<rw;x++)if(room.map[y][x]==='S')tiles[y][x]='#';
-  if(a.post)for(const [x0,x1,y] of a.post)for(let x=x0;x<=x1;x++)tiles[y][x]='#';
-  renderRoom();boss=BOSSES[id].make();boss.hard=true;boss.name='残響 ─ '+boss.name;
+  // 強化版は、最初に戦ったときの地形に戻す（倒したあとに出た足場・壊した壁・開いた仕掛けを元どおりに）
+  const a=room.arena;locked=true;tiles=room.map.map(r=>r.split('').map(c=>c==='S'?'#':c));for(const [x,y] of a.door)tiles[y][x]='D';for(const g in GATES){const d=GATES[g][roomKey];if(d)for(const [x,y] of gateCells(d))tiles[y][x]=d.t||'D'}
+  rmHid=items.filter(i=>i.type==='rope');items=items.filter(i=>i.type!=='rope');renderRoom();boss=BOSSES[id].make();boss.hard=true;boss.name='残響 ─ '+boss.name;
   cine={t:0,dur:90,first:false};setTimeout(()=>showName(boss?boss.name:'',true),500);
 }
 let scene=null;
@@ -3256,10 +3517,13 @@ function killBoss(){
   const [cx,cy]=B().center(boss);
   burst(cx,Math.min(cy,FY-10),40,['#f2b552','#ece4cf','#e46a6a'],4,.03,60);
   shake=12;sfx('bosskill');deathFx={x:cx,y:Math.min(cy,FY-14),t:0};hitstop=Math.max(hitstop,26);flash=Math.max(flash,.6);dropRin(cx,Math.min(cy,FY-20),25*(eq('kaketa')?2:1));
-  const id=boss.id,hard=!!boss.hard;if(hard){if(!save.hardDefeated.includes(id))save.hardDefeated.push(id)}else save.defeated.push(id);boss=null;projs=[];hazards=[];locked=false;
+  const id=boss.id,hard=!!boss.hard;if(hard){if(!save.hardDefeated.includes(id))save.hardDefeated.push(id)}else save.defeated.push(id);boss=null;projs=[];hazards=[];locked=false;plats=plats.filter(q=>!q.book);
   const a=room.arena;for(const [x,y] of a.door)tiles[y][x]='.';
   applyGate();
   if(a.post){for(const [x0,x1,y] of a.post)for(let x=x0;x<=x1;x++){tiles[y][x]='#';burst(x*T+8,y*T+8,3,['#8a8f9f','#cfd5df'],1,.05,20)}}
+  if(hard&&rmHid.length){items.push(...rmHid);rmHid=[]}
+  if(hard){for(const g in GATES){const d=GATES[g][roomKey];if(d&&gateOpen(g))for(const [x,y] of gateCells(d))tiles[y][x]=room.map[y][x]==='S'?'#':room.map[y][x]}}
+  if(hard){for(const b of save.broken){const [rk,pos]=b.split('@');if(rk===roomKey){const [x,y]=pos.split(',').map(Number);tiles[y][x]='.'}}}
   if(id==='graver'){for(let y=0;y<rh;y++)for(let x=0;x<rw;x++)if(room.map[y][x]==='S'){tiles[y][x]='.';if(!hard)burst(x*T+8,y*T+8,5,['#8a8478','#c8c0b0'],2.4,.12,30)}sfx('brk');shake=12}
   windX=0;windY=0;if(trk)trk.shift=0;
   renderRoom();
@@ -3279,7 +3543,7 @@ function killBoss(){
 
 /* ================= 更新 ================= */
 function step(){
-  frames++;save.frames++;if(boss&&boss.dmg0===undefined)boss.dmg0=dmgTaken;if(frames%60===0)try{achPoll()}catch(e){}const prevFace=p.face;
+  frames++;save.frames++;if(p&&p.entryRoom!==roomKey){p.entryRoom=roomKey;p.entry={x:p.x,y:p.y}}if(boss&&boss.dmg0===undefined)boss.dmg0=dmgTaken;if(frames%60===0)try{achPoll()}catch(e){}const prevFace=p.face;
   if(pressed.esc){openPause();return}
   if(cine){cineStep();return}
   if(scene){sceneStep();return}
@@ -3358,7 +3622,7 @@ function step(){
   {let on=false;const x0=Math.floor(p.x/T),x1=Math.floor((p.x+p.w-.01)/T),y0=Math.floor(p.y/T),y1=Math.floor((p.y+p.h-.01)/T);
    for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(ty>=0&&ty<rh&&tx>=0&&tx<rw&&(tiles[ty][tx]==='^'&&hit(p,{x:tx*T+2,y:ty*T+9,w:12,h:7})||tiles[ty][tx]==='X'&&hit(p,{x:tx*T+2,y:ty*T+6,w:12,h:10})))on=true;
    if(on){spikeHit();if(mode!=='play')return}
-   else if(p.onGround&&!(p.onPlat&&/^(pend|cryp|bubble|gstone|crumb|beat|stream)$/.test(p.onPlat.kind))){let near=false;for(let tx=x0-1;tx<=x1+1;tx++){const ty=Math.floor((p.y+p.h+1)/T);if(tx>=0&&tx<rw&&ty<rh&&(tiles[ty-1]&&(tiles[ty-1][tx]==='^'||tiles[ty-1][tx]==='X')))near=true}if(!near)p.safe={x:p.x,y:p.y}}}
+   else if(p.onGround&&!(p.onPlat&&/^(pend|cryp|bubble|gstone|crumb|beat|stream)$/.test(p.onPlat.kind))){let near=false;for(let tx=x0-1;tx<=x1+1;tx++){const ty=Math.floor((p.y+p.h+1)/T);if(tx>=0&&tx<rw&&ty<rh&&(tiles[ty-1]&&(tiles[ty-1][tx]==='^'||tiles[ty-1][tx]==='X')))near=true}{const fy=Math.floor((p.y+p.h+1)/T),fx=Math.floor((p.x+p.w/2)/T),fc=tiles[fy]&&tiles[fy][fx];if(fc==='R'||fc==='H')near=true}if(!near)p.safe={x:p.x,y:p.y}}}
   // もろい床のヒント
   if(p.onGround&&!save.plunge){const ty=Math.floor((p.y+p.h+1)/T),tx=Math.floor((p.x+p.w/2)/T);if(ty<rh&&tiles[ty][tx]==='B')hintOnce('crumble','床がもろい','上から勢いよく落ちれば崩れそうだ')}
   // ボス部屋の扉
@@ -3533,6 +3797,7 @@ function step(){
   for(const r of runes)r.t++;runes=runes.filter(r=>r.t<34);
   for(const k of sparks){k.x+=k.vx;k.y+=k.vy;k.vx*=.86;k.vy=k.vy*.86+.08;k.life--}sparks=sparks.filter(k=>k.life>0);
   for(const g2 of rings)g2.t++;rings=rings.filter(g2=>g2.t<g2.max);
+  for(const k of slashes)k.t++;slashes=slashes.filter(k=>k.t<10);for(const k of impacts)k.t++;impacts=impacts.filter(k=>k.t<6);
   for(const t of ftexts)t.t++;ftexts=ftexts.filter(t=>t.t<70);
   if(shake>0)shake*=.85;if(shake<.3)shake=0;
 }
@@ -4099,6 +4364,12 @@ function drawSparks(){
   ctx.globalCompositeOperation='lighter';
   for(const g2 of rings){const k=g2.t/g2.max;ctx.globalAlpha=(1-k)*.9;ctx.strokeStyle=g2.col;ctx.lineWidth=2*(1-k)+.5;ctx.beginPath();ctx.arc(g2.x,g2.y,4+k*g2.max*1.4,0,7);ctx.stroke()}
   for(const k of sparks){ctx.globalAlpha=Math.min(1,k.life/10);ctx.strokeStyle=k.col;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(k.x,k.y);ctx.lineTo(k.x-k.vx*1.8,k.y-k.vy*1.8);ctx.stroke()}
+  for(const k of impacts){const u=k.t/6,r=k.r*(1-u*.5);ctx.globalAlpha=1-u;ctx.fillStyle=k.red?'#ffd0c8':'#ffffff';ctx.beginPath();ctx.arc(k.x,k.y,r*.6,0,7);ctx.fill();
+    ctx.fillRect(k.x-r*1.6,k.y-.5,r*3.2,1);ctx.fillRect(k.x-.5,k.y-r*1.6,1,r*3.2)}
+  for(const k of slashes){const u=k.t/10,grow=Math.min(1,k.t/2+.3),L=k.len*grow/2,dx=Math.cos(k.a)*L,dy=Math.sin(k.a)*L,wd=k.w*(1-u);
+    ctx.globalAlpha=1-u;ctx.lineCap='round';ctx.strokeStyle=k.col;ctx.lineWidth=wd+2;ctx.beginPath();ctx.moveTo(k.x-dx,k.y-dy);ctx.lineTo(k.x+dx,k.y+dy);ctx.stroke();
+    ctx.strokeStyle='#ffffff';ctx.lineWidth=Math.max(.5,wd*.5);ctx.beginPath();ctx.moveTo(k.x-dx*.9,k.y-dy*.9);ctx.lineTo(k.x+dx*.9,k.y+dy*.9);ctx.stroke();ctx.lineCap='butt'}
+  ctx.globalAlpha=1;
   ctx.globalAlpha=1;ctx.lineWidth=1;ctx.globalCompositeOperation='source-over'}
 function drawRunes(){drawSparks();
   for(const r of runes){const k=r.t/34,rad=6+k*18;ctx.globalAlpha=1-k;ctx.strokeStyle=r.col;ctx.lineWidth=1;ctx.beginPath();ctx.arc(r.x,r.y,rad,0,7);ctx.stroke();
@@ -4243,12 +4514,14 @@ function draw(){
      wCx.fillStyle=wg;wCx.fillRect(camX-10,camY-10,W+20,H+20);wCx.globalCompositeOperation='source-over';
      ctx.save();ctx.setTransform(S,0,0,S,0,0);ctx.drawImage(wCv,0,0);ctx.restore()}}
   for(const q of projs)drawProj(q);
+  if(boss&&boss.id==='tsuno'&&boss.state!=='end')TSUNO.tel(boss);
   for(const r of rins){if(r.mat){const c={koke:'#9ff2a4',ishi:'#c8d6ff',nuke:'#e8c49a',sabi:'#c8885a',peji:'#e8dcc0',mizukusa:'#5fc8a0'}[r.mat]||'#fff';ctx.fillStyle=c;ctx.fillRect(Math.round(r.x)-2,Math.round(r.y)-2,4,4);ctx.fillStyle='#fff';ctx.fillRect(Math.round(r.x)-1,Math.round(r.y)-1,1,1);continue}
     ctx.fillStyle='#ffd37a';ctx.fillRect(Math.round(r.x)-1,Math.round(r.y)-2,2,4);ctx.fillRect(Math.round(r.x)-2,Math.round(r.y)-1,4,2);ctx.fillStyle='#fff1c4';ctx.fillRect(Math.round(r.x),Math.round(r.y)-1,1,1)}
   drawRunes();
   if(p.near&&mode==='play'&&!hideHUD&&!scene){const n=p.near,nx=n.type==='lift'?p.x+p.w/2:n.x+8,ny=n.type==='lift'?p.y-14:n.y-14,t=(TOUCH?'▲ ':'↑ ')+INTER[n.type];
     ctx.font='8px DotGothic16, monospace';ctx.textBaseline='top';const tw=ctx.measureText(t).width+8;ctx.fillStyle='rgba(8,11,20,.82)';ctx.fillRect(nx-tw/2,ny-4,tw,11);ctx.fillStyle='#f2b552';ctx.fillText(t,nx-tw/2+4,ny-3)}
   ctx.restore();
+  if(hurtV>0){const a=hurtV;ctx.fillStyle='rgba(200,30,40,'+(a*a*.28)+')';ctx.fillRect(0,0,W,H);const vg=ctx.createRadialGradient(W/2,H/2,H*.25,W/2,H/2,W*.62);vg.addColorStop(0,'rgba(120,0,10,0)');vg.addColorStop(1,'rgba(150,0,16,'+(.6*a)+')');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);hurtV=Math.max(0,hurtV-(hitstop>0?.015:.035))}
   if(flash>0){ctx.fillStyle='rgba(255,241,196,'+flash+')';ctx.fillRect(0,0,W,H);flash=Math.max(0,flash-.03)}
   if((p.sleep>0||p.asleep>0)&&!hideHUD){const a=p.asleep>0?.6:Math.min(.55,p.sleep/100*.55);const vg=ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,W*.6);vg.addColorStop(0,'rgba(20,6,16,'+(a*.4)+')');vg.addColorStop(1,'rgba(20,6,16,'+a+')');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H)}
   if(p.hp===1&&!hideHUD){const pu=.5+.5*Math.sin(frames*.12),vg=ctx.createRadialGradient(W/2,H/2,H*.35,W/2,H/2,W*.62);vg.addColorStop(0,'rgba(90,0,10,0)');vg.addColorStop(1,'rgba(110,0,14,'+(.25+.2*pu)+')');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H)}
@@ -4266,7 +4539,9 @@ function draw(){
     if(lv>0){ctx.fillStyle=ready?'#fff1c4':'#c08040';ctx.fillRect(x+4,y+4+(h-6)-fh+1,4,Math.min(3,fh))}
     ctx.fillStyle='#8a6a3a';ctx.fillRect(x,y+4,1,h-6);ctx.fillRect(x+w-1,y+4,1,h-6);
     for(let k=1;k<3;k++){ctx.fillStyle='rgba(13,18,32,.9)';ctx.fillRect(x+1,Math.round(y+4+(h-6)*(1-k/3)),2,1);ctx.fillRect(x+w-3,Math.round(y+4+(h-6)*(1-k/3)),2,1)}}
-  for(let i=0;i<MAXHP;i++)drawHeart(29+i*9,8,i<p.hp);
+  {const hs=heartFx&&heartFx.t<12?(12-heartFx.t)/4:0;for(let i=0;i<MAXHP;i++)drawHeart(29+i*9+(hs&&i<p.hp+2?Math.round((Math.random()-.5)*hs):0),8,i<p.hp)}
+  if(heartFx){const f=heartFx;f.t++;for(let i=f.from;i<f.to&&i<MAXHP;i++){const hx=29+i*9+3,hy=11;for(let k=0;k<5;k++){const a=-Math.PI/2+(k-2)*.7,d=f.t*1.3,gx=hx+Math.cos(a)*d,gy=hy+Math.sin(a)*d+f.t*f.t*.05;ctx.globalAlpha=Math.max(0,1-f.t/30);ctx.fillStyle=k%2?'#e46a6a':'#ffb3a8';ctx.fillRect(Math.round(gx),Math.round(gy),2,2)}}
+    ctx.globalAlpha=1;if(f.t>30)heartFx=null}
   {ctx.fillStyle='#ffd37a';ctx.fillRect(30,17,2,5);ctx.fillRect(29,18,4,3);ctx.fillStyle='#fff1c4';ctx.fillRect(30,18,1,1);
    ctx.font='8px DotGothic16, monospace';ctx.textBaseline='top';ctx.fillStyle='#ece4cf';ctx.fillText(String(save.rin),36,15)}
   ctx.font='8px DotGothic16, monospace';ctx.textBaseline='top';ctx.fillStyle='#8d93a6';
@@ -4357,7 +4632,8 @@ function menuTick(){
 }
 /* ================= 会話・語り ================= */
 let talkQ=[],talkI=0,talkCb=null,talkShown=0,talkPrev='play';
-function talk(name,lines,cb,narr){talkQ=(lines||[]).map(keyify);talkI=0;talkCb=cb||null;talkShown=0;talkPrev=mode==='talk'?'play':mode;mode='talk';
+let talkPlain=null;
+function talk(name,lines,cb,narr){if(name==='灯を持たない旅人'&&save&&save.story&&save.story.tsuno)name='ツノ';if(talkPlain){if(narr){narr=false;if(!name)name=talkPlain}talkPlain=null}talkQ=(lines||[]).map(keyify);talkI=0;talkCb=cb||null;talkShown=0;talkPrev=mode==='talk'?'play':mode;mode='talk';
   const el=$('talk');el.hidden=false;el.classList.toggle('narr',!!narr);$('talkName').textContent=name;$('talkText').textContent='';}
 function talkTick(){
   const line=talkQ[talkI]||'';
@@ -4369,7 +4645,7 @@ function talkTick(){
   }
 }
 stageEl.addEventListener('wheel',e=>{if(mode!=='map')return;e.preventDefault();mapZ=clamp(mapZ*(e.deltaY<0?1.12:1/1.12),.45,3.2)},{passive:false});
-const toCanvas=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]};
+const toCanvas=e=>{const r=cv.getBoundingClientRect();if(isRot())return[(e.clientY-r.top)/r.height*W,(r.right-e.clientX)/r.width*H];return[(e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H]};
 stageEl.addEventListener('pointerdown',e=>{if(mode!=='map'||e.target.closest('.pad'))return;const [x,y]=toCanvas(e);mapDrag={x,y,cx:mcx,cy:mcy,moved:false,id:e.pointerId}});
 addEventListener('pointermove',e=>{if(!mapDrag||mode!=='map'||e.pointerId!==mapDrag.id)return;const [x,y]=toCanvas(e),cw=26*mapZ,ch=cw*14/24;
   if(Math.hypot(x-mapDrag.x,y-mapDrag.y)>4)mapDrag.moved=true;if(mapDrag.moved){mapFollow=false;mcx=clamp(mapDrag.cx-(x-mapDrag.x)/cw,-6,20);mcy=clamp(mapDrag.cy-(y-mapDrag.y)/ch,-.5,37)}});
@@ -4421,7 +4697,7 @@ function mapTick(){
     if(pressed.map||pressed.esc||pressed.tap){mode='play';sfx('close')}return}
   if(pressed.map||pressed.esc||pressed.jump||pressed.atk||pressed.tap){mode='play';sfx('close')}
 }
-const BFACE={"shisai":["..wwwww..",".wwwwwww.","wwwwwwwww","wkkwwwkkw","wwwwwwwww","wwwwwwwww",".wwwwwww.","..g...g.."],"komori":["..mmmmm..",".mbbbbbm.","mbbbbbbbm","mbkkbkkbm","mbbbbbbbm","mmbbbbbmm",".mm.y.mm.","....y...."],"tsuno":["g.......g",".g.....g.","..ddddd..",".ddddddd.","ddwdddwdd","ddddddddd",".ddddddd.","..d...d.."],"twins":["..uuuuu..",".uuuuuuu.","uukkkkkuu","uuuukuuuu","uuuukuuuu",".uuukuuu.","..uuuuu..","...u.u..."],"warden": ["..sssss..", ".sssssss.", "sssssssss", "sYYsssYYs", "sssssssss", "ss.ddd.ss", "sssssssss", ".sssssss."], "moth": ["a.......a", ".a.....a.", "..mmmmm..", "wmkmmmkmw", "wwmmmmmww", "wwmmmmmww", ".w.mmm.w.", "...m.m..."], "centi": ["c.......c", ".c.....c.", "..rrrrr..", ".rrrrrrr.", "rrYrrrYrr", "rrrrrrrrr", ".rr.r.rr.", "r.......r"], "knight2": ["...hhh...", "..hhhhh..", ".hhhhhhh.", "hhhhhhhhh", "hkkkkkkkh", "hkTkkkTkh", "hhhhhhhhh", ".hh.h.hh."], "archivist": ["....f....", "...ofo...", "..ppppp..", ".ppkkkpp.", "ppkWkWkpp", "ppkkkkkpp", "ppppppppp", ".ppppppp."], "eel": ["...eee...", ".eeeeeee.", "eeeeeeeee", "eeWkeeeee", "eeeeeeeee", "eekkkkkee", ".ekekeke.", "..eeeee.."], "graver": [".bbbbbbb.", "bbbbbbbbb", "bkkbbbkkb", "bkkbbbkkb", "bbbbkbbbb", ".bbbbbbb.", "..bkbkb..", "..bbbbb.."], "kazanaki": ["g...g...g", ".g.ggg.g.", "..ggggg..", "nnnnnnnnn", ".nkknkkn.", ".nkWnkWn.", "..nnnnn..", "...n.n..."], "oracle": ["....q....", "...qqq...", "..qqqqq..", ".qqWqWqq.", "qqqqqqqqq", ".qqqqqqq.", "..qqqqq..", "...qqq..."]},BFC={"u":"#c8d8f0","w":"#eeeae0","m":"#6a4a56","b":"#d8ccc4","y":"#ffd37a","d":"#1e1a24","s": "#8a8f9f", "Y": "#ffd37a", "d": "#3a3e4a", "a": "#cfe0ff", "m": "#a8c4e0", "w": "#e8f0ff", "k": "#0a0a12", "c": "#e0a070", "r": "#a8503a", "h": "#5a8a8a", "T": "#9ff0e0", "f": "#ffd37a", "o": "#e0a040", "p": "#6a5a7a", "W": "#f4f1e6", "e": "#3a5a8a", "b": "#d8d0c0", "g": "#c8d8e8", "n": "#7a8aa0", "q": "#9fd8ff"};
+const BFACE={"shisai":["..wwwww..",".wwwwwww.","wwwwwwwww","wkkwwwkkw","wwwwwwwww","wwwwwwwww",".wwwwwww.","..g...g.."],"komori":["..mmmmm..",".mbbbbbm.","mbbbbbbbm","mbkkbkkbm","mbbbbbbbm","mmbbbbbmm",".mm.y.mm.","....y...."],"tsuno":["A.A...A.A",".AA...AA.",".HHHHHHH.","LLLLLLLLL",".kkkkkkk.",".kwkkkwk.",".kkkkkkk.","..kkkkk.."],"twins":["..uuuuu..",".uuuuuuu.","uukkkkkuu","uuuukuuuu","uuuukuuuu",".uuukuuu.","..uuuuu..","...u.u..."],"warden": ["..sssss..", ".sssssss.", "sssssssss", "sYYsssYYs", "sssssssss", "ss.ddd.ss", "sssssssss", ".sssssss."], "moth": ["a.......a", ".a.....a.", "..mmmmm..", "wmkmmmkmw", "wwmmmmmww", "wwmmmmmww", ".w.mmm.w.", "...m.m..."], "centi": ["c.......c", ".c.....c.", "..rrrrr..", ".rrrrrrr.", "rrYrrrYrr", "rrrrrrrrr", ".rr.r.rr.", "r.......r"], "knight2": ["...hhh...", "..hhhhh..", ".hhhhhhh.", "hhhhhhhhh", "hkkkkkkkh", "hkTkkkTkh", "hhhhhhhhh", ".hh.h.hh."], "archivist": ["....f....", "...ofo...", "..ppppp..", ".ppkkkpp.", "ppkWkWkpp", "ppkkkkkpp", "ppppppppp", ".ppppppp."], "eel": ["...eee...", ".eeeeeee.", "eeeeeeeee", "eeWkeeeee", "eeeeeeeee", "eekkkkkee", ".ekekeke.", "..eeeee.."], "graver": [".bbbbbbb.", "bbbbbbbbb", "bkkbbbkkb", "bkkbbbkkb", "bbbbkbbbb", ".bbbbbbb.", "..bkbkb..", "..bbbbb.."], "kazanaki": ["g...g...g", ".g.ggg.g.", "..ggggg..", "nnnnnnnnn", ".nkknkkn.", ".nkWnkWn.", "..nnnnn..", "...n.n..."], "oracle": ["....q....", "...qqq...", "..qqqqq..", ".qqWqWqq.", "qqqqqqqqq", ".qqqqqqq.", "..qqqqq..", "...qqq..."]},BFC={"u":"#c8d8f0","w":"#eeeae0","m":"#6a4a56","b":"#d8ccc4","y":"#ffd37a","d":"#1e1a24","s": "#8a8f9f", "Y": "#ffd37a", "d": "#3a3e4a", "a": "#cfe0ff", "m": "#a8c4e0", "w": "#e8f0ff", "k": "#0a0a12", "c": "#e0a070", "r": "#a8503a", "h": "#5a8a8a", "T": "#9ff0e0", "f": "#ffd37a", "o": "#e0a040", "p": "#6a5a7a", "W": "#f4f1e6", "e": "#3a5a8a", "b": "#d8d0c0", "g": "#c8d8e8", "n": "#7a8aa0", "q": "#9fd8ff", "A": "#8a7656", "H": "#bdb59e", "L": "#d6cfb8"};
 function bossFace(x,y,id,st,k){const m=BFACE[id];if(!m)return;k=k||1;x=Math.round(x);y=Math.round(y);
   ctx.fillStyle=st==='hard'?'#9cc4ff':st==='done'?'#f2b552':'#e46a6a';ctx.fillRect(x-1,y-1,9*k+2,8*k+2);ctx.fillStyle='#05070d';ctx.fillRect(x,y,9*k,8*k);
   for(let r=0;r<8;r++)for(let c=0;c<9;c++){const ch=m[r][c];if(ch!=='.'){ctx.fillStyle=BFC[ch];ctx.fillRect(x+c*k,y+r*k,k,k)}}
@@ -4663,6 +4939,9 @@ function beastSprite(c,k,seen){
       else if(k==='kazanaki'){ctx.scale(.95,.95);const b=KAZANAKI.make();b.x=(48/.95-24)/2;b.y=3;b.hx=b.x;b.hy=b.y;b.state='idle';KAZANAKI.draw(b)}
       else if(k==='twins'){ctx.scale(.68,.68);const b=TWINS.make();b.state='fight';b.ks[0].x=2;b.ks[0].y=20;b.ks[0].face=1;b.ks[1].x=44;b.ks[1].y=24;b.ks[1].face=-1;TWINS.draw(b)}
       else if(k==='oracle'){ctx.scale(.85,.85);const b=ORACLE.make();b.x=(48/.85-24)/2;b.y=2;b.state='idle';b.al=1;ORACLE.draw(b)}
+      else if(k==='shisai'){const sc=.68;ctx.scale(sc,sc);const b=SHISAI.make();b.x=(48/sc-b.w)/2;b.y=2;b.state='idle';b.face=1;SHISAI.draw(b)}
+      else if(k==='komori'){const sc=.6;ctx.scale(sc,sc);const b=KOMORI.make();b.x=(48/sc-b.w)/2;b.y=4;b.state='idle';b.sw=.6;KOMORI.draw(b)}
+      else if(k==='tsuno'){const sc=1.1;ctx.scale(sc,sc);const b=TSUNO.make();b.x=(48/sc-b.w)/2;b.y=(36/sc-b.h)/2;b.state='idle';b.face=1;b.vis=1;b.lamp=true;TSUNO.draw(b)}
       else{ctx.scale(.55,.55);const b=CENTI.make();b.head={x:74,y:22};b.segs=b.segs.map((s2,i)=>({x:66-i*8,y:30+Math.sin(i*.9)*5}));b.state='coil';CENTI.draw(b)}
       ctx.restore()}
     else{const SZ={otokui:[12,10],mimifusagi:[12,16],koenuke:[12,12],kuchinui:[12,16],kourou:[14,16],juzu:[7,7],neboke:[12,10],komorigumo:[10,8],makurawata:[12,10],damariko:[10,12],suigoke:[16,6],muban:[18,22],hankyou:[10,8],ishioyogi:[14,8],nagarebi:[8,8],okilan:[10,12],gakemori:[12,18],kanemushi:[10,8],shirushi:[16,16],otozan:[14,14],itsuwari:[16,18],banpei:[14,18],inori:[14,20],tatae:[12,12],walk:[12,10],drop:[10,8],lamp:[8,8],bat:[10,8],hop:[10,10],spit:[12,12],fly:[12,8],knight:[12,14],chime:[12,14],mole:[14,10],swoop:[12,8],drown:[12,13],crab:[14,10],leech:[10,6],lant:[10,10],fish2:[10,5],ghost:[12,14],ink:[14,9],jfish:[10,8],clam:[14,9],weed:[16,22],eelet:[14,6],heron:[12,18],bshell:[12,14],finger:[12,6],lampeater:[12,14],tombbearer:[16,18],offering:[8,8],kobell:[12,12],kazakiri:[12,8],nunobake:[12,14],kanetsuki:[34,20],gunsho:[16,14],hamushi:[6,6],kakera:[12,12],shoukumo:[10,8]}[k]||[12,12];
@@ -4782,6 +5061,8 @@ $('fsLoad').onclick=async e=>{e.stopPropagation();try{const [h]=await window.sho
 $('fsOff').onclick=async e=>{e.stopPropagation();fileH=null;fileOK=false;await fsSet(null);SET.txt=false;saveSet();syncSettings();fsMsg('自動保存をやめました');fsUI()};
 $('keyReset').onclick=e=>{e.stopPropagation();delete SET.keys;saveSet();rebuildKeymap();keyWait=null;renderKeys();$('keyMsg').textContent='初期設定に戻しました';sfx('pick')};
 $('fsTitle').onclick=e=>{e.stopPropagation();fileConnect()};
+$('rotBtn').onclick=e=>{e.stopPropagation();goLandscape()};$('rotBack').onclick=e=>{e.stopPropagation();setRot(false);try{if(document.fullscreenElement)document.exitFullscreen()}catch(_){}}
+if(TOUCH&&SET.rot)setRot(true);
 $('updBtn').onclick=e=>{e.stopPropagation();try{window.open(REPO_URL,'_blank','noopener')}catch(_){}};
 $('newsDl').onclick=async e=>{e.stopPropagation();$('newsMsg').textContent=(await dlBackup())?'shinsou-save.txt を保存しました':'保存できませんでした';sfx('save')};
 $('newsOk').onclick=e=>{e.stopPropagation();$('news').hidden=true;sfx('pick');focusFirst($('title'))};
@@ -4843,6 +5124,12 @@ $('pbtn').onclick=e=>{e.stopPropagation();if(mode==='play')openPause()};
 function isFull(){return document.body.classList.contains('fs')}
 function uiZoom(){const st=stageEl;if(!st)return;const z=isFull()?Math.max(1,Math.min(2.4,st.clientWidth/820)):1;st.style.setProperty('--uiz',z.toFixed(3))}
 addEventListener('resize',()=>setTimeout(uiZoom,50));
+function isRot(){return document.documentElement.classList.contains('rot')&&matchMedia('(orientation:portrait)').matches}
+function setRot(on){document.documentElement.classList.toggle('rot',!!on);try{SET.rot=!!on;saveSet()}catch(e){}setTimeout(uiZoom,60);window.scrollTo(0,0)}
+async function goLandscape(){let ok=false;
+  try{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;if(rq&&!document.fullscreenElement){await rq.call(el,{navigationUI:'hide'})}if(screen.orientation&&screen.orientation.lock){await screen.orientation.lock('landscape');ok=true}}catch(e){ok=false}
+  if(ok){document.body.classList.add('fs');setRot(false)}else setRot(true)}
+addEventListener('orientationchange',()=>setTimeout(()=>{if(!matchMedia('(orientation:portrait)').matches&&document.documentElement.classList.contains('rot'))document.documentElement.classList.remove('rot')},200));
 function setFull(on){
   if(on){document.body.classList.add('fs');window.scrollTo(0,0);try{const el=document.documentElement,rq=el.requestFullscreen||el.webkitRequestFullscreen;if(rq&&!document.fullscreenElement){const pr=rq.call(el,{navigationUI:'hide'});const lock=()=>{try{if(TOUCH&&screen.orientation&&screen.orientation.lock)screen.orientation.lock('landscape').catch(()=>{})}catch(_){}};if(pr&&pr.then)pr.then(lock,()=>{});else lock()}}catch(e){}}
   else{document.body.classList.remove('fs');try{if(document.fullscreenElement){const ex=document.exitFullscreen||document.webkitExitFullscreen;if(ex){const pr=ex.call(document);if(pr&&pr.catch)pr.catch(()=>{})}}}catch(e){}}
