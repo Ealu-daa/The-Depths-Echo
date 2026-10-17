@@ -275,6 +275,22 @@ html.rot .stage{container-type:size}
   html:not(.rot) #title{padding-bottom:56px}
   html:not(.rot) #title .ver{bottom:44px}
 }
+
+.pad .dpad,.pad button{pointer-events:auto}
+body.padediting .rotate{display:none!important}
+/* 画面ボタンを1つずつ置く */
+#pad.custom{pointer-events:none}
+#pad.custom .acts{display:contents}
+#pad.custom .dpad,#pad.custom .acts button{position:fixed!important;margin:0!important;transform:none!important;box-sizing:border-box;pointer-events:auto}
+#pad.custom .dpad{display:grid!important;grid-template-columns:repeat(3,1fr)!important;grid-template-rows:repeat(3,1fr)!important;gap:2px!important;padding:0!important}
+#pad.custom .dpad button{width:100%!important;height:100%!important;font-size:inherit!important}
+#pad.custom .acts button{font-size:inherit!important}
+#pad.editing.custom .dpad,#pad.editing.custom .acts button{outline:1px dashed rgba(242,181,82,.6);outline-offset:2px;cursor:move}
+#pad.editing .pe-sel{outline:2px solid #ffd37a!important;outline-offset:3px;box-shadow:0 0 14px rgba(255,211,122,.6)}
+#pad.editing.custom .acts{outline:none}
+.padedit.low{top:auto;bottom:max(8px,env(safe-area-inset-bottom,0px))}
+.padedit .pe-r{display:flex;align-items:center;gap:4px;width:60%}.padedit .pe-r input{width:100%}.padedit .pe-r small{color:var(--dim);font-size:10px;white-space:nowrap}
+.padedit .pe-btns{flex-wrap:wrap}
 </style>
 
 <div class="wrap">
@@ -387,11 +403,11 @@ html.rot .stage{container-type:size}
   </div>
 
   <div class="rotate"><button class="tb small" id="rotBtn">↻ 横画面で遊ぶ</button></div>
-  <div class="padedit" id="padEdit" hidden><b>画面ボタンの配置</b><span class="pe-hint">ボタンをドラッグして動かす</span>
-    <label>十字キーの大きさ<input type="range" id="peD" min="60" max="160" step="5"></label>
-    <label>ボタンの大きさ<input type="range" id="peA" min="60" max="160" step="5"></label>
-    <label>濃さ<input type="range" id="peO" min="25" max="100" step="5"></label>
-    <div class="pe-btns"><button class="tb small" id="peReset">初期に戻す</button><button class="tb small" id="peDone">完了</button></div></div>
+  <div class="padedit" id="padEdit" hidden><b>画面ボタンの配置 ─ <span id="peName">十字キー</span></b><span class="pe-hint">ボタンを押して選ぶ・ドラッグで動かす</span>
+    <label>大きさ<input type="range" id="peS" min="30" max="220" step="2"></label>
+    <label>縦横比<span class="pe-r"><small>縦長</small><input type="range" id="peR" min="-100" max="100" step="2"><small>横長</small></span></label>
+    <label>濃さ（全体）<input type="range" id="peO" min="25" max="100" step="5"></label>
+    <div class="pe-btns"><button class="tb small" id="peSq">縦横をそろえる</button><button class="tb small" id="peMove">この枠を動かす</button><button class="tb small" id="peReset">初期に戻す</button><button class="tb small" id="peDone">完了</button></div></div>
   <div class="pad" id="pad">
     <div class="dpad">
       <button class="up" data-k="up" aria-label="上">▲</button>
@@ -929,9 +945,9 @@ function loadSave(){return loadSlot(slot)}
 try{if(![1,2,3].some(n=>stGet(SLOT_KEY(n)))){const old=stGet('shinsou-zankyou-v4');if(old)stSet(SLOT_KEY(1),old)}}catch(e){}
 /* 設定 */
 const SET_KEY='shinsou-settings';
-const GAME_VER='0.84',REPO_URL='https://github.com/Ealu-daa/The-Depths-Echo',VER_URL='https://raw.githubusercontent.com/Ealu-daa/The-Depths-Echo/main/version.txt';
+const GAME_VER='0.85',REPO_URL='https://github.com/Ealu-daa/The-Depths-Echo',VER_URL='https://raw.githubusercontent.com/Ealu-daa/The-Depths-Echo/main/version.txt';
 setTimeout(()=>{try{const v=document.getElementById('verLine');if(v)v.textContent=v.textContent.replace(/v[0-9.]+/,'v'+GAME_VER)}catch(e){}},0);
-const CHANGES={'0.84':['機種によって画面からはみ出していたのを修正：タイトル・入手カード・メニューの大きさを画面の高さに合わせるように','スマホ縦画面：タイトルやメニューを、操作ボタンの上の広い場所に大きく表示するように','タイトルの版の表示が古いままだったのを修正'],'0.83':['攻撃が当たったときの手応えを強く：斬撃の線、光のはじけ、火花、ヒットストップ、画面の揺れ','被弾したときを派手に：一瞬止まる、赤い×の傷と衝撃、画面が赤くにじむ、ハートが砕けて飛び散る'],'0.82':['書庫の灯守：灯を移す（回復する）あいだは床まで降りてくる。立ったまま横斬りで止められる'],'0.81':['書庫の灯守：水が満ちているあいだに倒すと、浮いた本が穴の上に残って下りられなかったのを修正','書庫の灯守：灯を移す（回復する）あいだは低いところまで降りてくる。光っているあいだに3回斬れば止められる'],'0.80':['ツノ戦：技のあとに、はっきりした隙（息を整える）を入れた。重い技ほど長い','ツノ戦：隙のあいだは暗くても姿が見え、ぶつかってもダメージを受けない','ツノ戦：隙に何度も叩くと、跳びのいて間合いを取る（第1・2段階は4回、第3段階は3回）','ツノ戦：防御の時間を短くし、防御のあとにも短い隙'],'0.79':['トゲ這いの百足：トゲは片側だけに。体はその側の地面からまっすぐ立ちあがり、急に真ん中へ来なくなった。頭は低く、反対側から叩ける','トゲ這いの百足：潜ったあと体が地上を横切らないように／頭が出てくる場所を先に知らせるように','渦の大鰻：打ち上げられているあいだ、横に動かないように','鳴き石の番人：突進の跳ね返りはランダムではなく、第2段階で必ず（跳ね返る前の間も長く）。往復のあとは必ず目を回す','水晶の神託者：攻撃と攻撃のあいだに休みを入れた','蒼白の双騎士：画面に映っていない騎士は攻撃を始めないように','塔の頂：残響の灯が穴の上に出て触れなかったのを修正','風鳴き卿の強化版の最中に、綱で降りられないように'],'0.78':['古いセーブで、強化版に勝つ前から持っていたボスのまじないを外した（強化版に勝つと手に入る）'],'0.77':['すでにまじないを持っているボスに、強化版の残響の灯が出ていたのを修正（勝ったことにする）'],'0.76':['強化版のボス戦で、別の場所へ抜けられる穴（蒼白の聖域への道など）が開いていたのを閉じた'],'0.75':['強化版のボス戦は、最初に戦ったときの地形で戦うように（倒したあとに出る足場などは、勝つとまた出てくる）'],'0.74':['2〜4層の曲を作り直し：エリアごとに拍子・楽器・リズムを変えた（ワルツ、五拍子、七拍子、12拍子、聖歌、鐘の転調鳴らしなど）','曲に展開（Aメロ・Bメロ）、二つ目の旋律、こだまを追加','灯りの昇り井戸で曲が鳴らなかったのを修正'],'0.73':['ツノ戦の最初の段階で曲が消えていたのを修正（静かな曲が流れるように）','鳴らずの鐘道の上のほうで曲が鳴らなかったのを修正'],'0.72':['ツノ戦：技の前に構え（体が光る・杖の構え・地面の目印）が出るように','ツノの技の順番を固定に（段階ごとに決まった流れ）','ツノの新しい技「灯り落とし」：光る柱の目印のあとに灯りが落ちてくる','反撃の「……戻れ。」を削除'],'0.71':['4層を網の目に：祈り↔無響の抜け道、眠り↔無響の根の道、消え音→眠りの落とし穴（響き落とし）を追加','近道：祭壇の扉→祈りの回廊（レバー）、ツノの部屋→反響の縦穴（昇り井戸）','ツノ戦のツノを、旅人と同じ姿に／名前を知ったあとは、旅人の名前をすべて「ツノ」に統一','4層の住人との会話を、画面を暗くせず普通の会話枠で表示するようにした','スマホ：設定から画面ボタンの位置・大きさ・濃さを変えられる（縦と横で別々に保存）','スマホ：「横画面で遊ぶ」ボタンで横向きに（回転ロック中やiPhoneでも、画面ごと90°回して遊べる）','スマホ縦画面：操作ボタンを画面の下（親指の届く位置）に移し、十字キーを指をすべらせて斜めも入る形に','第4層の無音だった場所に小さな曲を追加（里・祈り・無響・崖・鐘道）','祭司と子守唄の後半で曲が消えたままにならず、少しの静寂のあと後半の曲になる','4層のボスの図鑑の絵を修正','石泳ぎを響き落としで黙り石から叩き出せるようにした','トゲに当たったとき、部屋の反対側に戻されることがあったのを修正','新しい抜け道（香の抜け道・眠りの根の道）の入口は黙り石：響き落としを手に入れるまで無響の大空洞には入れない','隠し部屋と命のかけらを5つ追加（照らし・響き落とし・鈴照らしで行ける場所）','実績「灯の記録」を追加（持ち物の「記録」タブ）','急降下を調整：敵に当てたあと少しのあいだ連続で出せない／ボスへのダメージ・無敵時間を減らし、空中ジャンプの回復をなくした','灯守の休み処から上の部屋へ登れなかったので、足場を追加','家の中の足場が透明になっていたのを修正','崩れた階段に、水の底へ押し下げる風のレバーを置いた','鐘道の門の上側にも鳴らせる鐘を吊るした','一族の住居跡の骨細工屋が出てこなかった不具合を修正','筆談の老人の「命のかけら」を買っても増えなかった不具合を修正'],'0.70':['新しい版が出たら、タイトル画面でお知らせするようにした','セーブに版の番号を記録するようにした（古い版のHTMLで新しいセーブは開かない）','ブラウザ内にも、セーブの予備を3世代残すようにした','セーブの保存先を選べるようにした（ブラウザだけ／ブラウザ＋txt）','txtへのバックアップと読み込み','書き換えたセーブを読み込むと……','4層：祈りの列・鈴のかけら・鐘道の門などの不具合を修正','4層の灯火を増やした','ミニマップが自分を中心にスクロールするようにした']};
+const CHANGES={'0.85':['スマホ：画面ボタンを1つずつ、大きさ・縦横比・位置を変えられるように（縦と横で別々に保存）','スマホ：遊んでいる途中で画面ボタンを調整すると、そのあと動けなくなっていたのを修正'],'0.84':['機種によって画面からはみ出していたのを修正：タイトル・入手カード・メニューの大きさを画面の高さに合わせるように','スマホ縦画面：タイトルやメニューを、操作ボタンの上の広い場所に大きく表示するように','タイトルの版の表示が古いままだったのを修正'],'0.83':['攻撃が当たったときの手応えを強く：斬撃の線、光のはじけ、火花、ヒットストップ、画面の揺れ','被弾したときを派手に：一瞬止まる、赤い×の傷と衝撃、画面が赤くにじむ、ハートが砕けて飛び散る'],'0.82':['書庫の灯守：灯を移す（回復する）あいだは床まで降りてくる。立ったまま横斬りで止められる'],'0.81':['書庫の灯守：水が満ちているあいだに倒すと、浮いた本が穴の上に残って下りられなかったのを修正','書庫の灯守：灯を移す（回復する）あいだは低いところまで降りてくる。光っているあいだに3回斬れば止められる'],'0.80':['ツノ戦：技のあとに、はっきりした隙（息を整える）を入れた。重い技ほど長い','ツノ戦：隙のあいだは暗くても姿が見え、ぶつかってもダメージを受けない','ツノ戦：隙に何度も叩くと、跳びのいて間合いを取る（第1・2段階は4回、第3段階は3回）','ツノ戦：防御の時間を短くし、防御のあとにも短い隙'],'0.79':['トゲ這いの百足：トゲは片側だけに。体はその側の地面からまっすぐ立ちあがり、急に真ん中へ来なくなった。頭は低く、反対側から叩ける','トゲ這いの百足：潜ったあと体が地上を横切らないように／頭が出てくる場所を先に知らせるように','渦の大鰻：打ち上げられているあいだ、横に動かないように','鳴き石の番人：突進の跳ね返りはランダムではなく、第2段階で必ず（跳ね返る前の間も長く）。往復のあとは必ず目を回す','水晶の神託者：攻撃と攻撃のあいだに休みを入れた','蒼白の双騎士：画面に映っていない騎士は攻撃を始めないように','塔の頂：残響の灯が穴の上に出て触れなかったのを修正','風鳴き卿の強化版の最中に、綱で降りられないように'],'0.78':['古いセーブで、強化版に勝つ前から持っていたボスのまじないを外した（強化版に勝つと手に入る）'],'0.77':['すでにまじないを持っているボスに、強化版の残響の灯が出ていたのを修正（勝ったことにする）'],'0.76':['強化版のボス戦で、別の場所へ抜けられる穴（蒼白の聖域への道など）が開いていたのを閉じた'],'0.75':['強化版のボス戦は、最初に戦ったときの地形で戦うように（倒したあとに出る足場などは、勝つとまた出てくる）'],'0.74':['2〜4層の曲を作り直し：エリアごとに拍子・楽器・リズムを変えた（ワルツ、五拍子、七拍子、12拍子、聖歌、鐘の転調鳴らしなど）','曲に展開（Aメロ・Bメロ）、二つ目の旋律、こだまを追加','灯りの昇り井戸で曲が鳴らなかったのを修正'],'0.73':['ツノ戦の最初の段階で曲が消えていたのを修正（静かな曲が流れるように）','鳴らずの鐘道の上のほうで曲が鳴らなかったのを修正'],'0.72':['ツノ戦：技の前に構え（体が光る・杖の構え・地面の目印）が出るように','ツノの技の順番を固定に（段階ごとに決まった流れ）','ツノの新しい技「灯り落とし」：光る柱の目印のあとに灯りが落ちてくる','反撃の「……戻れ。」を削除'],'0.71':['4層を網の目に：祈り↔無響の抜け道、眠り↔無響の根の道、消え音→眠りの落とし穴（響き落とし）を追加','近道：祭壇の扉→祈りの回廊（レバー）、ツノの部屋→反響の縦穴（昇り井戸）','ツノ戦のツノを、旅人と同じ姿に／名前を知ったあとは、旅人の名前をすべて「ツノ」に統一','4層の住人との会話を、画面を暗くせず普通の会話枠で表示するようにした','スマホ：設定から画面ボタンの位置・大きさ・濃さを変えられる（縦と横で別々に保存）','スマホ：「横画面で遊ぶ」ボタンで横向きに（回転ロック中やiPhoneでも、画面ごと90°回して遊べる）','スマホ縦画面：操作ボタンを画面の下（親指の届く位置）に移し、十字キーを指をすべらせて斜めも入る形に','第4層の無音だった場所に小さな曲を追加（里・祈り・無響・崖・鐘道）','祭司と子守唄の後半で曲が消えたままにならず、少しの静寂のあと後半の曲になる','4層のボスの図鑑の絵を修正','石泳ぎを響き落としで黙り石から叩き出せるようにした','トゲに当たったとき、部屋の反対側に戻されることがあったのを修正','新しい抜け道（香の抜け道・眠りの根の道）の入口は黙り石：響き落としを手に入れるまで無響の大空洞には入れない','隠し部屋と命のかけらを5つ追加（照らし・響き落とし・鈴照らしで行ける場所）','実績「灯の記録」を追加（持ち物の「記録」タブ）','急降下を調整：敵に当てたあと少しのあいだ連続で出せない／ボスへのダメージ・無敵時間を減らし、空中ジャンプの回復をなくした','灯守の休み処から上の部屋へ登れなかったので、足場を追加','家の中の足場が透明になっていたのを修正','崩れた階段に、水の底へ押し下げる風のレバーを置いた','鐘道の門の上側にも鳴らせる鐘を吊るした','一族の住居跡の骨細工屋が出てこなかった不具合を修正','筆談の老人の「命のかけら」を買っても増えなかった不具合を修正'],'0.70':['新しい版が出たら、タイトル画面でお知らせするようにした','セーブに版の番号を記録するようにした（古い版のHTMLで新しいセーブは開かない）','ブラウザ内にも、セーブの予備を3世代残すようにした','セーブの保存先を選べるようにした（ブラウザだけ／ブラウザ＋txt）','txtへのバックアップと読み込み','書き換えたセーブを読み込むと……','4層：祈りの列・鈴のかけら・鐘道の門などの不具合を修正','4層の灯火を増やした','ミニマップが自分を中心にスクロールするようにした']};
 function verCmp(a,b){const x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0}
 let SET={se:8,amb:6,bgm:5,shake:true,text:1,txt:false};
 try{Object.assign(SET,JSON.parse(stGet(SET_KEY))||{})}catch(e){}
@@ -1390,25 +1406,49 @@ document.querySelectorAll('#pad .acts button').forEach(b=>{
 
 
 /* ================= 画面ボタンの配置（向きごとに保存） ================= */
-let padEditing=false;
+let padEditing=false,padSel='dpad',padWasPause=false;
+const PADIDS=['dpad','atk','jump','dash','focus','map'],PADNAME={dpad:'十字キー',atk:'攻撃',jump:'ジャンプ',dash:'ダッシュ',focus:'灯移し',map:'地図'};
 function padKey(){return isRot()||matchMedia('(orientation:landscape)').matches?'land':'port'}
 function padCfg(){const all=SET.padLay||{};return Object.assign({dx:0,dy:0,ds:100,ax:0,ay:0,as:100,op:100},all[padKey()]||{})}
 function padSave(c){SET.padLay=SET.padLay||{};SET.padLay[padKey()]=c;saveSet()}
-function applyPad(){const c=padCfg(),dp=document.querySelector('#pad .dpad'),ac=document.querySelector('#pad .acts');if(!dp||!ac)return;
-  dp.style.transformOrigin='left bottom';ac.style.transformOrigin='right bottom';
-  dp.style.transform='translate('+c.dx+'px,'+c.dy+'px) scale('+c.ds/100+')';ac.style.transform='translate('+c.ax+'px,'+c.ay+'px) scale('+c.as/100+')';
-  $('pad').style.opacity=c.op/100}
-function openPadEdit(){padEditing=true;for(const id of ['settings','pause'])if($(id))$(id).hidden=true;$('padEdit').hidden=false;$('pad').classList.add('editing');const c=padCfg();$('peD').value=c.ds;$('peA').value=c.as;$('peO').value=c.op;applyPad();for(const k in held)held[k]=false}
-function closePadEdit(){padEditing=false;$('padEdit').hidden=true;$('pad').classList.remove('editing');if(mode==='title'){$('settings').hidden=false}else if(gameOn){$('settings').hidden=false}}
-setTimeout(function(){const groups=[['.dpad','d'],['.acts','a']];
-  for(const [sel,kk] of groups){const el=document.querySelector('#pad '+sel);if(!el)continue;let st=null;
-    el.addEventListener('pointerdown',e=>{if(!padEditing)return;e.preventDefault();e.stopImmediatePropagation();const c=padCfg();st={x:e.clientX,y:e.clientY,ox:c[kk+'x'],oy:c[kk+'y'],id:e.pointerId};try{el.setPointerCapture(e.pointerId)}catch(_){}},true);
-    el.addEventListener('pointermove',e=>{if(!padEditing||!st||e.pointerId!==st.id)return;e.stopImmediatePropagation();let dx=e.clientX-st.x,dy=e.clientY-st.y;if(isRot()){const t=dx;dx=dy;dy=-t}
-      const c=padCfg();c[kk+'x']=Math.round(st.ox+dx);c[kk+'y']=Math.round(st.oy+dy);padSave(c);applyPad()},true);
+// ボタンを1つずつ置く配置（向きごと）。なければ従来の並び
+function padL(){const a=SET.padLay2||{};return a[padKey()]||null}
+function padLSave(L){SET.padLay2=SET.padLay2||{};SET.padLay2[padKey()]=L;saveSet()}
+function padEl(id){return id==='dpad'?document.querySelector('#pad .dpad'):document.querySelector('#pad .acts [data-k='+id+']')}
+function padVW(){return isRot()?innerHeight:innerWidth}function padVH(){return isRot()?innerWidth:innerHeight}
+function padClear(){for(const id of PADIDS){const el=padEl(id);if(!el)continue;for(const k of['left','top','width','height','fontSize'])el.style[k]=''}}
+function applyPad(){const pad=$('pad'),dp=document.querySelector('#pad .dpad'),ac=document.querySelector('#pad .acts');if(!pad||!dp||!ac)return;const L=padL();
+  if(!L){pad.classList.remove('custom');padClear();const c=padCfg();dp.style.transformOrigin='left bottom';ac.style.transformOrigin='right bottom';
+    dp.style.transform='translate('+c.dx+'px,'+c.dy+'px) scale('+c.ds/100+')';ac.style.transform='translate('+c.ax+'px,'+c.ay+'px) scale('+c.as/100+')';pad.style.opacity=c.op/100;return}
+  pad.classList.add('custom');dp.style.transform='';ac.style.transform='';const VW=padVW(),VH=padVH();
+  for(const id of PADIDS){const el=padEl(id),r=L.items[id];if(!el||!r)continue;const w=clamp(r.w,24,VW),h=clamp(r.h,24,VH),x=clamp(r.x,0,VW-w),y=clamp(r.y,0,VH-h);
+    el.style.left=x+'px';el.style.top=y+'px';el.style.width=w+'px';el.style.height=h+'px';el.style.fontSize=Math.round(clamp(Math.min(h*(id==='dpad'?.12:.3),w*(id==='dpad'?.12:.22)),9,26))+'px'}
+  pad.style.opacity=(L.op==null?100:L.op)/100}
+// いまの見た目から、ボタン1つずつの位置と大きさを測る
+function padMeasure(){const pad=$('pad');delete (SET.padLay2||{})[padKey()];applyPad();void pad.offsetWidth;const rt=isRot(),items={};
+  for(const id of PADIDS){const el=padEl(id);if(!el)continue;const r=el.getBoundingClientRect();
+    items[id]=rt?{x:Math.round(r.top),y:Math.round(innerWidth-r.right),w:Math.round(r.height),h:Math.round(r.width)}:{x:Math.round(r.left),y:Math.round(r.top),w:Math.round(r.width),h:Math.round(r.height)}}
+  return {items,op:padCfg().op}}
+function padSelect(id){padSel=id;for(const k of PADIDS){const el=padEl(k);if(el)el.classList.toggle('pe-sel',padEditing&&k===id)}
+  const L=padL();if(!L)return;const r=L.items[id];$('peName').textContent=PADNAME[id];$('peS').value=Math.round(Math.sqrt(r.w*r.h));$('peR').value=Math.round(Math.log2(r.w/r.h)*60);$('peO').value=L.op==null?100:L.op}
+function openPadEdit(){padWasPause=!$('pause').hidden;padEditing=true;document.body.classList.add('padediting');for(const id of ['settings','pause'])if($(id))$(id).hidden=true;
+  if(!padL())padLSave(padMeasure());applyPad();$('padEdit').hidden=false;$('pad').classList.add('editing');padSelect(padSel);for(const k in held)held[k]=false}
+function closePadEdit(){padEditing=false;document.body.classList.remove('padediting');$('padEdit').hidden=true;$('pad').classList.remove('editing');for(const k of PADIDS){const el=padEl(k);if(el)el.classList.remove('pe-sel')}
+  for(const k in held)held[k]=false;if(padWasPause)$('pause').hidden=false;if(mode==='title'||gameOn)$('settings').hidden=false}
+setTimeout(function(){
+  for(const id of PADIDS){const el=padEl(id);if(!el)continue;let st=null;
+    el.addEventListener('pointerdown',e=>{if(!padEditing)return;e.preventDefault();e.stopImmediatePropagation();padSelect(id);const r=padL().items[id];st={x:e.clientX,y:e.clientY,ox:r.x,oy:r.y,pid:e.pointerId};try{el.setPointerCapture(e.pointerId)}catch(_){}},true);
+    el.addEventListener('pointermove',e=>{if(!padEditing||!st||e.pointerId!==st.pid)return;e.stopImmediatePropagation();let dx=e.clientX-st.x,dy=e.clientY-st.y;if(isRot()){const t=dx;dx=dy;dy=-t}
+      const L=padL(),r=L.items[id];r.x=Math.round(clamp(st.ox+dx,0,padVW()-r.w));r.y=Math.round(clamp(st.oy+dy,0,padVH()-r.h));padLSave(L);applyPad()},true);
     const end=e=>{if(!padEditing)return;st=null;e.stopImmediatePropagation()};el.addEventListener('pointerup',end,true);el.addEventListener('pointercancel',end,true)}
-  for(const [id,k] of [['peD','ds'],['peA','as'],['peO','op']])$(id).addEventListener('input',e=>{const c=padCfg();c[k]=+e.target.value;padSave(c);applyPad()});
-  for(const id of ['peD','peA','peO'])$(id).addEventListener('keydown',e=>e.stopPropagation());
-  $('peReset').onclick=e=>{e.stopPropagation();padSave({dx:0,dy:0,ds:100,ax:0,ay:0,as:100,op:100});openPadEdit()};
+  const resize=()=>{const L=padL();if(!L)return;const r=L.items[padSel],cx=r.x+r.w/2,cy=r.y+r.h/2,S2=+$('peS').value,ra=Math.pow(2,+$('peR').value/60);
+    r.w=Math.round(S2*Math.sqrt(ra));r.h=Math.round(S2/Math.sqrt(ra));r.x=Math.round(clamp(cx-r.w/2,0,padVW()-r.w));r.y=Math.round(clamp(cy-r.h/2,0,padVH()-r.h));padLSave(L);applyPad()};
+  $('peS').addEventListener('input',resize);$('peR').addEventListener('input',resize);
+  $('peO').addEventListener('input',e=>{const L=padL();if(!L)return;L.op=+e.target.value;padLSave(L);applyPad()});
+  for(const id of ['peS','peR','peO'])$(id).addEventListener('keydown',e=>e.stopPropagation());
+  $('peSq').onclick=e=>{e.stopPropagation();$('peR').value=0;resize()};
+  $('peMove').onclick=e=>{e.stopPropagation();$('padEdit').classList.toggle('low')};
+  $('peReset').onclick=e=>{e.stopPropagation();if(SET.padLay)delete SET.padLay[padKey()];if(SET.padLay2)delete SET.padLay2[padKey()];saveSet();padLSave(padMeasure());applyPad();padSelect(padSel)};
   $('peDone').onclick=e=>{e.stopPropagation();closePadEdit();sfx('pick')};
   $('padEditBtn').onclick=e=>{e.stopPropagation();openPadEdit()};
   if(!TOUCH&&$('padRow'))$('padRow').style.display='none';
