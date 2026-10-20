@@ -367,7 +367,7 @@ body.padediting .rotate{display:none!important}
     <button class="pbtn" id="pbtn" hidden aria-label="一時停止">≡</button>
     <button class="fsbtn" id="fsbtn" aria-label="全画面">⛶</button><button class="rotback" id="rotBack">↺ 縦に戻す</button>
     <div class="ov panelov" id="inv" hidden><div class="panel wide">
-      <div class="tabs"><button class="tab" data-tab="charm">まじない</button><button class="tab" data-tab="items">持ち物</button><button class="tab" data-tab="book">図鑑</button><button class="tab" data-tab="rec">記録</button></div>
+      <div class="tabs"><button class="tab" data-tab="charm">まじない</button><button class="tab" data-tab="items">持ち物</button><button class="tab" data-tab="book">図鑑</button><button class="tab" data-tab="cos">見た目</button><button class="tab" data-tab="rec">記録</button></div>
       <div class="split"><div id="invBody" style="display:flex;flex-direction:column;gap:6px"></div>
       <div class="idesc" id="invDesc"></div></div>
       <button class="tb" data-act="invclose">閉じる</button></div></div>
@@ -857,8 +857,8 @@ const layerOf=q=>q&&q.L?q.L:q&&q.cy>=14?3:q&&q.cy>=8?2:1;
 const LAYER_NAME={1:'第1層「祠の階」',2:'第2層「水没回廊」',3:'第3層「骨の聖堂」',4:'第4層「静寂の揺籃」',5:'第5層「灯溜まり」'};
 const BOSS_EPI={nushi:'円座をつくった、名前のない灯守',chise5:'あたたかい場所に、近づきたかった闇',kurai:'置いていかれた灯りを、食べつづけたもの',hinata1:'だれかの帰りを、待ちつづけた灯',sylph:'枯れた庭を、吹きつづけた風',shisai:'祈りの言葉を、なくしたもの',komori:'眠らない子を、あやしつづけたもの',tsuno:'灯りを捨てて、逃げたもの',twins:'眠る神を、守りつづけた二振り',oracle:'深い声を、伝えつづけたもの',kazanaki:'帰りを告げる鐘を、鳴らしつづけた風',graver:'名前を刻みつづけた手',knight2:'主を待ちつづけた鎧',archivist:'記録を書き終えられなかった人',eel:'パンくずを待っていたもの',warden:'白い花を待ちつづけた石',moth:'窓辺の火に焦がれたもの',centi:'雨音を子守唄にしたもの'};
 const BEAST={
-  mono:{n:'陽だまりのモノ',a:'残響の円座',d:'チセ戦の再演。中にチセはいない。\n闇だけが、人の形で動いている。'},
-  nushi:{n:'円座のヌシ',a:'残響の円座',d:'円座をつくった、元灯守の残響。\n倒したボスの技を、少しずつ変えて使う。'},
+  mono:{boss:true,n:'陽だまりのモノ',a:'残響の円座',d:'チセ戦の再演。中にチセはいない。\n闇だけが、人の形で動いている。'},
+  nushi:{boss:true,n:'円座のヌシ',a:'残響の円座',d:'円座をつくった、元灯守の残響。\n倒したボスの技を、少しずつ変えて使う。'},
   walk:{n:'さまよう殻',a:'大穴のあちこち',d:'中身をなくした殻。\nそれでも、歩いていた道だけは覚えている。'},
   drop:{n:'しずく這い',a:'大穴の棚',d:'天井でじっと待ち、下を通るものの上に落ちてくる。\n落ちたあとは、少し恥ずかしそうに這う。'},
   lamp:{n:'灯喰い',a:'大穴の棚',d:'灯りに焦がれて、ランタンの火を追いかけてくる。\n近づきすぎると、自分が燃えてしまうのに。'},
@@ -1042,9 +1042,9 @@ function loadSave(){return loadSlot(slot)}
 try{if(![1,2,3].some(n=>stGet(SLOT_KEY(n)))){const old=stGet('shinsou-zankyou-v4');if(old)stSet(SLOT_KEY(1),old)}}catch(e){}
 /* 設定 */
 const SET_KEY='shinsou-settings';
-const GAME_VER='0.99.3',REPO_URL='https://github.com/Ealu-daa/The-Depths-Echo',VER_URL='https://raw.githubusercontent.com/Ealu-daa/The-Depths-Echo/main/version.txt';
+const GAME_VER='0.99.4',REPO_URL='https://github.com/Ealu-daa/The-Depths-Echo',VER_URL='https://raw.githubusercontent.com/Ealu-daa/The-Depths-Echo/main/version.txt';
 setTimeout(()=>{try{const v=document.getElementById('verLine');if(v)v.textContent=v.textContent.replace(/v[0-9.]+/,'v'+GAME_VER)}catch(e){}},0);
-const CHANGES={'0.99.3':['残響の円座：第一章のあと、汀の寝床の広間の天井から入れる','層めぐり（層ごとに3体、好きな順）・全部入り（3体ずつの組で連戦）・個別戦（客席の像から）','縛り10個と点数・段階。個別戦の記録は記録の壁に刻まれる','燐は入口で預け、クリアしたらまとめて受け取る','陽だまりのモノ（チセのいない再演）と、円座のヌシ','ツノを倒したあと、灯り流れの底の床に穴が開き、足場で上り下りできるように（下へ降りられなかったのを直した）'],'0.99.2':['待ち人の道（12部屋）：第一章のあと、鳴らずの鐘道の共鳴の縦穴の底が開く。出口は汀の手前の光の降り口','新しい敵3種：拾い手・待ちぼうけ・目印灯','足音の通路の扉、拾い集めの間のランタン、ヒナタの書きつけ、声の水晶、闇の縦穴（火を絞ると見える足場）','溶けきれなかった跡の、枯れた蔓の奥に石板'],'0.99.1':['照らしと鈴照らしを同じ操作に（↑を押しながら灯移しボタンを短く押す）。鈴を持ったあとは、灯りが広がると同時に鈴の波紋も出る'],'0.99':['灯喰らいのあと、汀の灯火の間でツノとチセが追いつく','陽だまりの間（3部屋）と、最後のボス「陽だまりのチセ」','チセの闇だけを削る戦い。「おにいさん」の声で闇が止まる。最後は灯りを分ける','決着と「第一章 おわり」','鳴らずの鐘道の壁に、新しい印が並ぶ'],'0.98':['第5層②：灯の湖（10部屋）と思い出の浮島（8部屋）','陽だまりの番を撃退すると、汀から湖への扉が開く','新しい敵4種：灯り泡・すくい手・灯り鯉・まぼろし','ボス「灯喰らい」：飲みこまれると体の中へ。奪われた灯りを取り返す','浮島の幻を4つ見ると、最後の島に結び目','湖・浮島・灯喰らい戦の曲'],'0.97':['第5層「灯溜まり」の入口：灯の落ち路・まどろみの汀・白昼の回廊（21部屋）','ツノを越えると、灯り流れの底の床が開いて下へ降りられる','火を絞る操作：↓を押しながら灯移しボタンを長押し。淡く光る足場や、光に隠れた敵が見える','新しい敵8種：灯垂れ・まぶしがり・転がり灯・白い影・灯り蛾・添い寝の影・寝ぼけた残響・毛布おばけ','ボス「陽だまりの番」（1回目）','汀の住人と、毛布の灯守','第5層の曲4つ'],'0.96':['翡翠のシルフを強くした：後半は技を2つ続けてから休む','一陣の風のあいだにも、蔓の鞭の印が出るように','庭の渦のあいだ、床が蔓で埋まっていく（上昇気流に乗って空へ）','後半の蔓の鞭と根の突き上げは3ダメージに'],'0.95':['鐘道の裏庭の扉は、裏庭側と回廊側の両方のレバーを引かないと開かないように','翡翠のシルフの攻撃が2ダメージに（花粉はそのまま）'],'0.94':['忘れ井戸を6部屋の洞窟に作り直した（第1層）','シルフの庭園を第2層だけに。明るい緑と白い柱の庭にした','鳴らずの鐘道からだけ入れる「鐘道の裏庭」。レバーで庭園への近道が開く','忘れ井戸と庭園の灯火を増やした','地図：行ったことのある部屋から、まだ行っていない部屋への入口が見えるように'],'0.93':['新しい場所「忘れ井戸」（苔の住処の西）と「シルフの庭園」','新しい敵 5種：綿毛の精・芽吹きの蔓・蜜吸い蝶・根もぐら・種鉄砲の鞘','新しいボス「翡翠のシルフ」と、庭師','小さな種の袋と、大樹の根もとの花壇','まじない「翡翠の風」（強化版のシルフに勝つと手に入る）','忘れ井戸と庭園の曲、シルフ戦の曲'],'0.92':['地図の「文字」ボタンで、灯火を渡るときの灯火の名前も隠せるように'],'0.91':['鐘守の控えに、上の書庫の地下水路へ登れる天井の蓋（鐘楼の側のレバーで開く）','祈りの前に、晶の吹きだまりへ抜ける扉（祈りの側のレバーで開く）','地図：「文字」ボタン（キーボードは T）で部屋やエリアの名前を隠せるように','地図：拡大・縮小ボタンを大きく'],'0.90':['鐘楼の裏の吹き抜けの左下に、鳴らずの鐘道（印守りの通路）とつながる扉。鐘道の側のレバーでしか開かない'],'0.89':['蒼白の聖域「下の灯火」を左に大きく。壁で隔てた左側は、淵の縦穴の床から下りて入る（命のかけら・置き荷）'],'0.88':['地図の空白にさらに部屋を12追加：崩れ床の横穴・下の坑道・奥の坑道・書庫の地下水路・倉の下の溜まり・淵の縦穴・鐘楼の裏の吹き抜け・鐘の墓場・落ちた鐘の溜まり・音の抜けた部屋・声の溜まり・晶の吹きだまり','命のかけらを3つ追加（奥の坑道・鐘の墓場・声の溜まり）'],'0.87':['地図の空白に新しい部屋を8つ追加（錆びた倉・淵の脇穴・鐘楼の地下・鐘楼の物置・墓石の裏道・鐘道の脇道・根の奥・崖の外棚）','敵の少なかった部屋に敵を追加','新しい拾い物「置き荷」：燐と、その場所の素材が手に入る'],'0.86':['被弾の演出を控えめに（止まる時間・揺れ・赤いにじみを弱く）'],'0.85':['スマホ：画面ボタンを1つずつ、大きさ・縦横比・位置を変えられるように（縦と横で別々に保存）','スマホ：遊んでいる途中で画面ボタンを調整すると、そのあと動けなくなっていたのを修正'],'0.84':['機種によって画面からはみ出していたのを修正：タイトル・入手カード・メニューの大きさを画面の高さに合わせるように','スマホ縦画面：タイトルやメニューを、操作ボタンの上の広い場所に大きく表示するように','タイトルの版の表示が古いままだったのを修正'],'0.83':['攻撃が当たったときの手応えを強く：斬撃の線、光のはじけ、火花、ヒットストップ、画面の揺れ','被弾したときを派手に：一瞬止まる、赤い×の傷と衝撃、画面が赤くにじむ、ハートが砕けて飛び散る'],'0.82':['書庫の灯守：灯を移す（回復する）あいだは床まで降りてくる。立ったまま横斬りで止められる'],'0.81':['書庫の灯守：水が満ちているあいだに倒すと、浮いた本が穴の上に残って下りられなかったのを修正','書庫の灯守：灯を移す（回復する）あいだは低いところまで降りてくる。光っているあいだに3回斬れば止められる'],'0.80':['ツノ戦：技のあとに、はっきりした隙（息を整える）を入れた。重い技ほど長い','ツノ戦：隙のあいだは暗くても姿が見え、ぶつかってもダメージを受けない','ツノ戦：隙に何度も叩くと、跳びのいて間合いを取る（第1・2段階は4回、第3段階は3回）','ツノ戦：防御の時間を短くし、防御のあとにも短い隙'],'0.79':['トゲ這いの百足：トゲは片側だけに。体はその側の地面からまっすぐ立ちあがり、急に真ん中へ来なくなった。頭は低く、反対側から叩ける','トゲ這いの百足：潜ったあと体が地上を横切らないように／頭が出てくる場所を先に知らせるように','渦の大鰻：打ち上げられているあいだ、横に動かないように','鳴き石の番人：突進の跳ね返りはランダムではなく、第2段階で必ず（跳ね返る前の間も長く）。往復のあとは必ず目を回す','水晶の神託者：攻撃と攻撃のあいだに休みを入れた','蒼白の双騎士：画面に映っていない騎士は攻撃を始めないように','塔の頂：残響の灯が穴の上に出て触れなかったのを修正','風鳴き卿の強化版の最中に、綱で降りられないように'],'0.78':['古いセーブで、強化版に勝つ前から持っていたボスのまじないを外した（強化版に勝つと手に入る）'],'0.77':['すでにまじないを持っているボスに、強化版の残響の灯が出ていたのを修正（勝ったことにする）'],'0.76':['強化版のボス戦で、別の場所へ抜けられる穴（蒼白の聖域への道など）が開いていたのを閉じた'],'0.75':['強化版のボス戦は、最初に戦ったときの地形で戦うように（倒したあとに出る足場などは、勝つとまた出てくる）'],'0.74':['2〜4層の曲を作り直し：エリアごとに拍子・楽器・リズムを変えた（ワルツ、五拍子、七拍子、12拍子、聖歌、鐘の転調鳴らしなど）','曲に展開（Aメロ・Bメロ）、二つ目の旋律、こだまを追加','灯りの昇り井戸で曲が鳴らなかったのを修正'],'0.73':['ツノ戦の最初の段階で曲が消えていたのを修正（静かな曲が流れるように）','鳴らずの鐘道の上のほうで曲が鳴らなかったのを修正'],'0.72':['ツノ戦：技の前に構え（体が光る・杖の構え・地面の目印）が出るように','ツノの技の順番を固定に（段階ごとに決まった流れ）','ツノの新しい技「灯り落とし」：光る柱の目印のあとに灯りが落ちてくる','反撃の「……戻れ。」を削除'],'0.71':['4層を網の目に：祈り↔無響の抜け道、眠り↔無響の根の道、消え音→眠りの落とし穴（響き落とし）を追加','近道：祭壇の扉→祈りの回廊（レバー）、ツノの部屋→反響の縦穴（昇り井戸）','ツノ戦のツノを、旅人と同じ姿に／名前を知ったあとは、旅人の名前をすべて「ツノ」に統一','4層の住人との会話を、画面を暗くせず普通の会話枠で表示するようにした','スマホ：設定から画面ボタンの位置・大きさ・濃さを変えられる（縦と横で別々に保存）','スマホ：「横画面で遊ぶ」ボタンで横向きに（回転ロック中やiPhoneでも、画面ごと90°回して遊べる）','スマホ縦画面：操作ボタンを画面の下（親指の届く位置）に移し、十字キーを指をすべらせて斜めも入る形に','第4層の無音だった場所に小さな曲を追加（里・祈り・無響・崖・鐘道）','祭司と子守唄の後半で曲が消えたままにならず、少しの静寂のあと後半の曲になる','4層のボスの図鑑の絵を修正','石泳ぎを響き落としで黙り石から叩き出せるようにした','トゲに当たったとき、部屋の反対側に戻されることがあったのを修正','新しい抜け道（香の抜け道・眠りの根の道）の入口は黙り石：響き落としを手に入れるまで無響の大空洞には入れない','隠し部屋と命のかけらを5つ追加（照らし・響き落とし・鈴照らしで行ける場所）','実績「灯の記録」を追加（持ち物の「記録」タブ）','急降下を調整：敵に当てたあと少しのあいだ連続で出せない／ボスへのダメージ・無敵時間を減らし、空中ジャンプの回復をなくした','灯守の休み処から上の部屋へ登れなかったので、足場を追加','家の中の足場が透明になっていたのを修正','崩れた階段に、水の底へ押し下げる風のレバーを置いた','鐘道の門の上側にも鳴らせる鐘を吊るした','一族の住居跡の骨細工屋が出てこなかった不具合を修正','筆談の老人の「命のかけら」を買っても増えなかった不具合を修正'],'0.70':['新しい版が出たら、タイトル画面でお知らせするようにした','セーブに版の番号を記録するようにした（古い版のHTMLで新しいセーブは開かない）','ブラウザ内にも、セーブの予備を3世代残すようにした','セーブの保存先を選べるようにした（ブラウザだけ／ブラウザ＋txt）','txtへのバックアップと読み込み','書き換えたセーブを読み込むと……','4層：祈りの列・鈴のかけら・鐘道の門などの不具合を修正','4層の灯火を増やした','ミニマップが自分を中心にスクロールするようにした']};
+const CHANGES={'0.99.4':['円座の報酬：層めぐりの段階に応じて、見た目がもらえる（ランタン・外套・翼・帽子の住人・帽子、各4つ）','持ち物の画面に「見た目」。選ぶとつけられ、もう一度選ぶと外せる','全部入りの段階に応じて、灯守の家に家具が増える（勝利の旗・客席の椅子・ボスの像・金の灯籠・飾り棚・ヌシの像と椅子）','持ち物の画面で、←→で「記録」まで行けなかったのを直した'],'0.99.3':['残響の円座：第一章のあと、汀の寝床の広間の天井から入れる','層めぐり（層ごとに3体、好きな順）・全部入り（3体ずつの組で連戦）・個別戦（客席の像から）','縛り10個と点数・段階。個別戦の記録は記録の壁に刻まれる','燐は入口で預け、クリアしたらまとめて受け取る','陽だまりのモノ（チセのいない再演）と、円座のヌシ','ツノを倒したあと、灯り流れの底の床に穴が開き、足場で上り下りできるように（下へ降りられなかったのを直した）'],'0.99.2':['待ち人の道（12部屋）：第一章のあと、鳴らずの鐘道の共鳴の縦穴の底が開く。出口は汀の手前の光の降り口','新しい敵3種：拾い手・待ちぼうけ・目印灯','足音の通路の扉、拾い集めの間のランタン、ヒナタの書きつけ、声の水晶、闇の縦穴（火を絞ると見える足場）','溶けきれなかった跡の、枯れた蔓の奥に石板'],'0.99.1':['照らしと鈴照らしを同じ操作に（↑を押しながら灯移しボタンを短く押す）。鈴を持ったあとは、灯りが広がると同時に鈴の波紋も出る'],'0.99':['灯喰らいのあと、汀の灯火の間でツノとチセが追いつく','陽だまりの間（3部屋）と、最後のボス「陽だまりのチセ」','チセの闇だけを削る戦い。「おにいさん」の声で闇が止まる。最後は灯りを分ける','決着と「第一章 おわり」','鳴らずの鐘道の壁に、新しい印が並ぶ'],'0.98':['第5層②：灯の湖（10部屋）と思い出の浮島（8部屋）','陽だまりの番を撃退すると、汀から湖への扉が開く','新しい敵4種：灯り泡・すくい手・灯り鯉・まぼろし','ボス「灯喰らい」：飲みこまれると体の中へ。奪われた灯りを取り返す','浮島の幻を4つ見ると、最後の島に結び目','湖・浮島・灯喰らい戦の曲'],'0.97':['第5層「灯溜まり」の入口：灯の落ち路・まどろみの汀・白昼の回廊（21部屋）','ツノを越えると、灯り流れの底の床が開いて下へ降りられる','火を絞る操作：↓を押しながら灯移しボタンを長押し。淡く光る足場や、光に隠れた敵が見える','新しい敵8種：灯垂れ・まぶしがり・転がり灯・白い影・灯り蛾・添い寝の影・寝ぼけた残響・毛布おばけ','ボス「陽だまりの番」（1回目）','汀の住人と、毛布の灯守','第5層の曲4つ'],'0.96':['翡翠のシルフを強くした：後半は技を2つ続けてから休む','一陣の風のあいだにも、蔓の鞭の印が出るように','庭の渦のあいだ、床が蔓で埋まっていく（上昇気流に乗って空へ）','後半の蔓の鞭と根の突き上げは3ダメージに'],'0.95':['鐘道の裏庭の扉は、裏庭側と回廊側の両方のレバーを引かないと開かないように','翡翠のシルフの攻撃が2ダメージに（花粉はそのまま）'],'0.94':['忘れ井戸を6部屋の洞窟に作り直した（第1層）','シルフの庭園を第2層だけに。明るい緑と白い柱の庭にした','鳴らずの鐘道からだけ入れる「鐘道の裏庭」。レバーで庭園への近道が開く','忘れ井戸と庭園の灯火を増やした','地図：行ったことのある部屋から、まだ行っていない部屋への入口が見えるように'],'0.93':['新しい場所「忘れ井戸」（苔の住処の西）と「シルフの庭園」','新しい敵 5種：綿毛の精・芽吹きの蔓・蜜吸い蝶・根もぐら・種鉄砲の鞘','新しいボス「翡翠のシルフ」と、庭師','小さな種の袋と、大樹の根もとの花壇','まじない「翡翠の風」（強化版のシルフに勝つと手に入る）','忘れ井戸と庭園の曲、シルフ戦の曲'],'0.92':['地図の「文字」ボタンで、灯火を渡るときの灯火の名前も隠せるように'],'0.91':['鐘守の控えに、上の書庫の地下水路へ登れる天井の蓋（鐘楼の側のレバーで開く）','祈りの前に、晶の吹きだまりへ抜ける扉（祈りの側のレバーで開く）','地図：「文字」ボタン（キーボードは T）で部屋やエリアの名前を隠せるように','地図：拡大・縮小ボタンを大きく'],'0.90':['鐘楼の裏の吹き抜けの左下に、鳴らずの鐘道（印守りの通路）とつながる扉。鐘道の側のレバーでしか開かない'],'0.89':['蒼白の聖域「下の灯火」を左に大きく。壁で隔てた左側は、淵の縦穴の床から下りて入る（命のかけら・置き荷）'],'0.88':['地図の空白にさらに部屋を12追加：崩れ床の横穴・下の坑道・奥の坑道・書庫の地下水路・倉の下の溜まり・淵の縦穴・鐘楼の裏の吹き抜け・鐘の墓場・落ちた鐘の溜まり・音の抜けた部屋・声の溜まり・晶の吹きだまり','命のかけらを3つ追加（奥の坑道・鐘の墓場・声の溜まり）'],'0.87':['地図の空白に新しい部屋を8つ追加（錆びた倉・淵の脇穴・鐘楼の地下・鐘楼の物置・墓石の裏道・鐘道の脇道・根の奥・崖の外棚）','敵の少なかった部屋に敵を追加','新しい拾い物「置き荷」：燐と、その場所の素材が手に入る'],'0.86':['被弾の演出を控えめに（止まる時間・揺れ・赤いにじみを弱く）'],'0.85':['スマホ：画面ボタンを1つずつ、大きさ・縦横比・位置を変えられるように（縦と横で別々に保存）','スマホ：遊んでいる途中で画面ボタンを調整すると、そのあと動けなくなっていたのを修正'],'0.84':['機種によって画面からはみ出していたのを修正：タイトル・入手カード・メニューの大きさを画面の高さに合わせるように','スマホ縦画面：タイトルやメニューを、操作ボタンの上の広い場所に大きく表示するように','タイトルの版の表示が古いままだったのを修正'],'0.83':['攻撃が当たったときの手応えを強く：斬撃の線、光のはじけ、火花、ヒットストップ、画面の揺れ','被弾したときを派手に：一瞬止まる、赤い×の傷と衝撃、画面が赤くにじむ、ハートが砕けて飛び散る'],'0.82':['書庫の灯守：灯を移す（回復する）あいだは床まで降りてくる。立ったまま横斬りで止められる'],'0.81':['書庫の灯守：水が満ちているあいだに倒すと、浮いた本が穴の上に残って下りられなかったのを修正','書庫の灯守：灯を移す（回復する）あいだは低いところまで降りてくる。光っているあいだに3回斬れば止められる'],'0.80':['ツノ戦：技のあとに、はっきりした隙（息を整える）を入れた。重い技ほど長い','ツノ戦：隙のあいだは暗くても姿が見え、ぶつかってもダメージを受けない','ツノ戦：隙に何度も叩くと、跳びのいて間合いを取る（第1・2段階は4回、第3段階は3回）','ツノ戦：防御の時間を短くし、防御のあとにも短い隙'],'0.79':['トゲ這いの百足：トゲは片側だけに。体はその側の地面からまっすぐ立ちあがり、急に真ん中へ来なくなった。頭は低く、反対側から叩ける','トゲ這いの百足：潜ったあと体が地上を横切らないように／頭が出てくる場所を先に知らせるように','渦の大鰻：打ち上げられているあいだ、横に動かないように','鳴き石の番人：突進の跳ね返りはランダムではなく、第2段階で必ず（跳ね返る前の間も長く）。往復のあとは必ず目を回す','水晶の神託者：攻撃と攻撃のあいだに休みを入れた','蒼白の双騎士：画面に映っていない騎士は攻撃を始めないように','塔の頂：残響の灯が穴の上に出て触れなかったのを修正','風鳴き卿の強化版の最中に、綱で降りられないように'],'0.78':['古いセーブで、強化版に勝つ前から持っていたボスのまじないを外した（強化版に勝つと手に入る）'],'0.77':['すでにまじないを持っているボスに、強化版の残響の灯が出ていたのを修正（勝ったことにする）'],'0.76':['強化版のボス戦で、別の場所へ抜けられる穴（蒼白の聖域への道など）が開いていたのを閉じた'],'0.75':['強化版のボス戦は、最初に戦ったときの地形で戦うように（倒したあとに出る足場などは、勝つとまた出てくる）'],'0.74':['2〜4層の曲を作り直し：エリアごとに拍子・楽器・リズムを変えた（ワルツ、五拍子、七拍子、12拍子、聖歌、鐘の転調鳴らしなど）','曲に展開（Aメロ・Bメロ）、二つ目の旋律、こだまを追加','灯りの昇り井戸で曲が鳴らなかったのを修正'],'0.73':['ツノ戦の最初の段階で曲が消えていたのを修正（静かな曲が流れるように）','鳴らずの鐘道の上のほうで曲が鳴らなかったのを修正'],'0.72':['ツノ戦：技の前に構え（体が光る・杖の構え・地面の目印）が出るように','ツノの技の順番を固定に（段階ごとに決まった流れ）','ツノの新しい技「灯り落とし」：光る柱の目印のあとに灯りが落ちてくる','反撃の「……戻れ。」を削除'],'0.71':['4層を網の目に：祈り↔無響の抜け道、眠り↔無響の根の道、消え音→眠りの落とし穴（響き落とし）を追加','近道：祭壇の扉→祈りの回廊（レバー）、ツノの部屋→反響の縦穴（昇り井戸）','ツノ戦のツノを、旅人と同じ姿に／名前を知ったあとは、旅人の名前をすべて「ツノ」に統一','4層の住人との会話を、画面を暗くせず普通の会話枠で表示するようにした','スマホ：設定から画面ボタンの位置・大きさ・濃さを変えられる（縦と横で別々に保存）','スマホ：「横画面で遊ぶ」ボタンで横向きに（回転ロック中やiPhoneでも、画面ごと90°回して遊べる）','スマホ縦画面：操作ボタンを画面の下（親指の届く位置）に移し、十字キーを指をすべらせて斜めも入る形に','第4層の無音だった場所に小さな曲を追加（里・祈り・無響・崖・鐘道）','祭司と子守唄の後半で曲が消えたままにならず、少しの静寂のあと後半の曲になる','4層のボスの図鑑の絵を修正','石泳ぎを響き落としで黙り石から叩き出せるようにした','トゲに当たったとき、部屋の反対側に戻されることがあったのを修正','新しい抜け道（香の抜け道・眠りの根の道）の入口は黙り石：響き落としを手に入れるまで無響の大空洞には入れない','隠し部屋と命のかけらを5つ追加（照らし・響き落とし・鈴照らしで行ける場所）','実績「灯の記録」を追加（持ち物の「記録」タブ）','急降下を調整：敵に当てたあと少しのあいだ連続で出せない／ボスへのダメージ・無敵時間を減らし、空中ジャンプの回復をなくした','灯守の休み処から上の部屋へ登れなかったので、足場を追加','家の中の足場が透明になっていたのを修正','崩れた階段に、水の底へ押し下げる風のレバーを置いた','鐘道の門の上側にも鳴らせる鐘を吊るした','一族の住居跡の骨細工屋が出てこなかった不具合を修正','筆談の老人の「命のかけら」を買っても増えなかった不具合を修正'],'0.70':['新しい版が出たら、タイトル画面でお知らせするようにした','セーブに版の番号を記録するようにした（古い版のHTMLで新しいセーブは開かない）','ブラウザ内にも、セーブの予備を3世代残すようにした','セーブの保存先を選べるようにした（ブラウザだけ／ブラウザ＋txt）','txtへのバックアップと読み込み','書き換えたセーブを読み込むと……','4層：祈りの列・鈴のかけら・鐘道の門などの不具合を修正','4層の灯火を増やした','ミニマップが自分を中心にスクロールするようにした']};
 function verCmp(a,b){const x=String(a).split('.').map(Number),y=String(b).split('.').map(Number);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0?1:-1}return 0}
 let SET={se:8,amb:6,bgm:5,shake:true,text:1,txt:false};
 try{Object.assign(SET,JSON.parse(stGet(SET_KEY))||{})}catch(e){}
@@ -4404,7 +4404,7 @@ function startRushFight(id){items=items.filter(i=>i.type!=='echoorb');const a0=r
   if(id==='tsuno'){boss.hp=boss.max=180}
   if(id==='nushi'){enzaSave().nushiMet=true;rush.doors=[];for(const x of[0,rw-1])for(let y=8;y<=11;y++){tiles[y][x]='D';rush.doors.push([x,y])}renderRoom()}
   boss.name='思い出 ─ '+boss.name;cine={t:0,dur:80,first:false};setTimeout(()=>showName(boss?boss.name:'',true),400)}
-function rushWin(){const id=rush.cur,E=enzaSave(),t=frames-rush.t0,h=rush.hits-rush.hits0;boss=null;projs=[];hazards=[];locked=false;windX=0;windY=0;p.hold=null;
+function rushWin(){if((rush.cur==='mono'||rush.cur==='nushi')&&!save.defeated.includes(rush.cur))save.defeated.push(rush.cur);const id=rush.cur,E=enzaSave(),t=frames-rush.t0,h=rush.hits-rush.hits0;boss=null;projs=[];hazards=[];locked=false;windX=0;windY=0;p.hold=null;
   for(const [x,y] of (room.arena?room.arena.door:[]).concat(rush.doors||[]))tiles[y][x]='.';rush.doors=null;renderRoom();sfx('bosskill');flash=Math.max(flash,.5);
   if(rush.kind==='single'){const r=E.rec[id],sc=rush.pts;if(!r||sc>r.sc||sc===r.sc&&(t<r.t||t===r.t&&h<r.h))E.rec[id]={t,h,sc};persist();
     toast('勝った ─ '+ENZA_NAME[id],'時間 '+fmtT(t)+'　被弾 '+h+'　縛り '+sc+'点');setTimeout(()=>rushEnd(true),1800);return}
@@ -4922,7 +4922,10 @@ function drawSword(x,y,f,run,air,hy,white){
 function drawWitch(x,y,f,run,look,air){
   const A=p.an,white=p.inv>64;
   const R=(dx,dy,w,h,c)=>{ctx.fillStyle=white?'#fff':c;ctx.fillRect(f>0?x+dx:x+10-dx-w,y+dy,w,h)};
-  const HAT='#3a4466',HATL='#5a6690',HATD='#20263b',CL='#2b3250',CLL='#414c72',CLD='#171b2b',VOID='#03040a',EYE='#f4f1e6',BR='#cbbf9f';
+  let HAT='#3a4466',HATL='#5a6690',HATD='#20263b',CL='#2b3250',CLL='#414c72',CLD='#171b2b';const VOID='#03040a',EYE='#f4f1e6',BR='#cbbf9f';
+  const cC=cosOn('cloak'),cH=cosOn('hat'),cW=cosOn('wing'),cR=cosOn('res');
+  if(cC===0){CL='#4a7a98';CLL='#6a9ab8';CLD='#2a4a68'}else if(cC===1){CL='#2e5a3e';CLL='#4a7a52';CLD='#1a3a26'}else if(cC===2){CL='#3a3448';CLL='#55506a';CLD='#221e2e'}else if(cC===3){CL='#2a5a6a';CLL='#4a8a9a';CLD='#163a48'}
+  if(cH===0){HAT='#5a4a36';HATL='#7a6648';HATD='#3a2e20'}else if(cH===1){HAT='#2e3456';HATL='#4a5280';HATD='#1a1e34'}else if(cH===2){HAT='#3a4466';HATL='#6a76a0';HATD='#20263b'}else if(cH===3){HAT='#b8703a';HATL='#e0a060';HATD='#7a4420'}
   // つぶれ・伸び・前傾（足元を基準に変形）
   let sx=A.sx,sy=A.sy;
   if(p.dashT>0){sx*=1.28;sy*=.84}
@@ -4940,10 +4943,17 @@ function drawWitch(x,y,f,run,look,air){
   // 三つ編み（背中側でばね揺れ）
   const bl=A.braid*f*-1;
   for(let i=0;i<4;i++){const o=Math.round(bl*(i+1)/4+(air?-(i*A.flare*.6):0));R(i%2?-2-o:-1-o,2+hy+i*2,i===3?1:2,2,BR)}
+  // 翼の飾り（背中）
+  if(cW>=0){const wf=Math.round(Math.sin(frames*.08)*1),WC=[['#d8d0c0','#a89c88'],['#c9a35a','#8a6a3a'],['#cfeaff','#8fd0ff'],['#f4f1e6','#8fb4e8']][cW];
+    if(cW===0){R(-3,4+hy+wf,2,1,WC[0]);R(-4,5+hy+wf,2,1,WC[0]);R(-5,6+hy+wf,2,1,WC[0]);R(-3,6+hy+wf,1,2,WC[1])}
+    else if(cW===1){R(-4,4+hy+wf,3,4,WC[0]);R(-5,7+hy+wf,5,1,WC[1]);R(-3,8+hy+wf,1,1,WC[1])}
+    else if(cW===2){R(-3,3+hy+wf,2,2,WC[0]);R(-5,4+hy+wf,3,3,WC[1]);R(-4,7+hy+wf,2,2,WC[0])}
+    else{R(-3,3+hy+wf,2,5,WC[0]);R(-5,4+hy+wf,2,5,WC[1]);R(-6,6+hy+wf,1,3,WC[0])}}
   // 外套
   R(2,5+hy,7,2,CL);R(1,7,9,2,CL);R(0+trail,9,11,2,CL);R(-1-Math.max(0,fw)+trail,11,12+Math.max(0,fw)*2,2,CL);
   if(fw>=0){R(-1-fw+trail-stride,13,5+fw,1,CL);R(5+trail+stride,13,6+fw,1,CL)}else{R(0,12,10,1,CL);R(1,13,3,1,CL);R(6,13,3,1,CL)}
   R(3,5+hy,5,1,CLL);R(7,6+hy,1,7-hy,CLD);R(0+trail,9,1,4,CLD);
+  if(cC===1){R(2+trail,12,1,2,'#6aa050');R(8+trail,11,1,3,'#6aa050')}else if(cC===2){R(1+trail,11,3,2,'#e8e0c8');R(7+trail,12,3,1,'#d8ccb0')}else if(cC===3){const w2=(frames>>3)%2;R(-1+trail+w2,13,2,1,CLL);R(4+trail-w2,13,2,1,CLL);R(9+trail+w2,13,2,1,CLL)}else if(cC===0){R(2,9,7,1,CLL)}
   // 顔と目（まばたき・上下を向く）
   R(2,1+hy,7,4,VOID);R(3,5+hy,5,1,VOID);
   const eh=A.blink>0?1:2,ey=2+hy+look+(A.blink>0?1:0);
@@ -4955,6 +4965,9 @@ function drawWitch(x,y,f,run,look,air){
   const tip=Math.round(clamp(-A.swing*f*1.5,-1,1));
   R(1,-2+hy,8,1,HATD);R(2,-3+hy,6,1,HAT);R(2,-4+hy,5,1,HAT);R(3,-5+hy,4,1,HAT);R(3,-6+hy,3,1,HAT);R(1+tip,-7+hy,4,1,HAT);R(-1+tip,-8+hy,3,1,HAT);
   R(4,-5+hy,1,2,HATL);
+  if(cH===0){R(5,-3+hy,2,1,'#8a7656');R(0,0+hy,2,1,'#8a7656')}else if(cH===1){for(const [dx2,dy2] of [[3,-4],[6,-2],[0,0],[9,0],[13,0]])R(dx2,dy2+hy,1,1,frames%40<20?'#ffd37a':'#fff1c4')}else if(cH===2){R(-5,2+hy+brim,1,2,HAT);R(14,2+hy+brim,1,2,HAT);R(-5,4+hy+brim,1,1,HATL)}else if(cH===3){R(-6,1+hy+brim,2,1,HAT);R(14,1+hy+brim,2,1,HAT);R(-4,0+hy,19,1,HATL)}
+  // 帽子の上の住人
+  if(cR>=0){const b2=Math.round(Math.sin(frames*.07));if(cR===0){R(10,-2+hy+b2,3,2,'#f4f8e8');R(10,-2+hy+b2,1,1,'#3a4a30')}else if(cR===1){R(9,-2+hy,4,2,'#8a6a4a');R(10,-3+hy+b2,2,1,'#e8d8e0')}else if(cR===2){R(10,-4+hy+b2,2,3,'#d8ccc4');R(11,-2+hy+b2,2,2,'#c9a35a')}else{R(10,-4+hy+b2,2,4,'#120c0a');R(12,-2+hy+b2,1,1,'#ffd37a')}}
   for(let i=0;i<save.eq.length;i++){const C=CHARMS[save.eq[i]];if(!C)continue;const sw=((frames>>4)+i)%2;R(-3+i*2,1+hy+sw,1,3,C.col)}
   ctx.restore();
   drawSword(x,y,f,run,air,hy,white);
@@ -4962,8 +4975,13 @@ function drawWitch(x,y,f,run,look,air){
   const tx=(f>0?x-.5:x+10.5)+tip*f,ty=y-8+hy,lx=tx+Math.sin(A.swing)*4.5,ly=ty+Math.cos(A.swing)*4.5;
   ctx.fillStyle='#8a6a3a';for(let k=1;k<=3;k++)ctx.fillRect(Math.round(tx+(lx-tx)*k/4-.5),Math.round(ty+(ly-ty)*k/4),1,1);
   const lit=p.focusT>0||frames%50<48;
-  ctx.fillStyle=white?'#fff':'#5a4426';ctx.fillRect(Math.round(lx-1.5),Math.round(ly),3,1);
-  ctx.fillStyle=white?'#fff':(lit?'#ffd37a':'#e0a040');ctx.fillRect(Math.round(lx-1.5),Math.round(ly+1),3,2);
+  const cL=cosOn('lamp'),LX=Math.round(lx-1.5),LY=Math.round(ly);
+  if(cL===0){ctx.fillStyle=white?'#fff':'#4a3a24';ctx.fillRect(LX-1,LY,5,1);ctx.fillRect(LX-1,LY+3,5,1);ctx.fillStyle='#6aa050';ctx.fillRect(LX-1,LY,2,1)}
+  else if(cL===1){ctx.fillStyle=white?'#fff':'#8a8f9f';ctx.fillRect(LX-1,LY-1,5,1);ctx.fillRect(LX-1,LY+3,5,1)}
+  else if(cL===2){ctx.fillStyle=white?'#fff':'#c8b088';ctx.fillRect(LX-1,LY,5,1);ctx.fillStyle='#f4f1e6';ctx.fillRect(LX+3,LY+1,1,2);ctx.fillRect(LX-1,LY+2,1,2)}
+  else if(cL===3){ctx.fillStyle=white?'#fff':'#5a4426';ctx.fillRect(LX,LY,3,1);ctx.fillStyle='#c8d6ff';ctx.fillRect(LX+1,LY+3,1,2)}
+  else{ctx.fillStyle=white?'#fff':'#5a4426';ctx.fillRect(LX,LY,3,1)}
+  ctx.fillStyle=white?'#fff':(lit?'#ffd37a':'#e0a040');ctx.fillRect(LX,LY+1,3,2);
   if(save.eq.length&&!white){ctx.globalAlpha=.55;ctx.fillStyle=CHARMS[save.eq[0]].col;ctx.fillRect(Math.round(lx-1.5),Math.round(ly+2),3,1);ctx.globalAlpha=1}
   ctx.fillStyle='#fff1c4';ctx.fillRect(Math.round(lx-.5),Math.round(ly+1),1,1);
 }
@@ -5389,6 +5407,16 @@ if(it.type==='deco'||it.type==='look')return drawDeco(it);const x=it.x,y=it.y,a=
     ctx.fillStyle='#2a2a38';ctx.fillRect(cx-10,c-10,20,20);ctx.fillStyle='rgba(180,170,240,.5)';ctx.fillRect(cx-1,c-7,2,14);ctx.fillRect(cx-7,c-1,14,2);LI();return true}
   return false}
 function drawFurniture(){if(roomKey!=='home')return;
+  {const st=(save.enza&&save.enza.all)||0;
+    if(st>=1){ctx.fillStyle='#6a5a40';ctx.fillRect(150,70,1,22);ctx.fillStyle='#c9a35a';ctx.fillRect(151,70,12,8);ctx.fillStyle='#ffd37a';ctx.fillRect(155,72,4,4);
+      ctx.fillStyle='#4a3e34';ctx.fillRect(282,178,12,3);ctx.fillRect(282,181,2,11);ctx.fillRect(292,181,2,11);ctx.fillRect(292,166,2,12);
+      ctx.fillStyle='#5a5468';for(let k=0;k<6;k++){ctx.fillRect(196+k*7,116,4,8);ctx.fillRect(195+k*7,114,6,2)}ctx.fillStyle='#3a3448';ctx.fillRect(192,124,46,2)}
+    if(st>=2){ctx.fillStyle='#5a5468';for(let k=0;k<6;k++){ctx.fillRect(196+k*7,100,4,8);ctx.fillRect(195+k*7,98,6,2)}ctx.fillStyle='#3a3448';ctx.fillRect(192,108,46,2)}
+    if(st>=3){ctx.fillStyle='#5a5468';for(let k=0;k<5;k++){ctx.fillRect(196+k*8,84,4,8);ctx.fillRect(195+k*8,82,6,2)}ctx.fillStyle='#3a3448';ctx.fillRect(192,92,46,2);
+      ctx.fillStyle='#c9a35a';ctx.fillRect(130,178,10,14);ctx.fillRect(127,174,16,4);ctx.fillStyle='#fff1c4';ctx.fillRect(133,181,4,5);ctx.globalCompositeOperation='lighter';glow(135,183,20,'rgba(255,214,120,.35)');ctx.globalCompositeOperation='source-over'}
+    if(st>=4){ctx.fillStyle='#3a2e24';ctx.fillRect(188,78,54,52);ctx.fillStyle='#4a3e34';ctx.fillRect(188,78,54,2);ctx.fillRect(188,128,54,2);
+      ctx.fillStyle='#6a6478';ctx.fillRect(250,168,8,24);ctx.fillRect(248,164,12,6);ctx.fillStyle='#1a1620';ctx.fillRect(251,166,6,3);
+      ctx.fillStyle='#5a4e6a';ctx.fillRect(300,174,16,4);ctx.fillRect(300,178,2,14);ctx.fillRect(314,178,2,14);ctx.fillRect(300,156,2,18);ctx.fillRect(314,156,2,18);ctx.fillRect(300,156,16,2)}}
   if(bought('f_blanket')){ctx.fillStyle='#8a4a4a';ctx.fillRect(26,160,52,6);ctx.fillStyle='#b86a5a';for(let k=0;k<52;k+=8)ctx.fillRect(26+k,160,4,6);ctx.fillStyle='#d8b070';ctx.fillRect(26,165,52,1)}
   if(bought('f_chair')){ctx.fillStyle='#5c3e24';ctx.fillRect(100,170,14,3);ctx.fillRect(100,173,2,19);ctx.fillRect(112,173,2,19);ctx.fillRect(112,152,2,20);ctx.fillRect(108,152,6,2);ctx.fillStyle='#7a5434';ctx.fillRect(100,170,14,1)}
   if(bought('f_tourou')){ctx.fillStyle='#3a4a50';ctx.fillRect(56,176,12,16);ctx.fillRect(53,172,18,4);ctx.fillStyle='#ffd37a';ctx.fillRect(59,180,6,5);ctx.globalCompositeOperation='lighter';glow(62,182,22,'rgba(255,200,120,.3)');ctx.globalCompositeOperation='source-over'}
@@ -6084,6 +6112,13 @@ function renderInv(){
     if(!memos.length)h+='<div class="sec" style="letter-spacing:.1em">まだ拾っていない</div>';
     for(const g of memos){const m=STORY.memo[g.split(':memo:')[1]];if(m)h+=ient(D('<b>'+m[0]+'</b>\n'+m.slice(1).map(esc).join('\n')),'<span class="sw" style="background:#d9cfb4"></span><span>'+m[0]+'</span>')}
     h+='</div>';
+  }else if(invTab==='cos'){
+    h+='<div class="knots"><span>見た目 ─ 残響の円座でもらえる</span><span class="w">選ぶとつけられ、もう一度選ぶと外せる。性能は変わらない</span></div><div class="ilist" style="max-height:none">';
+    for(const slot of COS_ORDER){const C=COS[slot];h+='<div class="sec">'+C.n+'（層めぐり 第'+C.L+'層）</div>';
+      C.it.forEach((nm,i)=>{const un=cosUnlocked(slot,i),on=cosOn(slot)===i;
+        h+=un?ient(D('<b>'+nm+'</b>\n'+C.n+'。性能は変わらない。'),'<span class="sw" style="background:#c9a35a"></span><span>'+nm+'</span><span class="st">'+(on?'つけている':'')+'</span>',on?'on':'','data-cos="'+slot+':'+i+'"')
+          :ient(D('<b>？？？</b>\n層めぐり 第'+C.L+'層を、縛りの段階'+(i+1)+'以上でクリアするともらえる'),'<span class="sw" style="background:#2a3044"></span><span>？？？</span><span class="st">段階'+(i+1)+'</span>')})}
+    h+='</div>';
   }else if(invTab==='rec'){
     const a=achGet().got||{},n=ACH.filter(x=>a[x[0]]).length;
     h+='<div class="knots"><span>灯の記録 ─ しるし</span><span class="kn">'+n+' / '+ACH.length+'</span></div><div class="ilist">';
@@ -6126,6 +6161,19 @@ function beastSprite(c,k,seen){
   });
   if(!seen){g.globalCompositeOperation='source-in';g.fillStyle='#1d2234';g.fillRect(0,0,48,36);g.globalCompositeOperation='source-over'}
 }
+
+/* ---------- 円座の報酬：見た目（性能は変えない） ---------- */
+const COS={lamp:{n:'ランタンの意匠',L:1,it:['苔むした木枠の灯籠','石の祠灯籠','しめ縄と紙垂を巻いた灯籠','鳴き石の鈴を下げた灯籠']},
+  cloak:{n:'外套',L:2,it:['渡し守の水色の布','水草が絡んだ緑の外套','裾に古い頁を縫いつけた外套','裾が渦のように波打つ外套']},
+  wing:{n:'翼の飾り',L:3,it:['骨の小さな翼','鐘の形の金属の翼','水晶の翼','蒼白の翼']},
+  res:{n:'帽子の上の住人',L:4,it:['綿毛の子','ゆりかごの子','鈴を抱えた子','小さな灯守の影']},
+  hat:{n:'帽子',L:5,it:['灯守の古い帽子','灯りの粒を縫いこんだ帽子','つばの先がしずくのように溶けた帽子','陽だまりの帽子']}};
+const COS_ORDER=['lamp','cloak','wing','res','hat'];
+for(const k of['sylph','hinata1','kurai'])if(BEAST[k])BEAST[k].boss=true;
+function cosGet(){if(!save.cos||typeof save.cos!=='object')save.cos={};return save.cos}
+function cosUnlocked(slot,i){const E=save.enza||{},st=(E.layer||{})[COS[slot].L];return st!=null&&st>=i+1}
+const cosOn=slot=>{const v=cosGet()[slot];return v==null?-1:v};
+function setCos(slot,i){const c=cosGet();c[slot]=c[slot]===i?-1:i;persist();sfx('pick');const idx=document.activeElement&&document.activeElement.dataset?document.activeElement.dataset.cos:null;renderInv();if(idx){const b=document.querySelector('#invBody [data-cos="'+idx+'"]');if(b){b.focus();showDesc(b)}}}
 function toggleCharm(k){
   if(!invCanEq){hintOnce('t1x11','結び替えは灯火のそばで','灯火の前で持ち物を開こう');sfx('thud');return}
   if(eq(k)){save.eq=save.eq.filter(x=>x!==k);sfx('unequip')}
@@ -6193,7 +6241,7 @@ function navKey(e){
   if(k==='ArrowDown'||k==='KeyS'){e.preventDefault();const n=f[(i+1)%f.length]||f[0];n.focus();showDesc(n);sfx('pick')}
   else if(k==='ArrowUp'||k==='KeyW'){e.preventDefault();const n=f[(i-1+f.length)%f.length]||f[0];n.focus();showDesc(n);sfx('pick')}
   else if((k==='KeyI'||k==='Tab')&&el.id==='inv'){e.preventDefault();closeInv()}
-  else if((k==='ArrowLeft'||k==='ArrowRight'||k==='KeyA'||k==='KeyD')&&el.id==='inv'){e.preventDefault();const tabs=['charm','items','book','rec'];invTab=tabs[(tabs.indexOf(invTab)+(k==='ArrowRight'||k==='KeyD'?1:2))%3];renderInv();sfx('pick')}
+  else if((k==='ArrowLeft'||k==='ArrowRight'||k==='KeyA'||k==='KeyD')&&el.id==='inv'){e.preventDefault();const tabs=['charm','items','book','cos','rec'];invTab=tabs[(tabs.indexOf(invTab)+(k==='ArrowRight'||k==='KeyD'?1:tabs.length-1))%tabs.length];renderInv();sfx('pick')}
   else if((k==='ArrowLeft'||k==='ArrowRight'||k==='KeyA'||k==='KeyD')&&document.activeElement&&document.activeElement.type==='range'){e.preventDefault();const r=document.activeElement;r.value=+r.value+(k==='ArrowRight'||k==='KeyD'?1:-1);r.dispatchEvent(new Event('input'))}
   else if(k==='Enter'||k==='Space'||k==='KeyZ'){e.preventDefault();if(document.activeElement&&document.activeElement.tagName==='BUTTON')document.activeElement.click();else if(f[0])f[0].focus()}
   else if(k==='Escape'||k==='KeyX'){e.preventDefault();if(el.id==='pause')resumeGame();else if(el.id==='inv')closeInv();else if(el.id==='craft')closeCraft();else if(el.id!=='title')closePanel(el.id)}
@@ -6314,7 +6362,7 @@ document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement
 $('fsbtn').onclick=e=>{e.stopPropagation();setFull(!isFull());sfx('pick')};
 $('setFull').onclick=e=>{e.stopPropagation();setFull(!isFull())};
 document.querySelectorAll('#inv .tab').forEach(b=>b.onclick=e=>{e.stopPropagation();invTab=b.dataset.tab;renderInv();sfx('pick')});
-$('invBody').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;e.stopPropagation();showDesc(b);if(b.dataset.ch)toggleCharm(b.dataset.ch)});
+$('invBody').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;e.stopPropagation();showDesc(b);if(b.dataset.ch)toggleCharm(b.dataset.ch);if(b.dataset.cos){const [sl,i]=b.dataset.cos.split(':');setCos(sl,+i)}});
 $('craftList').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;e.stopPropagation();showDesc(b);if(b.dataset.mk)craft(b.dataset.mk);else if(b.dataset.buy)buyItem(b.dataset.buy)});
 for(const id of['invBody','craftList']){$(id).addEventListener('focusin',e=>showDesc(e.target.closest('[data-i]')));$(id).addEventListener('mouseover',e=>{const b=e.target.closest('[data-i]');if(b)showDesc(b)})}
 showTitle();cloudInit();fileInit();checkUpdate();setTimeout(checkNews,400);
