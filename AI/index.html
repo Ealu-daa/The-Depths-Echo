@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MYPROFILE | Official Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Shippori+Mincho:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05060a; --bg2: #0c0e18; --panel: rgba(10,12,24,.85);
+    --gold: #7f93d9; --gold-bright: #dbe4ff; --fg: #e6e9f5; --muted: #8f96ad;
+    --line: rgba(127,147,217,.35); --danger: #d46a6a;
+    --serif: "Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+    --display: "Cinzel","Shippori Mincho",serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  section, .hero { scroll-margin-top: 70px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--serif); line-height: 2; letter-spacing: .04em;
+  }
+  a { color: var(--gold-bright); text-decoration: none; }
+  #embers { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ---- nav ---- */
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    background: linear-gradient(#05060add, transparent);
+  }
+  nav {
+    max-width: 1000px; margin: 0 auto; padding: 18px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo { font-family: var(--display); font-weight: 700; letter-spacing: .25em; color: var(--gold-bright); }
+  nav ul { list-style: none; display: flex; gap: 26px; margin: 0; padding: 0; }
+  nav ul a {
+    font-family: var(--display); font-size: 13px; letter-spacing: .2em; color: var(--fg);
+    padding-bottom: 4px; border-bottom: 1px solid transparent; transition: .25s;
+  }
+  nav ul a:hover { color: var(--gold-bright); border-color: var(--gold); }
+
+  /* ---- depth (背景の奥行き) ---- */
+  .depth { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 40%, rgba(127,147,217,.12), transparent 60%); }
+  .layer {
+    position: absolute; left: -6%; width: 112%; height: 42vh; will-change: transform;
+    transform: translate3d(calc(var(--mx, 0) * var(--k) * 1px), calc(var(--sy, 0) * var(--s) * var(--dir, -1) * 1px), 0);
+  }
+  .layer svg { width: 100%; height: 100%; display: block; }
+  .layer.top { top: -6vh; --dir: -1; }
+  .layer.bot { bottom: -6vh; --dir: 1; }
+  .layer.bot svg { transform: scaleY(-1); }
+  .l1 { --k: 8;  --s: 12; opacity: .9; }
+  .l2 { --k: 18; --s: 24; }
+  .l3 { --k: 34; --s: 40; }
+  .l1 svg { fill: #161e55; } .l2 svg { fill: #0c1233; } .l3 svg { fill: #03040a; }
+  .l1.bot { height: 34vh; } .l3 { height: 30vh; }
+  .fog {
+    position: absolute; inset: -20%; filter: blur(30px);
+    background:
+      radial-gradient(40% 18% at 20% 62%, rgba(110,130,230,.25), transparent 70%),
+      radial-gradient(45% 16% at 75% 48%, rgba(90,110,210,.2), transparent 70%),
+      radial-gradient(35% 14% at 50% 80%, rgba(140,160,255,.12), transparent 70%);
+    animation: drift 38s ease-in-out infinite alternate;
+  }
+  .fog.b { animation-duration: 55s; animation-direction: alternate-reverse; opacity: .8; transform: scaleX(-1); }
+  @keyframes drift { from { translate: -4% 0; } to { translate: 5% 2%; } }
+  .depth::after {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 45%, transparent 22%, rgba(2,3,8,.93) 100%);
+  }
+
+  /* ---- hero ---- */
+  .hero {
+    position: relative; z-index: 1; min-height: 100vh;
+    display: grid; place-items: center; text-align: center; padding: 120px 20px 80px;
+  }
+  .hero .sub { font-family: var(--display); letter-spacing: .5em; color: var(--gold); font-size: 13px; }
+  .hero h1 { margin: 22px 0 44px !important;
+    font-family: var(--display); font-weight: 700;
+    font-size: clamp(40px, 9vw, 96px); margin: 18px 0; letter-spacing: .15em;
+    background: linear-gradient(#ffffff, #b9c6f5 70%, #5f70b5);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 24px rgba(127,147,217,.35));
+  }
+  .hero p { color: var(--muted); margin: 0 0 40px; }
+  .btn {
+    display: inline-block; padding: 12px 38px; border: 1px solid var(--gold);
+    color: var(--gold-bright); font-family: var(--display); letter-spacing: .3em; font-size: 13px;
+    background: rgba(127,147,217,.06); cursor: pointer; transition: .3s;
+  }
+  .btn:hover { background: rgba(127,147,217,.22); }
+  .scroll { position: absolute; bottom: 28px; left: 50%; translate: -50% 0;
+    font-family: var(--display); font-size: 11px; letter-spacing: .4em; color: var(--muted); }
+  .scroll::after { content: ""; display: block; width: 1px; height: 38px; margin: 8px auto 0;
+    background: linear-gradient(var(--gold), transparent); animation: drip 2s infinite; }
+  @keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* ---- sections ---- */
+  main { position: relative; z-index: 1; }
+  section { max-width: 1000px; margin: 0 auto; padding: 100px 20px; }
+  .title { text-align: center; margin-bottom: 48px; }
+  .title small { display: block; font-family: var(--display); letter-spacing: .5em; color: var(--gold); font-size: 12px; }
+  .title h2 { font-family: var(--display); font-size: clamp(26px, 5vw, 38px); margin: 6px 0 0; letter-spacing: .2em; font-weight: 500; }
+  .title::after {
+    content: "◆"; display: block; margin-top: 12px; color: var(--gold); font-size: 12px;
+    background: linear-gradient(90deg, transparent, var(--line), transparent) center / 60% 1px no-repeat;
+  }
+  .frame {
+    background: var(--panel); border: 1px solid var(--line); padding: 32px;
+    box-shadow: none;
+    position: relative;
+  }
+
+  /* ---- 自己紹介だけ別レイアウト（中央寄せ） ---- */
+  .title.plain small { display: none; } .title.plain::after { display: none; } .title.plain { margin-bottom: 36px; }
+  .intro { text-align: center; margin-bottom: 110px; padding: 72px 40px 52px; }
+  .intro > small { font-family: var(--display); letter-spacing: .4em; color: var(--gold); font-size: 12px; }
+  .intro h3 { margin: 4px 0 14px; font-family: var(--display); font-size: clamp(38px, 8vw, 64px); letter-spacing: .12em; color: var(--gold-bright); font-weight: 500; }
+  .intro p { max-width: 600px; margin: 0 auto 40px; font-size: 17px; line-height: 2.1; }
+  .stats { list-style: none; margin: 0; padding: 22px 0 0; display: grid; gap: 12px;
+    grid-template-columns: repeat(4, 1fr); row-gap: 20px; border-top: 1px solid var(--line); }
+  .stats li { font-size: 16px; }
+  .stats li span { display: block; color: var(--gold); font-family: var(--display); font-size: 11px; letter-spacing: .3em; }
+  /* ---- profile (スクロールで左右交互に表示) ---- */
+  .entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; margin-bottom: 64px; }
+  .entry:nth-of-type(even) .shot { order: 2; }
+  .entry .shot { margin: 0; }
+  .shot {
+    position: relative; aspect-ratio: 4 / 3; border: 1px solid var(--line); overflow: hidden;
+    background: linear-gradient(135deg, #141a3a, #080a14);
+    box-shadow: none;
+  }
+  .shot::before { content: "IMAGE"; position: absolute; inset: 0; display: grid; place-items: center;
+    font-family: var(--display); letter-spacing: .4em; font-size: 12px; color: var(--gold); opacity: .6; }
+  .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .txt small { font-family: var(--display); letter-spacing: .3em; color: var(--gold); font-size: 12px; }
+  .txt h3 { margin: 4px 0 12px; font-size: clamp(18px, 3vw, 22px); font-weight: 600; color: var(--gold-bright); }
+  .txt p { margin: 0 0 12px; color: var(--fg); }
+  .list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .list li { border: 1px solid var(--line); padding: 10px 16px; background: rgba(255,255,255,.02); }
+  .list li span { display: block; color: var(--muted); font-size: 12px; letter-spacing: .1em; }
+  @keyframes fade { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+  @media (max-width: 720px) {
+    .entry { grid-template-columns: 1fr; gap: 20px; margin-bottom: 56px; }
+    .entry:nth-of-type(even) .shot { order: 0; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ---- journey（足跡）：中央の道を歩くように、カードが左右に並ぶ ---- */
+  #journey { overflow: clip; padding-bottom: 150px; }   /* はみ出しは、このセクションの中で切る */
+  .steps { position: relative; padding: 10px 0 20px; --p: 0%; }
+  .steps::before, .steps::after { content: ""; position: absolute; left: 50%; top: 0; width: 2px; margin-left: -1px; }
+  .steps::before { bottom: 0; background: repeating-linear-gradient(180deg, rgba(127,147,217,.4) 0 6px, transparent 6px 14px); }
+  .steps::after { height: var(--p); background: linear-gradient(180deg, var(--gold), var(--gold-bright)); box-shadow: 0 0 10px var(--gold); transition: height .25s linear; }
+  .step { position: relative; width: calc(50% - 46px); margin-bottom: 44px; padding: 24px 26px 22px; border: 1px solid var(--line); background: var(--panel);
+    opacity: 0; translate: -30px 0; transition: opacity .9s, translate .9s, border-color .3s; }
+  .step:nth-child(even) { margin-left: auto; translate: 30px 0; margin-top: -10px; }
+  .step.lit { opacity: 1; translate: 0 0; border-color: rgba(127,147,217,.6); }
+  .step:last-child { margin-bottom: 0; }
+  /* 道へつなぐ線と、道の上の印 */
+  .step::before { content: ""; position: absolute; top: 34px; width: 46px; height: 1px; background: var(--line); }
+  .step:nth-child(odd)::before { right: -46px; } .step:nth-child(even)::before { left: -46px; }
+  .step::after { content: ""; position: absolute; top: 28px; width: 12px; height: 12px; rotate: 45deg; background: var(--bg); border: 1px solid var(--line);
+    transition: background .6s .3s, border-color .6s .3s, box-shadow .6s .3s; }
+  .step:nth-child(odd)::after { right: -53px; } .step:nth-child(even)::after { left: -53px; }
+  .step.lit::after { background: var(--gold); border-color: var(--gold-bright); box-shadow: 0 0 12px var(--gold); }
+  .step .no { position: absolute; top: 8px; right: 16px; font-family: var(--display); font-size: 44px; color: var(--gold); opacity: .22; line-height: 1; }
+  .step small { font-family: var(--display); letter-spacing: .3em; color: var(--gold); font-size: 11px; }
+  .step h3 { margin: 6px 0 8px; font-size: 20px; font-weight: 600; color: var(--gold-bright); }
+  .step p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.9; }
+  @media (max-width: 720px) {
+    .steps::before, .steps::after { left: 14px; }
+    .step, .step:nth-child(even) { width: auto; margin-left: 40px; margin-top: 0; translate: 0 18px; }
+    .step::before, .step:nth-child(odd)::before, .step:nth-child(even)::before { left: -26px; right: auto; width: 26px; }
+    .step::after, .step:nth-child(odd)::after, .step:nth-child(even)::after { left: -33px; right: auto; }
+    .step.lit { translate: 0 0; }
+  }
+
+  /* ---- 隠された扉：最初は存在しない。フッターの小さな印に触れると現れる ---- */
+  #secret[hidden] { display: none; }
+  #secret.show { animation: appear 1.6s ease both; }
+  @keyframes appear { from { opacity: 0; filter: blur(8px); translate: 0 20px; } to { opacity: 1; filter: none; translate: 0 0; } }
+  #rune {
+    margin-top: 26px; background: none; border: 0; cursor: pointer; font-size: 14px;
+    color: #9be0a8; opacity: .45; transition: opacity .8s, text-shadow .8s, transform .8s;
+  }
+  #rune:hover, #rune:focus-visible { opacity: 1; text-shadow: 0 0 14px #9be0a8; transform: scale(1.4) rotate(45deg); outline: none; }
+  .gate.shake { animation: shake .4s; }
+  @keyframes shake { 20%, 60% { translate: -6px 0; } 40%, 80% { translate: 6px 0; } }
+  /* ---- 草に覆われた扉 ---- */
+  #secret .gate { border-color: rgba(100,160,110,.4); }
+  #secret .gate .btn { border-color: #5a9a63; color: #b9e0bd; }
+  #secret .gate input:focus { border-color: #5a9a63; }
+  .vine { position: absolute; top: -8px; width: 150px; height: 214px; pointer-events: none; overflow: visible; transform-origin: 8px 0; animation: sway 7s ease-in-out infinite alternate; }
+  .vine.l { left: -10px; }
+  .vine.r { right: -10px; transform: scaleX(-1); animation-name: sway2; animation-duration: 9s; }
+  @keyframes sway  { from { rotate: -1.5deg; } to { rotate: 2deg; } }
+  @keyframes sway2 { from { rotate: 1.5deg; } to { rotate: -2deg; } }
+  .moss { position: absolute; left: 0; right: 0; bottom: 0; height: 34px; pointer-events: none;
+    background:
+      radial-gradient(18px 12px at 8% 100%, #2f5a3a 60%, transparent 62%),
+      radial-gradient(26px 16px at 22% 100%, #3b6b44 60%, transparent 62%),
+      radial-gradient(20px 11px at 38% 100%, #2f5a3a 60%, transparent 62%),
+      radial-gradient(30px 18px at 57% 100%, #3b6b44 60%, transparent 62%),
+      radial-gradient(22px 12px at 74% 100%, #2f5a3a 60%, transparent 62%),
+      radial-gradient(28px 16px at 91% 100%, #3b6b44 60%, transparent 62%);
+    filter: drop-shadow(0 -2px 6px rgba(90,154,99,.3)); }
+  .gate > :not(.vine):not(.moss) { position: relative; z-index: 1; }
+  .runewrap { position: relative; display: inline-block; }
+  .grass { position: absolute; left: -26px; right: -26px; bottom: -6px; width: calc(100% + 52px); height: 30px; pointer-events: none; }
+  /* ---- 扉を開くと、背景まで草に覆われていく ---- */
+  .layer svg { transition: fill 5s ease; }
+  .fog.g { opacity: 0; transition: opacity 5s ease;
+    background:
+      radial-gradient(42% 20% at 15% 70%, rgba(70,170,100,.22), transparent 70%),
+      radial-gradient(40% 18% at 85% 55%, rgba(60,150,90,.2), transparent 70%),
+      radial-gradient(50% 16% at 50% 90%, rgba(90,190,120,.14), transparent 70%); }
+  .grow .fog.g { opacity: 1; }
+  .grow .l1 svg { fill: #17402a; } .grow .l2 svg { fill: #0c2418; } .grow .l3 svg { fill: #040a06; }
+  .growth { position: absolute; inset: 0; }
+  .growth .side { position: absolute; top: 0; height: 100%; width: 120px; overflow: visible; }
+  .growth .sl { left: 0; } .growth .sr { right: 0; transform: scaleX(-1); }
+  .growth .stem { fill: none; stroke: #2f5a3a; stroke-width: 4; stroke-linecap: round; vector-effect: non-scaling-stroke;
+    stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 7s ease-out; }
+  .grow .growth .stem { stroke-dashoffset: 0; }
+  .growth .lv ellipse { fill: #3f7a4d; opacity: 0; transition: opacity 2s ease var(--d, 0s); }
+  .growth .lv ellipse:nth-child(3n) { fill: #5a9a63; } .growth .lv ellipse:nth-child(3n+1) { fill: #2f5a3a; }
+  .grow .growth .lv ellipse { opacity: .9; }
+  .growth .hang { position: absolute; top: -4vh; width: 140px; height: 200px; transform-origin: 8px 0; transform: scaleY(0);
+    opacity: 0; transition: transform 6s ease-out var(--d, 0s), opacity 2s ease var(--d, 0s); }
+  .grow .growth .hang { transform: scale(var(--s, 1)); opacity: .85; }
+  @media (max-width: 640px) { .growth .side { width: 60px; } .growth .hang:nth-of-type(even) { display: none; } }
+  /* ---- 合言葉で変わる背景（テーマ）。色相をずらして世界ごと変える ---- */
+  .depth { transition: filter 3s ease; }
+  .theme-dawn { --gold: #d9a35b; --gold-bright: #ffe2b0; --line: rgba(217,163,91,.35); }
+  .theme-dawn .depth { filter: hue-rotate(165deg) saturate(1.35) brightness(1.15); }
+  /* ---- 背景の凝り：遠景・光の筋・結晶・水滴・生き物・ランタン・呼吸 ---- */
+  .lr { --k: 4; --s: 6; height: 52vh; bottom: 4vh; opacity: 1; }
+  .lr svg, .lc svg { transform: none !important; fill: #1d2770; filter: blur(1px); }
+  .lc { --k: 26; --s: 30; height: 30vh; bottom: 3vh; left: -4%; width: 108%; }
+  .lc svg { fill: none; filter: none; overflow: visible; }
+  .lc polygon { animation: cpulse var(--t, 5s) ease-in-out infinite alternate; animation-delay: var(--dl, 0s); }
+  @keyframes cpulse { from { opacity: .65; filter: drop-shadow(0 0 5px currentColor); } to { opacity: 1; filter: drop-shadow(0 0 20px currentColor); } }
+  .c1 { fill: #6ad7ff; color: #6ad7ff; } .c2 { fill: #8cffb0; color: #8cffb0; } .c3 { fill: #b79bff; color: #b79bff; }
+  .rays { position: absolute; inset: 0; mix-blend-mode: screen; opacity: 1; }
+  .rays i { position: absolute; top: -12vh; width: var(--w); height: 125vh; rotate: var(--r); transform-origin: 50% 0;
+    background: linear-gradient(180deg, rgba(170,190,255,.34), rgba(170,190,255,.11) 55%, transparent 90%);
+    filter: blur(9px); animation: shaft var(--t) ease-in-out infinite alternate; }
+  @keyframes shaft { from { opacity: .25; translate: -14px 0; } to { opacity: .9; translate: 18px 0; } }
+  .breath { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, rgba(130,150,255,.14), transparent 65%); animation: breathe 8s ease-in-out infinite alternate; }
+  @keyframes breathe { from { opacity: .2; } to { opacity: 1; } }
+  .lantern { position: absolute; inset: 0; --lx: 50%; --ly: 40%;
+    background: radial-gradient(circle at var(--lx) var(--ly), rgba(0,0,0,0) 0, rgba(0,0,0,0) 110px, rgba(0,0,0,.28) 560px);
+    transition: opacity 3s; }
+  .abyss .lantern { background: radial-gradient(circle at var(--lx) var(--ly), rgba(0,0,0,0) 0, rgba(0,0,0,0) 60px, rgba(0,0,0,.92) 320px); }
+  .abyss .depth { filter: brightness(.55); }
+  #drops { position: absolute; inset: 0; }
+  .drip { position: absolute; top: 12vh; width: 2px; height: 10px; border-radius: 2px; background: linear-gradient(transparent, rgba(190,210,255,.9));
+    animation: drip 1.5s cubic-bezier(.5,0,.9,.6) forwards; }
+  @keyframes drip { to { transform: translateY(var(--fall)); } }
+  .splash { position: absolute; width: 10px; height: 4px; margin: -2px 0 0 -5px; border-radius: 50%; border: 1px solid rgba(190,210,255,.7);
+    animation: splash 1.6s ease-out forwards; }
+  @keyframes splash { from { transform: scale(.3); opacity: .9; } to { transform: scale(6); opacity: 0; } }
+  .bat { position: absolute; left: 0; top: 0; color: #02030a; pointer-events: none; animation: fly var(--dur) linear forwards; }
+  .bat svg { width: 100%; height: 100%; fill: currentColor; animation: flap .35s ease-in-out infinite alternate; }
+  .bat.big { color: #010204; filter: blur(5px); opacity: .85; }
+  .bat.big svg { animation-duration: 1.1s; }
+  @keyframes fly { from { transform: translate(var(--x0), var(--y0)); } to { transform: translate(var(--x1), var(--y1)); } }
+  @keyframes flap { from { transform: scaleY(.45); } to { transform: scaleY(1); } }
+  .theme-snow { --gold: #cfe3f5; --gold-bright: #ffffff; --line: rgba(200,225,245,.35); }
+  .theme-snow .depth { filter: saturate(.35) brightness(1.25); }
+  .abyss { background: #010204; }
+  .abyss .depth::after { background: radial-gradient(ellipse at 50% 45%, transparent 8%, rgba(0,0,0,.96) 70%); }
+  .theme-crimson { --gold: #d96a6a; --gold-bright: #ffd0d0; --line: rgba(217,106,106,.35); }
+  .theme-crimson .depth { filter: hue-rotate(125deg) saturate(1.5); }
+  .grow.theme-dawn .depth { filter: hue-rotate(-100deg) saturate(1.4) brightness(1.2); }
+  .grow.theme-crimson .depth { filter: hue-rotate(-140deg) saturate(1.6); }
+  .theme-crimson .hero h1 { filter: drop-shadow(0 0 28px rgba(217,60,60,.5)); }
+  /* ---- アニメーション ---- */
+  /* 1) 最初の画面：上から順に現れる。題字は広がった字間がゆっくり縮む */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } }
+  @keyframes titleIn { from { opacity: 0; letter-spacing: .45em; filter: blur(10px); } }
+  .hero .sub { animation: fadeUp 1s .1s backwards; }
+  .hero h1 { margin: 22px 0 44px !important; animation: titleIn 2s .3s cubic-bezier(.2,.7,.2,1) backwards; }
+  .hero p { animation: fadeUp 1s 1.3s backwards; }
+  .hero .btn { animation: fadeUp 1s 1.7s backwards; }
+  /* 2) 自己紹介：名前の字間が締まり、項目が順に出る */
+  .intro > * { opacity: 0; translate: 0 14px; transition: opacity .9s, translate .9s; }
+  .intro.in > * { opacity: 1; translate: 0 0; }
+  .intro > small { transition-delay: .1s; } .intro > h3 { transition-delay: .25s; } .intro > p { transition-delay: .55s; } .intro > .stats { transition-delay: .8s; opacity: 1; translate: 0 0; }
+  .intro h3 { letter-spacing: .3em; transition: opacity .9s .25s, translate .9s .25s, letter-spacing 1.8s .25s cubic-bezier(.2,.7,.2,1); }
+  .intro.in h3 { letter-spacing: .12em; }
+  .stats li { opacity: 0; translate: 0 10px; transition: opacity .7s calc(.9s + var(--i, 0) * .1s), translate .7s calc(.9s + var(--i, 0) * .1s); }
+  .intro.in .stats li { opacity: 1; translate: 0 0; }
+  .stats li:nth-child(2) { --i: 1; } .stats li:nth-child(3) { --i: 2; } .stats li:nth-child(4) { --i: 3; }
+  .stats li:nth-child(5) { --i: 4; } .stats li:nth-child(6) { --i: 5; } .stats li:nth-child(7) { --i: 6; } .stats li:nth-child(8) { --i: 7; }
+  /* 3) 各項目：画像が幕を引くように現れ、文章が反対側から滑り込む */
+  .entry .shot { clip-path: inset(0 100% 0 0); transition: clip-path 1.2s cubic-bezier(.7,0,.2,1); }
+  .entry:nth-of-type(even) .shot { clip-path: inset(0 0 0 100%); }
+  .entry.in .shot { clip-path: inset(0); }
+  .entry .txt { opacity: 0; translate: 36px 0; transition: opacity .9s .35s, translate .9s .35s; }
+  .entry:nth-of-type(even) .txt { translate: -36px 0; }
+  .entry.in .txt { opacity: 1; translate: 0 0; }
+  @media (max-width: 720px) { .entry .txt, .entry:nth-of-type(even) .txt { translate: 0 18px; } }
+  /* ---- gate ---- */
+  .door { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 28px; align-items: start; }
+  .words { padding: 22px 18px; border-color: rgba(100,160,110,.4); }
+  .words h3 { margin: 0 0 4px; font-size: 15px; letter-spacing: .2em; color: #b9e0bd; font-weight: 600; }
+  .words p { margin: 0 0 14px; font-size: 12px; color: var(--muted); }
+  .words ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .words button { width: 100%; text-align: left; padding: 8px 12px; font: inherit; font-family: var(--display); font-size: 13px; letter-spacing: .12em;
+    color: #b9e0bd; background: rgba(90,154,99,.07); border: 1px solid rgba(100,160,110,.35); cursor: pointer; transition: .25s; }
+  .words button:hover { background: rgba(90,154,99,.22); }
+  @media (max-width: 760px) { .door { grid-template-columns: 1fr; } }
+  .gate { text-align: center; }
+  .gate p { color: var(--muted); margin: 0 0 24px; }
+  .gate form { display: inline-flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .gate input {
+    width: 260px; max-width: 100%; padding: 11px 16px; font: inherit; color: var(--fg);
+    background: rgba(0,0,0,.4); border: 1px solid var(--line); text-align: center; letter-spacing: .2em;
+  }
+  .gate input:focus { outline: none; border-color: var(--gold); }
+  #msg { min-height: 1.8em; margin-top: 14px; color: var(--danger); font-size: 14px; }
+  #reward { display: none; margin-top: 26px; color: #b9e0bd; line-height: 2; white-space: pre-line; }
+  #reward.open { display: block; animation: fade .8s; }
+  #reward a { color: #b9e0bd; border-bottom: 1px solid #5a9a63; }
+  #hint { display: block; margin-top: 6px; font-size: 13px; letter-spacing: .2em; color: #9be0a8; opacity: .6; transition: opacity .8s; }
+  .runewrap:hover + #hint, .runewrap:focus-within + #hint { opacity: .85; }
+  #gameBox { display: none; margin-top: 30px; }
+  #gameBox.open { display: block; animation: fade .8s; }
+  #gameBox iframe { width: 100%; max-width: 800px; aspect-ratio: 4 / 3; border: 1px solid var(--gold); background: #000; }
+  #gameBox .open-link { display: block; margin-top: 12px; font-size: 13px; }
+
+  footer {
+    position: relative; z-index: 1; text-align: center; padding: 50px 20px 60px;
+    color: var(--muted); font-family: var(--display); font-size: 12px; letter-spacing: .3em;
+  }
+
+  /* ---- reveal ---- */
+  .rv { opacity: 0; translate: 0 24px; transition: opacity .9s, translate .9s; }
+  .rv.in { opacity: 1; translate: 0 0; }
+  @media (max-width: 640px) {
+    nav ul { gap: 14px; } nav ul a { font-size: 11px; letter-spacing: .1em; }
+    .frame { padding: 22px 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } .rv { opacity: 1; translate: 0 0; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="vineShape">
+      <path d="M8 0C28 28 4 58 20 92S26 150 46 192" fill="none" stroke="#2f5a3a" stroke-width="3" stroke-linecap="round"/>
+      <path d="M30 0C46 22 30 46 40 70S56 110 70 128" fill="none" stroke="#3b6b44" stroke-width="2" stroke-linecap="round"/>
+      <g fill="#3f7a4d">
+        <ellipse transform="translate(17 26) rotate(-30)" rx="11" ry="5"/>
+        <ellipse transform="translate(10 58) rotate(200)" rx="12" ry="5.5" fill="#2f5a3a"/>
+        <ellipse transform="translate(22 92) rotate(-20)" rx="13" ry="6" fill="#5a9a63"/>
+        <ellipse transform="translate(18 124) rotate(190)" rx="11" ry="5"/>
+        <ellipse transform="translate(32 150) rotate(-35)" rx="12" ry="5.5" fill="#2f5a3a"/>
+        <ellipse transform="translate(40 176) rotate(200)" rx="10" ry="4.5" fill="#5a9a63"/>
+        <ellipse transform="translate(40 24) rotate(-40)" rx="9" ry="4.2" fill="#5a9a63"/>
+        <ellipse transform="translate(42 66) rotate(210)" rx="10" ry="4.5"/>
+        <ellipse transform="translate(66 124) rotate(-25)" rx="9" ry="4" fill="#2f5a3a"/>
+      </g>
+    </g>
+    <g id="grassShape" fill="#1f3d2a">
+      <path d="M0 40Q6 10 8 0Q12 20 16 40ZM14 40Q24 14 30 4Q30 24 36 40ZM34 40Q38 18 46 8Q46 26 52 40ZM50 40Q60 16 64 2Q66 24 70 40ZM68 40Q72 20 82 10Q80 28 86 40ZM84 40Q92 12 98 0Q100 22 104 40ZM102 40Q106 22 114 12Q114 30 120 40Z"/>
+    </g>
+  </defs>
+</svg>
+<div class="depth" aria-hidden="true">
+  <div class="layer bot lr"><svg viewBox="0 0 1600 400" preserveAspectRatio="none"><path d="M0 400V340H80V320H110V340H220V300H250V280H270V300H300V340H420V330L440 250L455 330H520V290H560V270L575 220L590 270H620V300H680V240H700V200L720 150L740 200V240H770V300H840V330H940V310H980V260L1000 230L1020 260V310H1100V335H1200V300L1220 260L1240 300V335H1330V320H1400V345H1500V315H1540V345H1600V400Z"/></svg></div>
+  <div class="layer top l1"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 0H1600V90L1540 130L1500 80L1430 190L1370 100L1300 150L1240 70L1170 230L1100 110L1030 170L960 80L890 200L820 120L750 260L690 130L620 180L560 90L490 210L420 120L350 170L290 70L220 190L150 110L80 160L0 100Z"/></svg></div>
+  <div class="layer bot l1"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 0H1600V120L1520 60L1460 150L1390 90L1320 200L1250 110L1180 170L1100 60L1040 140L960 220L890 120L820 180L740 70L670 150L600 100L530 210L450 130L380 180L300 80L230 160L150 100L70 170L0 110Z"/></svg></div>
+  <div class="fog"></div>
+  <div class="layer top l2"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 0H1600V60L1560 150L1510 70L1450 120L1380 50L1330 210L1270 90L1200 140L1130 40L1080 190L1010 100L940 150L870 60L810 170L730 90L670 220L600 110L540 150L470 50L410 180L340 100L270 140L200 60L130 200L60 90L0 120Z"/></svg></div>
+  <div class="layer bot l2"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 0H1600V100L1550 40L1490 130L1420 70L1360 170L1290 90L1220 150L1160 50L1090 180L1020 110L950 160L880 70L800 140L730 190L660 90L590 150L520 60L450 170L380 110L310 160L240 70L170 150L100 90L40 140L0 80Z"/></svg></div>
+  <div class="layer bot lc"><svg id="crystalSvg" viewBox="0 0 1600 200" preserveAspectRatio="none"></svg></div>
+  <div class="fog b"></div>
+  <div class="rays"><i style="left:8%;--w:120px;--r:14deg;--t:9s"></i><i style="left:28%;--w:190px;--r:17deg;--t:13s"></i><i style="left:52%;--w:100px;--r:12deg;--t:11s"></i><i style="left:70%;--w:170px;--r:18deg;--t:15s"></i><i style="left:90%;--w:110px;--r:15deg;--t:10s"></i></div>
+  <div class="layer top l3"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 0H1600V40L1570 160L1530 60L1490 40L1400 30L1200 20L1000 30L800 20L600 35L400 25L200 30L110 40L70 260L30 80L0 120Z"/></svg></div>
+  <div class="layer bot l3"><svg viewBox="0 0 1600 360" preserveAspectRatio="none"><path d="M0 0H1600V70L1560 30L1520 140L1470 60L1380 50L1200 60L1000 50L800 70L600 55L400 65L250 50L170 70L120 190L80 60L40 100L0 40Z"/></svg></div>
+  <div class="fog g"></div>
+  <div class="growth">
+    <svg class="side sl" viewBox="0 0 120 1000" preserveAspectRatio="none"><path class="stem" pathLength="1" d="M30 0C95 120-15 240 50 360S10 600 60 720S25 900 70 1000"/><g class="lv">
+      <ellipse style="--d:.5s" transform="translate(52 80) rotate(-30)" rx="16" ry="6"/><ellipse style="--d:1.2s" transform="translate(12 170) rotate(200)" rx="18" ry="7"/>
+      <ellipse style="--d:1.9s" transform="translate(40 300) rotate(-25)" rx="17" ry="6.5"/><ellipse style="--d:2.6s" transform="translate(38 420) rotate(195)" rx="18" ry="7"/>
+      <ellipse style="--d:3.3s" transform="translate(30 540) rotate(-35)" rx="16" ry="6"/><ellipse style="--d:4s" transform="translate(58 680) rotate(200)" rx="18" ry="7"/>
+      <ellipse style="--d:4.7s" transform="translate(40 810) rotate(-30)" rx="17" ry="6.5"/><ellipse style="--d:5.3s" transform="translate(55 940) rotate(195)" rx="16" ry="6"/></g></svg>
+    <svg class="side sr" viewBox="0 0 120 1000" preserveAspectRatio="none"><path class="stem" pathLength="1" d="M30 0C95 120-15 240 50 360S10 600 60 720S25 900 70 1000"/><g class="lv">
+      <ellipse style="--d:.8s" transform="translate(52 100) rotate(-30)" rx="16" ry="6"/><ellipse style="--d:1.5s" transform="translate(14 200) rotate(200)" rx="18" ry="7"/>
+      <ellipse style="--d:2.2s" transform="translate(40 330) rotate(-25)" rx="17" ry="6.5"/><ellipse style="--d:2.9s" transform="translate(36 450) rotate(195)" rx="18" ry="7"/>
+      <ellipse style="--d:3.6s" transform="translate(30 570) rotate(-35)" rx="16" ry="6"/><ellipse style="--d:4.3s" transform="translate(58 700) rotate(200)" rx="18" ry="7"/>
+      <ellipse style="--d:5s" transform="translate(40 830) rotate(-30)" rx="17" ry="6.5"/></g></svg>
+    <svg class="hang" style="left:8%;--s:.9;--d:.4s" viewBox="0 0 140 200"><use href="#vineShape"/></svg>
+    <svg class="hang" style="left:27%;--s:1.5;--d:1.2s" viewBox="0 0 140 200"><use href="#vineShape"/></svg>
+    <svg class="hang" style="left:48%;--s:1.1;--d:2s" viewBox="0 0 140 200"><use href="#vineShape"/></svg>
+    <svg class="hang" style="left:68%;--s:1.7;--d:.8s" viewBox="0 0 140 200"><use href="#vineShape"/></svg>
+    <svg class="hang" style="left:86%;--s:1.2;--d:1.6s" viewBox="0 0 140 200"><use href="#vineShape"/></svg>
+  </div>
+  <div class="breath"></div>
+  <div id="drops"></div>
+  <div class="lantern" id="lantern"></div>
+</div>
+<canvas id="embers"></canvas>
+
+<header>
+  <nav>
+    <a class="logo" href="#top">MYPROFILE</a>
+    <ul>
+      <li><a href="#profile">PROFILE</a></li>
+      <li><a href="#journey">JOURNEY</a></li>
+      <li><a href="#secret">SECRET</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="hero" id="top">
+  <div>
+    <!-- ■ 題字の上に書く文：ここを書き換える -->
+    <div class="sub">よろしくお願いします！</div>
+    <h1>MYPROFILE</h1>
+    <a class="btn" href="#profile">ENTER</a>
+  </div>
+  <div class="scroll">SCROLL</div>
+</div>
+
+<main>
+  <section id="profile">
+    <div class="title rv"><small>PROFILE</small><h2>自分について</h2></div>
+    <!-- ■ マス目（<li>）は項目ごとに自由な数にできます。1行コピー／削除するだけ。
+         ■ 項目を増やす・減らす：<article class="entry rv"> のブロックをコピー／削除。画像は左右が自動で交互になります -->
+    <div class="intro rv frame">
+      <small>自己紹介</small>
+      <h3>戸村颯真</h3>
+      <p>いろいろ好きです。</p>
+      <ul class="stats">
+        <li><span>NAME</span>戸村颯真</li>
+        <li><span>HOBBY</span>ゲームをすること</li>
+        <li><span>BLOOD</span>O型</li>
+        <li><span>BIRTH</span>2011/6/17</li>
+        <li><span>CLASS</span>3-2</li>
+        <li><span>CLUB</span>卓球部</li>
+        <li><span>HEIGHT</span>（約）170cm</li>
+        <li><span>SIGN</span>ふたご座</li>
+      </ul>
+    </div>
+    <article class="entry rv">
+      <figure class="shot"><img src="img/food.jpg" alt="" onerror="this.remove()"></figure>
+      <div class="txt">
+        <h3>好きな食べ物</h3>
+        <p>寿司です。いくらが一番好き。</p>
+        <ul class="list"><li><span>No.1</span>寿司</li><li><span>No.2</span>森永のラムネ</li></ul>
+      </div>
+    </article>
+    <article class="entry rv">
+      <figure class="shot"><img src="img/game.jpg" alt="" onerror="this.remove()"></figure>
+      <div class="txt">
+        <h3>好きなゲーム</h3>
+        <p>Hollow Knight。かわいい絵柄の裏で成り立つ、ダークで寂しい雰囲気が最高。</p>
+        <ul class="list"><li><span>No.1</span>Hollow Knight</li><li><span>No.2</span>Minecraft</li><li><span>No.3</span>ゼルダの伝説 ブレス オブ ザ ワイルド</li></ul>
+      </div>
+    </article>
+    <article class="entry rv">
+      <figure class="shot"><img src="img/music.png" alt="" onerror="this.remove()"></figure>
+      <div class="txt">
+        <h3>好きな音楽</h3>
+        <p>Altale。感動的で儚く、美しいメロディに惹かれる。</p>
+        <ul class="list"><li><span>MUSIC</span>Altale / Sakuzyo</li><li><span>MUSIC</span>錠剤 / TOOBOE</li></ul>
+      </div>
+    </article>
+    <article class="entry rv">
+      <figure class="shot"><img src="img/anime.jpg" alt="" onerror="this.remove()"></figure>
+      <div class="txt">
+        <h3>好きなアニメ・映画</h3>
+        <p>かわいくて、ワクワクして、度し難いファンタジーアニメ。メイドインアビスです。</p>
+        <ul class="list"><li><span>ANIME</span>メイドインアビス</li><li><span>MOVIE</span>サマーウォーズ</li></ul>
+      </div>
+    </article>
+    <article class="entry rv">
+      <figure class="shot"><img src="img/weak.jpg" alt="" onerror="this.remove()"></figure>
+      <div class="txt">
+        <h3>苦手なもの</h3>
+        <p>月曜日！くるなぁっ！！うわぁ！！！</p>
+        <ul class="list"><li><span>WEAK</span>月曜日</li><li><span>WEAK</span>虫</li></ul>
+      </div>
+    </article>
+  </section>
+
+  <section id="journey" class="rv">
+    <div class="title plain"><small>JOURNEY</small><h2>足跡</h2></div>
+    <!-- ■ 更新履歴や、これからやりたいこと。<article class="step"> をコピーして増やせます（左右は自動で交互） -->
+    <div class="steps">
+      <article class="step"><span class="no">I</span><small>2026.11</small><h3>最初の一歩</h3><p>このサイトを作り始めた。</p></article>
+      <article class="step"><span class="no">II</span><small>2026.12</small><h3>次の二歩目</h3><p>まずは受験のために勉強を頑張る。</p></article>
+      <article class="step"><span class="no">III</span><small>2026.1</small><h3>踏み出す三歩目</h3><p>芝柏に受かって、最高の状態で県船に挑む！</p></article>
+      <article class="step"><span class="no">IV</span><small>2026.2</small><h3>始まりの四歩目</h3><p>県立船橋高校に受かるぜー！</p></article>
+    </div>
+  </section>
+
+  <section id="secret" class="rv">
+    <div class="title plain"><small>SECRET</small><h2>隠し扉</h2></div>
+    <div class="door">
+    <div class="frame gate">
+      <svg class="vine l" viewBox="0 0 140 200" aria-hidden="true"><use href="#vineShape"/></svg>
+      <svg class="vine r" viewBox="0 0 140 200" aria-hidden="true"><use href="#vineShape"/></svg>
+      <div class="moss" aria-hidden="true"></div>
+      <p>鍵付きだ。<br>なにか、言葉を入力すれば開くかもしれない。</p>
+      <form id="f" autocomplete="off">
+        <input id="word" type="text" placeholder="合言葉" aria-label="合言葉">
+        <button class="btn" type="submit">OPEN</button>
+      </form>
+      <div id="msg" role="status"></div>
+      <div id="reward" role="status"></div>
+      <div id="gameBox">
+        <iframe id="gameFrame" title="game" allowfullscreen></iframe>
+        <a class="open-link" href="game/game.html" target="_blank" rel="noopener">▶ 別タブで開く</a>
+      </div>
+    </div>
+    <aside class="frame words" aria-label="合言葉の一覧">
+      <h3>合言葉の一覧</h3>
+      <p>触れると、その扉に入力される。</p>
+      <ul id="wordList"></ul>
+    </aside>
+    </div>
+  </section>
+</main>
+
+<footer>© 2026 MYPROFILE<br></footer>
+
+<script>
+  // 扉の前まで来ると、背景が草に覆われはじめる
+  new IntersectionObserver(function (es, ob) {
+    if (es[0].isIntersecting) { document.body.classList.add('grow'); window.grown = true; ob.disconnect(); }
+  }, { threshold: .3 }).observe(document.getElementById('secret'));
+
+  // 背景の演出。合言葉の effect に名前を書くと発動します
+  //   'snow'    … 雪が降る
+  //   'firefly' … 蛍が増えて、マウスに寄ってくる
+  //   'abyss'   … 深淵。世界がほぼ真っ暗になる
+  //   'grow'    … 世界が草に覆われる
+  //   'dawn'    … 夜明け。世界が金色に変わる
+  //   'crimson' … 世界が赤く染まる
+  //   'reset'   … 元の青い世界に戻す
+  function runEffect(name) {
+    var b = document.body;
+    b.classList.remove('theme-dawn', 'theme-crimson', 'theme-snow', 'abyss');
+    window.mode = null;
+    window.emberRGB = null;
+    if (name === 'dawn') { b.classList.add('theme-dawn'); window.emberRGB = ['255,225,160', '#ffc860']; }
+    if (name === 'crimson') { b.classList.add('theme-crimson'); window.emberRGB = ['255,170,170', '#ff5a5a']; }
+    if (name === 'snow') { b.classList.add('theme-snow'); window.mode = 'snow'; }
+    if (name === 'firefly') window.mode = 'firefly';
+    if (name === 'abyss') b.classList.add('abyss');
+    if (name === 'grow') { b.classList.add('grow'); window.grown = true; }
+    if (name === 'reset') { b.classList.remove('grow'); window.grown = false; }
+  }
+
+  // ■ 合言葉の一覧：ここに行を足せば、合言葉を増やせます
+  //   type:'game' … ゲームを枠の中に表示（url にファイルの場所）
+  //   effect     … 背景の演出だけ。text を足せば文章も出る
+  var SECRETS = {
+    'DepthsEcho': { type: 'game', url: 'game/game.html', hide: true },   // hide:true … 一覧に載せない（本当の秘密）
+    // ↓ お試し用の合言葉。好きな言葉に書き換えてください
+    'Snowfall': { effect: 'snow' },
+    'Firefly': { effect: 'firefly' },
+    'Abyss': { effect: 'abyss' },
+    'Overgrown': { effect: 'grow' },
+    'Silence': { effect: 'reset' }
+    // 'ここに合言葉': { effect: 'dawn' },   ← 背景だけ変える。文章を出すなら text: '…' を足す（url / label でリンクも可）
+  };
+
+  // 合言葉の一覧（hide:true 以外を自動で並べる。押すと入力して実行）
+  (function () {
+    var ul = document.getElementById('wordList');
+    Object.keys(SECRETS).forEach(function (k) {
+      if (SECRETS[k].hide) return;
+      var li = document.createElement('li'), b = document.createElement('button');
+      b.type = 'button'; b.textContent = k;
+      b.addEventListener('click', function () { document.getElementById('word').value = k; document.getElementById('f').requestSubmit(); });
+      li.appendChild(b); ul.appendChild(li);
+    });
+  })();
+
+  // secret word
+  document.getElementById('f').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = document.getElementById('msg');
+    var hit = SECRETS[document.getElementById('word').value.trim()];
+    if (hit) {
+      msg.textContent = '';
+      if (hit.effect) runEffect(hit.effect);
+      var box = document.getElementById('gameBox'), rw = document.getElementById('reward');
+      box.classList.remove('open'); rw.classList.remove('open');
+      if (hit.type === 'game') {
+        var fr = document.getElementById('gameFrame');
+        if (!fr.src) fr.src = hit.url;
+        box.classList.add('open');
+        box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else if (hit.text || hit.url) {   // 文章やリンクを出す（text / url があるときだけ）
+        rw.textContent = hit.text || '';
+        if (hit.url) { var a = document.createElement('a'); a.href = hit.url; a.textContent = hit.label || '▶ 進む'; a.target = '_blank'; a.rel = 'noopener'; rw.appendChild(document.createElement('br')); rw.appendChild(a); }
+        rw.classList.add('open');
+        rw.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    } else {
+      msg.textContent = '石碑は沈黙したままだ…';
+      var g = document.querySelector('.gate'); g.classList.remove('shake'); void g.offsetWidth; g.classList.add('shake');
+    }
+  });
+
+  // parallax (mouse + scroll)
+  (function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var d = document.querySelector('.depth'), tx = 0, mx = 0, raf = 0;
+    function apply() {
+      mx += (tx - mx) * .08;
+      d.style.setProperty('--mx', mx.toFixed(3));
+      d.style.setProperty('--sy', (scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight)).toFixed(4));
+      raf = Math.abs(tx - mx) > .002 ? requestAnimationFrame(apply) : 0;
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(apply); }
+    addEventListener('mousemove', function (e) { tx = (e.clientX / innerWidth - .5) * 2; kick(); });
+    addEventListener('scroll', kick, { passive: true });
+  })();
+
+  // ---- 背景の凝り ----
+  (function () {
+    var NS = 'http://www.w3.org/2000/svg', calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 光る結晶：下の岩に点々と生やす
+    var cs = document.getElementById('crystalSvg');
+    [[140, 'c1'], [420, 'c3'], [760, 'c2'], [1010, 'c1'], [1300, 'c3'], [1520, 'c2']].forEach(function (c, i) {
+      [[-34, 90, 20, 40], [-6, 150, 17, 70], [24, 75, 22, 30]].forEach(function (s, j) {
+        var p = document.createElementNS(NS, 'polygon'), x = c[0] + s[0], h = s[1], w = s[2];
+        p.setAttribute('points', (x - w) + ',200 ' + x + ',' + (200 - h) + ' ' + (x + w) + ',200');
+        p.setAttribute('class', c[1]);
+        p.style.setProperty('--t', (4 + ((i * 3 + j) % 5)) + 's'); p.style.setProperty('--dl', (-(i + j) * 0.7) + 's');
+        cs.appendChild(p);
+      });
+    });
+
+    // ランタン：マウスの周りだけ明るい
+    var ln = document.getElementById('lantern'), lx = innerWidth / 2, ly = innerHeight * .4, tx = lx, ty = ly, lr = 0;
+    function lstep() {
+      lx += (tx - lx) * .12; ly += (ty - ly) * .12;
+      ln.style.setProperty('--lx', lx.toFixed(1) + 'px'); ln.style.setProperty('--ly', ly.toFixed(1) + 'px');
+      lr = (Math.abs(tx - lx) + Math.abs(ty - ly) > .5) ? requestAnimationFrame(lstep) : 0;
+    }
+    if (!calm) addEventListener('pointermove', function (e) { tx = e.clientX; ty = e.clientY; if (!lr) lr = requestAnimationFrame(lstep); });
+
+    if (calm) return;
+
+    // 水滴：上の岩から落ちて、下で波紋
+    var drops = document.getElementById('drops');
+    function drip() {
+      if (!document.hidden) {
+        var x = 6 + Math.random() * 88, fall = innerHeight * (.62 + Math.random() * .12);
+        var d = document.createElement('i'); d.className = 'drip'; d.style.left = x + '%'; d.style.setProperty('--fall', fall + 'px');
+        drops.appendChild(d);
+        setTimeout(function () {
+          d.remove();
+          var s = document.createElement('i'); s.className = 'splash'; s.style.left = x + '%'; s.style.top = (innerHeight * .12 + fall) + 'px';
+          drops.appendChild(s); setTimeout(function () { s.remove(); }, 1700);
+        }, 1450);
+      }
+      setTimeout(drip, 1800 + Math.random() * 3200);
+    }
+    setTimeout(drip, 2500);
+
+    // 舞う生き物：コウモリが横切る。ときどき大きな影も
+    var BAT = '<svg viewBox="0 0 40 16"><path d="M0 8Q8-2 16 6Q20 1 24 6Q32-2 40 8Q30 6 24 13Q20 8 16 13Q10 6 0 8Z"/></svg>';
+    function bat() {
+      if (!document.hidden) {
+        var big = Math.random() < .2, w = big ? 260 : 18 + Math.random() * 18, dir = Math.random() < .5 ? 1 : -1;
+        var el = document.createElement('div'); el.className = 'bat' + (big ? ' big' : ''); el.innerHTML = BAT;
+        el.style.width = w + 'px'; el.style.height = (w * .4) + 'px';
+        var y0 = innerHeight * (big ? .35 + Math.random() * .3 : .15 + Math.random() * .3), dy = (Math.random() - .5) * innerHeight * .2;
+        el.style.setProperty('--x0', (dir > 0 ? -w - 20 : innerWidth + 20) + 'px'); el.style.setProperty('--x1', (dir > 0 ? innerWidth + 20 : -w - 20) + 'px');
+        el.style.setProperty('--y0', y0 + 'px'); el.style.setProperty('--y1', (y0 + dy) + 'px');
+        var dur = big ? 16 : 7 + Math.random() * 5; el.style.setProperty('--dur', dur + 's');
+        if (dir < 0) el.firstChild.style.scale = '-1 1';
+        drops.appendChild(el); setTimeout(function () { el.remove(); }, dur * 1000 + 200);
+      }
+      setTimeout(bat, 9000 + Math.random() * 14000);
+    }
+    setTimeout(bat, 4000);
+  })();
+
+  // ページ内リンク（上のボタン・ENTER・ロゴ）：どの環境でも確実に動くよう、スクロールで移動する
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href').slice(1), t = id === 'top' ? document.body : document.getElementById(id);
+      if (!t) return;
+      e.preventDefault();
+      if (id === 'top') window.scrollTo({ top: 0, behavior: 'smooth' });
+      else t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // 足跡：スクロールに合わせて、道が伸び、カードの印が灯る
+  (function () {
+    var box = document.querySelector('.steps'), steps = [].slice.call(box.querySelectorAll('.step')), tick = 0;
+    function upd() {
+      tick = 0;
+      var r = box.getBoundingClientRect(), mark = innerHeight * .62;
+      var p = Math.max(0, Math.min(1, (mark - r.top) / r.height));
+      box.style.setProperty('--p', (p * 100).toFixed(1) + '%');
+      steps.forEach(function (s) { s.classList.toggle('lit', s.getBoundingClientRect().top < mark); });
+    }
+    function req() { if (!tick) tick = requestAnimationFrame(upd); }
+    addEventListener('scroll', req, { passive: true }); addEventListener('resize', req); upd();
+  })();
+
+  // reveal on scroll
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+
+  // floating embers（光の粒）。window.mode で動きが変わる：snow=雪 / firefly=蛍 / それ以外=ふつう
+  (function () {
+    var c = document.getElementById('embers'), g = c.getContext('2d'), P = [], W, H, mx = -999, my = -999, last = '';
+    function size() { W = c.width = innerWidth; H = c.height = innerHeight; }
+    addEventListener('resize', size); size();
+    addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; });
+    function mk(init) {
+      var m = window.mode, R = Math.random;
+      if (m === 'snow') return { x: R() * W, y: init ? R() * H : -10, r: R() * 2.2 + .8, v: R() * .8 + .4, d: R() * 6.28, a: R() * .5 + .4 };
+      if (m === 'firefly') return { x: R() * W, y: R() * H, r: R() * 1.6 + 1.1, v: 0, d: R() * 6.28, a: 1 };
+      return { x: R() * W, y: init ? R() * H : H + 10, r: R() * 1.8 + .4, v: R() * .5 + .15, d: R() * 6.28, a: R() * .6 + .2 };
+    }
+    function tick() {
+      var m = window.mode || '', want = m === 'snow' ? 150 : m === 'firefly' ? 120 : 60, deep = document.body.classList.contains('abyss');
+      if (m !== last) { P = []; last = m; }
+      while (P.length < want) P.push(mk(true));
+      g.clearRect(0, 0, W, H);
+      P.forEach(function (p, i) {
+        var col, glow, a = p.a, r = p.r;
+        p.d += .01;
+        if (m === 'snow') {
+          p.y += p.v; p.x += Math.sin(p.d) * .5;
+          if (p.y > H + 10) P[i] = mk(false);
+          col = 'rgba(255,255,255,'; glow = '#cfe3f5';
+        } else if (m === 'firefly') {
+          p.d += .01; p.x += Math.cos(p.d) * .6; p.y += Math.sin(p.d * 1.3) * .5;
+          var dx = mx - p.x, dy = my - p.y;
+          if (dx * dx + dy * dy < 90000) { p.x += dx * .006; p.y += dy * .006; }
+          if (p.x < -10) p.x = W + 10; if (p.x > W + 10) p.x = -10; if (p.y < -10) p.y = H + 10; if (p.y > H + 10) p.y = -10;
+          a = .35 + .65 * Math.abs(Math.sin(p.d * 2 + i));
+          col = 'rgba(215,255,140,'; glow = '#c8ff6a';
+        } else {
+          p.y -= p.v; p.x += Math.sin(p.d) * .3;
+          if (p.y < -10) P[i] = mk(false);
+          var ec = window.emberRGB;
+          col = ec ? 'rgba(' + ec[0] + ',' : window.grown ? 'rgba(190,255,205,' : 'rgba(200,215,255,';
+          glow = ec ? ec[1] : window.grown ? '#5ad88a' : '#7f93d9';
+        }
+        if (deep) r *= 1.5;
+        g.beginPath(); g.arc(p.x, p.y, r, 0, 6.28);
+        g.fillStyle = col + a + ')'; g.shadowBlur = deep ? 18 : m === 'firefly' ? 14 : 8; g.shadowColor = glow; g.fill();
+      });
+      requestAnimationFrame(tick);
+    }
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) tick();
+  })();
+</script>
+</body>
+</html>

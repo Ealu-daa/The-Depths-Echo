@@ -1,0 +1,76 @@
+{
+ "game": "深層の残響",
+ "v": 1,
+ "saved": "2026-10-14T04:19:01.262Z",
+ "slots": {
+  "1": {
+   "dash": false,
+   "dj": false,
+   "plunge": false,
+   "defeated": [],
+   "got": [],
+   "broken": [],
+   "visited": [
+    "home",
+    "path",
+    "shaft",
+    "hub"
+   ],
+   "fire": {
+    "room": "hub",
+    "x": 20,
+    "y": 11
+   },
+   "frames": 3235,
+   "hints": [
+    "link"
+   ],
+   "talked": {},
+   "whisper": [
+    "hub"
+   ],
+   "rin": 4,
+   "lostRin": null,
+   "fires": [
+    "home",
+    "hub"
+   ],
+   "liftOpen": false,
+   "liftPos": "top",
+   "hardDefeated": [],
+   "linked": [
+    "home",
+    "hub",
+    "t2"
+   ],
+   "wj": false,
+   "lamp2": false,
+   "oar": false,
+   "libLow": false,
+   "found": {},
+   "buy": [],
+   "pages": [],
+   "songGot": false,
+   "named": false,
+   "story": {},
+   "talkN": {},
+   "charms": [],
+   "recipes": [],
+   "eq": [],
+   "mats": {
+    "koke": 0,
+    "ishi": 0,
+    "nuke": 0
+   },
+   "kills": {
+    "lamp": 1,
+    "walk": 1
+   },
+   "regions": [
+    "大穴の棚",
+    "祠の広間"
+   ],
+   "ts": 1791951540257
+  }
+ }
+}
